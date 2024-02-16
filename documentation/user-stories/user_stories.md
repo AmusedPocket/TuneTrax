@@ -18,9 +18,9 @@
 * As a registered and unauthorized user, I want to be able to log in to the website via a log-in form.
   * When I'm on the `/login` page:
     * I would like to be able to enter my email and password on a clearly laid out form.
-    * I would like the website to log me in upon successful completion of the lob-up form.
+    * I would like the website to log me in upon successful completion of the log-in form.
       * So that I can seamlessly access the site's functionality
-  * When I enter invalid data on the log-up form:
+  * When I enter invalid data on the log-in form:
     * I would like the website to inform me of the validations I failed to pass, and repopulate the form with my valid entries (except my password).
       * So that I can try again without needing to refill forms I entered valid data into.
 
@@ -35,40 +35,96 @@
 
 * As a logged in user, I want to log out via an easy to find log out button on the navigation bar.
   * While on any page of the site:
-    * I can log out of my account and be redirected to a page displaying recent FauxTweets.
+    * I can log out of my account and be redirected to a page displaying recent songs.
       * So that I can easily log out to keep my information secure.
 
-## FauxTweets
+## Songs
 
-### Create FauxTweets
+### Create Songs
 
-* As a logged in user, I want to be able to post new FauxTweets.
-  * When I'm on the `/new-fauxtweet` page:
-    * I can write and submit a new FauxTweet.
-      * So that I can share my thoughts and memes with my friends.
+* As a logged in user, I want to be able to post new Songs.
+  * When I'm on the `/new-song` page:
+    * I can post a new song.
+      * Able to specify: Title, Genre, Additional Tags (30 max), Description, Caption, Privacy (Public or Private).
+      * Able to upload: Image.
 
-### Viewing FauxTweets
+### Viewing Songs
 
-* As a logged in _or_ logged out user, I want to be able to view a selection of the most recent FauxTweets.
-  * When I'm on the `/fauxtweets` page:
-    * I can view the ten most recently posted FauxTweets.
-      * So that I can read and interact with the thoughts and memes of my friends.
+* As a logged out user, I want to be able to view a selection of the most recent Songs.
+  * When I'm on the `/discover` page:
+    * I can view Recently Added Music and Genre's.
 
-* As a logged in _or_ logged out user, I want to be able to view a specific FauxTweet and its associated FauxComments and FauxLikes.
-  * When I'm on the `/fauxtweets/:id` page:
-    * I can view the content of the FauxTweet, as well as the associated FauxComments and FauxLikes.
-      * So that I can read and interact with the thoughts and memes of my friends, and add my own thoughts and memes in the FauxComments.
+* As a logged in user, I want to be able to view a custom home page containing:
+* When I'm on the `/discover` page:
+    * I can view Today's Mixes, Recently Played, Genre's, Liked Songs.
 
-### Updating FauxTweets
+* As a logged in _or_ logged out user, I want to be able to view a specific song and its associated comments and likes.
+  * When I'm on the `/:username/:songname` page:
+    * I can play the song, see comments on the song at the timestamp, like the song, song description, tags, artist.
+      * So that I can read and interact with the comments of other users, and add my own comments.
 
-* As a logged in user, I want to be able to edit my FauxTweets by clicking an Edit button associated with the FauxTweet anywhere that FauxTweet appears.
-  * When I'm on the `/fauxtweets`, `/fauxtweets/:id`, or `/users/:id/fauxtweets` pages:
-    * I can click "Edit" to make permanent changes to FauxTweets I have posted.
-      * So that I can fix any errors I make in my FauxTweets.
+### Updating Songs
 
-### Deleting FauxTweets
+* As a logged in user, I want to be able to edit my Songs by clicking an Edit button associated with the song anywhere that song appears.
+  * When I'm on the `/:username`, `/:username/:songname`, or `/:username/sets/:songname` pages:
+    * I can click "Edit" to make permanent changes to the song.
+      * So that I can fix any errors I make in my song uploads, replace the file, etc..
 
-* As a logged in user, I want to be able to delete my FauxTweets by clicking a Delete button associated with the FauxTweet anywhere that FauxTweet appears.
-  * When I'm on the `/fauxtweets`, `/fauxtweets/:id`, or `/users/:id/fauxtweets` pages:
-    * I can click "Delete" to permanently delete a FauxTweet I have posted.
-      * So that when I realize I shouldn't have publicly said something, I can easily remove it.
+### Deleting Songs
+
+* As a logged in user, I want to be able to delete my Songs by clicking a Delete button associated with the song anywhere that song appears.
+    * When I'm on the `/:username`, `/:username/:songname`, or `/:username/sets/:songname` pages:
+    * I can click "Delete" to make permanent changes to the song.
+      * So that I can delete the song if needed.
+
+## Playlists
+
+### Playlist Homepage
+
+* As a logged in user _or_logged out, I want to be able to view all of the playlists I have made under the playlist homepage `/:username/sets`. 
+* Playlist tile will have:
+  * Album cover of the first song.
+  * Username (small font)
+  * Name of Playlist (large font)
+  * List of songs in the playlist 
+  * Playcount for each song
+
+* As a logged in user, I will be able to view the above in addition to:
+  * Edit Options (Share, Copy Link, Edit, Like, Add to queue, Delete Playlist)
+
+### Playlist Page
+
+* As a logged in user _or_ logged out, when navigating to the page of the playlist `/:username/sets/:playlistname` I will see the specifics of that playlist.
+* Playlist page will have:
+  * Playlist name
+  * Username
+  * Date created (how many hours ago)
+  * Album cover image
+  * User icon
+  * Tags for playlist
+  * Songs in playlist with playcount by it
+
+* As a logged in user, I will be able to view the above in addition to:
+  * Options tile (Share, Link, Edit, Like, Add to queue, Delete Playlist)
+
+## Albums
+
+## Album Main Page
+
+* As a logged in _or_ logged out user, I can see a list of albums by a particular artist `/:username/albums`. I will see the specifics of each album listed along with options:
+* Album will contain:
+  * Album Cover
+  * Usernmae
+  * Album Name
+  * List of songs
+  * Options tile (Favorite, Copy Link, Add to queue)
+
+* As a logged in user, I will see the above along with an edit option that will allow:
+  * Edit the album
+  * Delete the album
+
+
+
+
+
+

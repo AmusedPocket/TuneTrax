@@ -40,4 +40,3 @@ the user.
  * **GET**  ``/songs``
  * **GET**  ``/songs/:song_id``
  * **GET**  ``/albums/:album_id``
- * **GET**  ``/playlists/:playlist_id``
