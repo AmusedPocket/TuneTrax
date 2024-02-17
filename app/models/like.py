@@ -21,21 +21,21 @@ class Like(db.Model):
     # One to Many
     users = db.relationship(
         "User",
-        back_populate="likes"
+        back_populates="likes"
     )
     songs = db.relationship(
         "Song",
-        back_populate="likes"
+        back_populates="likes"
     )
     albums =db.relationship(
         "Album",
-        back_populate="likes"
+        back_populates="likes"
     )
     playlists = db.relationship(
         "Playlist",
-        back_populate="likes"
+        back_populates="likes"
     )
     comments =  db.relationship(
         "Comment",
-        back_populate="likes"
+        back_populates="likes"
     )
