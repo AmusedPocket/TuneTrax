@@ -1,5 +1,6 @@
 from app.models import db, User, environment, SCHEMA
 from sqlalchemy.sql import text
+from random import sample, randint
 
 
 # Adds a demo user, you can add other users here if you want
@@ -28,6 +29,18 @@ def seed_users():
         first_name = 'country', last_name = 'Fan', email='metalfan@aa.io', username ='Metalfan', profile_pic="", header_pic="",  description="", hashed_password='password')
 
     all_users = [demo, rockfan, popfan, electronicfan, alternativefan, hauntologyfan, classicalfan, rapfan, indiefan, countryfan, metalfan]
+
+    for user in all_users:
+        following = sample(all_users, randint(1, 4))
+        
+        try:
+            remove = following.index(user)
+            following.pop(remove)
+        except:
+            pass
+
+        user.following = following
+    
     db.session.add_all(all_users)
     db.session.commit()
     return all_users
