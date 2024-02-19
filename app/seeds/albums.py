@@ -1,7 +1,8 @@
 from app.models import Album, db
 from sqlalchemy.sql import text
+from random import sample, randint
 
-def album_seed_data():
+def album_seed_data(all_users):
     album1 = Album(title="RomanSenykMusic", album_pic="https://tunetrax-pictures.s3.us-west-2.amazonaws.com/22-32-15-627_250x250.png", body="Album for Funky Fortune", user_id=1, release_date="2021-05-15")
     album2 = Album(title="Alex Grohl", album_pic="https://tunetrax-pictures.s3.us-west-2.amazonaws.com/11-21-45-402_200x200.jpg", body="Album for Hard Rock(Fireman)", user_id=1, release_date="2023-07-27")
     album3 = Album(title="lemonmusicstudio", album_pic="https://tunetrax-pictures.s3.us-west-2.amazonaws.com/07-01-09-228_200x200.png", body="Album for This World Has Gone Crazy", user_id=1, release_date="2021-03-08")
@@ -74,13 +75,13 @@ def album_seed_data():
     album81 = Album(title="Death of the Chosen Few", album_pic="https://tunetrax.s3.us-east-2.amazonaws.com/death-of-chosen-few-album.jpg", user_id=10, release_date="2016-07-07")
     album82 = Album(title="True Defiance", album_pic="https://tunetrax.s3.us-east-2.amazonaws.com/demon-hunter-true-defiance.jpg", user_id=10, release_date="2019-05-21")
   
+    all_albums = [album1, album2, album3, album4, album5, album6, album7, album8, album9, album10, album11, album12, album13, album14, album15, album16, album17, album18, album19, album20, album21, album22, album23, album24, album25, album26, album27, album28, album29, album30, album31, album32, album36, album37, album38, album39, album40, album41, album42, album43, album44, album45, album46, album47, album48, album49, album50, album51, album61, album62, album63, album64, album65, album66, album67, album68, album69, album70, album71, album72, album73, album74, album75, album76, album77, album78, album79, album80, album81, album82]
+    
+    for album in all_albums:
+        album.user = all_users[album.user_id]
+        album.likes = sample(all_users, randint(0, len(all_users)))
 
-
-
-
-
-
-    db.session.add_all([album1, album2, album3, album4, album5, album6, album7, album8, album9, album10, album11, album12, album13, album14, album15, album16, album17, album18, album19, album20, album21, album22, album23, album24, album25, album26, album27, album28, album29, album30, album31, album32, album36, album37, album38, album39, album40, album41, album42, album43, album44, album45, album46, album47, album48, album49, album50, album51, album61, album62, album63, album64, album65, album66, album67, album68, album69, album70, album71, album72, album73, album74, album75, album76, album77, album78, album79, album80, album81, album82])
+    db.session.add_all(all_albums)
     db.session.commit()
 
 def undo_album_seeds():

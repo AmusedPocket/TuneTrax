@@ -20,10 +20,10 @@ def seed():
         # the schema name (see comment in users.py undo_users function).
         # Make sure to add all your other model's undo functions below
         undo_users()
-    seed_users()
-    album_seed_data()
-    song_seed_data()
-    comment_seeds()
+    all_users = seed_users()
+    album_seed_data(all_users)
+    all_songs = song_seed_data(all_users)
+    comment_seeds(all_users, all_songs)
     # Add other seed functions here
 
 

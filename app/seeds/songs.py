@@ -1,7 +1,8 @@
 from app.models import Song, db
 from sqlalchemy.sql import text
+from random import sample, randint
 
-def song_seed_data():
+def song_seed_data(all_users):
     song1 = Song(title="Funky Fortune", song_link="https://tunetrax-songs.s3.us-west-2.amazonaws.com/funky-fortune-154575.mp3", song_pic="", body="Funky Fortune - groovy funk background track featuring electric guitar, bass, organ, synth, claps and drums that creates cool, funky, dancey and a bit retro mood.", genre="Rock", visibility="", user_id=1)
     song2 = Song(title="Hard Rock (Fireman)", song_link="https://tunetrax-songs.s3.us-west-2.amazonaws.com/hard-rock-fireman-15041.mp3", song_pic="", body="Thunderous riffs clash with pounding drums in a relentless onslaught of raw energy, as the vocals scream defiance into the chaos, creating a hard rock anthem that shakes the very foundations of rebellion.", genre="Rock", visibility="", user_id=1)
     song3 = Song(title="This World Has Gone Crazy", song_link="https://tunetrax-songs.s3.us-west-2.amazonaws.com/this-world-has-gone-crazy-15500.mp3", song_pic="", body="An explosive fusion of electrifying guitars and thunderous drums fuels a hard rock anthem that pulses with rebellion, while the gritty vocals roar with unbridled passion, setting the stage for a sonic uprising.", genre="Rock", visibility="", user_id=1)
@@ -104,6 +105,10 @@ def song_seed_data():
     song100 = Song(title="Enmity", song_link="https://tunetrax.s3.us-east-2.amazonaws.com/Awake+Again++Enmity+OFFICIAL+LYRIC+VIDEO.mp3", song_pic="https://tunetrax.s3.us-east-2.amazonaws.com/Awake-Again.jpg", body="Metal song from Awake Again", genre="Metal", visibility="", user_id=10)
 
     all_songs = [song1, song2, song3, song4, song5, song6, song7, song8, song9, song10, song11, song12, song13, song14, song15, song16, song17, song18, song19, song20, song21, song22, song23, song24, song25, song26, song27, song28, song29, song30, song31, song32, song33, song34, song35, song36, song37, song38, song39, song40, song41, song42, song43, song44, song45, song46, song47, song48, song49, song50, song51, song52, song53, song54, song55, song56, song57, song58, song59, song60, song61, song62, song63, song64, song65, song66, song67, song68, song69, song70, song71, song72, song73, song74, song75, song76, song77, song78, song79, song80, song81, song82, song83, song84, song85, song86, song87, song88, song89, song90, song91, song92, song93, song94, song95, song96, song97, song98, song99, song100]
+
+    for song in all_songs:
+        song.user = all_users[song.user_id]
+        song.likes = sample(all_users, randint(0, len(all_users)))
 
     db.session.add_all(all_songs)
     db.session.commit()
