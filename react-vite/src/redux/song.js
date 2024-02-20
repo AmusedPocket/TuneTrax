@@ -60,11 +60,11 @@ export const thunkGetSong = (songId) => async (dispatch) => {
     const response = await fetch(`/api/songs/${songId}`);
 
     if (response.ok) {
-        const song = await response.body();
+        const song = await response.json();
         dispatch(getSong(song));
         return song;
     }
-    const data = await response.body();
+    const data = await response.json();
     if (data.errors) return data;
 }
 
@@ -74,9 +74,11 @@ export const thunkGetSongs = () => async (dispatch) => {
         const songs = await response.json();
         dispatch(getSongs(songs))
         return songs;
-    } else {
-        return response;
-    }
+    } 
+    
+    const data = await response.json()
+    if(data.errors) return data;
+    
 }
 
 export const thunkPostSong = (song) => async (dispatch) => {
@@ -195,15 +197,15 @@ export const thunkAddLike = (songId) => async(dispatch) => {
 const initialState = { songs: {} }
 
 const songReducer = (state=initialState, action) => {
-    let newState = {...state}
+    let newState;
     switch(action.type) {
         case GET_SONG:
             newState = {...state};
-            newState.users = normalizeObj(action.payload);
+            newState.songs = action.payload;
             return newState;
         case GET_SONGS:
             newState = {...state};
-            newState.songs = action.songs
+            newState.songs = action.payload;
             return newState;
         case POST_SONG:
             newState.songs = { ...state.songs, [action.payload.id]: action.payload };
