@@ -1,5 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
-
+from datetime import datetime
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -11,11 +11,19 @@ class Comment(db.Model):
     comment = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
     song_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("songs.id")), nullable=False)
+   
     song_time = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
-    updated_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     # RELATIONSHIPS: 
+    # Many to Many
+    likes = db.relationship(
+        "User",
+        secondary="comment_likes",
+        back_populates="user_liked_comments"
+    )
+
     # One to Many
     song = db.relationship(
         "Song", 
@@ -23,9 +31,5 @@ class Comment(db.Model):
     )
     user = db.relationship(
         "User", 
-        back_populates="comments"
-    )
-    likes = db.relationship(
-        "Like",
         back_populates="comments"
     )

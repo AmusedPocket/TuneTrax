@@ -1,6 +1,8 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from .following import follows
+from datetime import datetime
 
 
 class User(db.Model, UserMixin):
@@ -18,20 +20,38 @@ class User(db.Model, UserMixin):
     header_pic = db.Column(db.String(255))
     description = db.Column(db.Text)
     hashed_password = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
-    updated_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     # RELATIONSHIPS: 
     # Many to Many
-    following = db.relationship(
-        "User",
-        secondary="following",
-        back_populates="followers"
-    )
     followers = db.relationship(
         "User",
-        secondary="following",
-        back_populates="following"
+        secondary="follows",
+        primaryjoin=(follows.c.follower_id == id),
+        secondaryjoin=(follows.c.user_id == id),
+        backref=db.backref("following", lazy="dynamic"),
+        lazy="dynamic"
+    )
+    user_liked_songs = db.relationship(
+        "Song",
+        secondary="song_likes",
+        back_populates="likes"
+    )
+    user_liked_albums = db.relationship(
+        "Album",
+        secondary="album_likes",
+        back_populates="likes"
+    )
+    user_liked_playlists = db.relationship(
+        "Playlist",
+        secondary="playlist_likes",
+        back_populates="likes"
+    )
+    user_liked_comments = db.relationship(
+        "Comment",
+        secondary="comment_likes",
+        back_populates="likes"
     )
 
     # One to Many
@@ -50,10 +70,6 @@ class User(db.Model, UserMixin):
     albums = db.relationship(
         "Album",
         back_populates="user"
-    )
-    likes = db.relationship(
-        "Like",
-        back_populates="users"
     )
 
     # GETTERS/SETTERS
