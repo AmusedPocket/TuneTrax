@@ -17,6 +17,13 @@ class Comment(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     # RELATIONSHIPS: 
+    # Many to Many
+    likes = db.relationship(
+        "User",
+        secondary="comment_likes",
+        back_populates="user_liked_comments"
+    )
+
     # One to Many
     song = db.relationship(
         "Song", 
@@ -24,9 +31,5 @@ class Comment(db.Model):
     )
     user = db.relationship(
         "User", 
-        back_populates="comments"
-    )
-    likes = db.relationship(
-        "Like",
         back_populates="comments"
     )

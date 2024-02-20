@@ -21,13 +21,15 @@ class Playlist(db.Model):
         secondary="playlist_songs",
         back_populates="playlists"
     )
+    likes = db.relationship(
+        "User",
+        secondary="playlist_likes",
+        back_populates="user_liked_playlists"
+    )
+
 
     # One to Many
     user = db.relationship(
         "User",
-        back_populates="playlists"
-    )
-    likes = db.relationship(
-        "Like",
         back_populates="playlists"
     )

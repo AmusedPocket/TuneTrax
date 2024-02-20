@@ -1,5 +1,6 @@
 from app.models import Comment, db
 from sqlalchemy.sql import text
+from random import sample, randint
 
 def comment_seeds(all_users, all_songs):
     comment1 = Comment(comment="Rocking out to this song feels like diving into a sea of raw energy and primal beats!", user_id=6, song_id=1,  song_time=16)
@@ -292,6 +293,7 @@ def comment_seeds(all_users, all_songs):
 
 def undo_comment_seeds():
     db.session.execute(text("DELETE FROM comments"))
+    db.session.execute(text("DELETE FROM comment_likes"))
     db.session.commit()
 
 

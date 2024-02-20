@@ -23,12 +23,13 @@ class Album(db.Model):
         secondary="album_songs",
         back_populates="albums"
     )
+    likes = db.relationship(
+        "User",
+        secondary="album_likes",
+        back_populates="user_liked_albums"
+    )
 
     # One to Many
-    likes = db.relationship(
-        "Like",
-        back_populates="albums"
-    )
     user = db.relationship(
         "User",
         back_populates="albums"

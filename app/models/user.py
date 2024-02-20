@@ -25,7 +25,6 @@ class User(db.Model, UserMixin):
 
     # RELATIONSHIPS: 
     # Many to Many
-   
     followers = db.relationship(
         "User",
         secondary="follows",
@@ -33,6 +32,26 @@ class User(db.Model, UserMixin):
         secondaryjoin=(follows.c.user_id == id),
         backref=db.backref("following", lazy="dynamic"),
         lazy="dynamic"
+    )
+    user_liked_songs = db.relationship(
+        "Song",
+        secondary="song_likes",
+        back_populates="likes"
+    )
+    user_liked_albums = db.relationship(
+        "Album",
+        secondary="album_likes",
+        back_populates="likes"
+    )
+    user_liked_playlists = db.relationship(
+        "Playlist",
+        secondary="playlist_likes",
+        back_populates="likes"
+    )
+    user_liked_comments = db.relationship(
+        "Comment",
+        secondary="comment_likes",
+        back_populates="likes"
     )
 
     # One to Many
@@ -51,10 +70,6 @@ class User(db.Model, UserMixin):
     albums = db.relationship(
         "Album",
         back_populates="user"
-    )
-    likes = db.relationship(
-        "Like",
-        back_populates="users"
     )
 
     # GETTERS/SETTERS
