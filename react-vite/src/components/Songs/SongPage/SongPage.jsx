@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { thunkGetSong } from "../../../redux/song";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import SongPlayer from "../../SongPlayer/SongPlayer";
 
 
 const SongPage = () => {
@@ -17,10 +18,12 @@ const SongPage = () => {
     
     return (
         <>
+        
         {song.songs.title}
-        {song.songs.user.username}
+        {/* {song.songs.user.username} */}
         {song.songs.created_at}
         <p>#{song.songs.genre}</p>
+        <SongPlayer />
         </>
     )
 }
