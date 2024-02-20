@@ -14,6 +14,14 @@ class Playlist(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
+    def toDictLimited(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "playlist_pic":self.playlist_pic,
+            "num_likes":len(self.likes),
+            "created_at":self.created_at
+        }
     # RELATIONSHIPS: 
     # Many to Many
     songs = db.relationship(

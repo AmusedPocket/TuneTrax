@@ -16,6 +16,28 @@ class Album(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
+    def toDict(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "album_pic":self.album_pic,
+            "body":self.body,
+            "user":self.user.toDictLimited(),
+            "songs":[song.toDictLimited() for song in self.songs],
+            "likes":[user.toDictLimited() for user in self.likes],
+            "release_date":self.release_date,
+            "created_at":self.created_at,
+            "updated_at":self.updated_at,
+        }
+    
+    def toDictLimited(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "album_pic":self.album_pic,
+            "release_date":self.release_date,
+        }
+
     # RELATIONSHIPS: 
     # Many to Many
     songs = db.relationship(

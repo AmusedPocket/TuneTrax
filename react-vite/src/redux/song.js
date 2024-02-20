@@ -1,9 +1,9 @@
-import normalizeObj from "./helpers";
+import { normalizeObj } from "./helpers";
 
 const GET_SONG = 'songs/addSong';
 
 const getSong = (song) => ({
-    type: ADD_SONG,
+    type: GET_SONG,
     payload: song
 })
 
@@ -22,6 +22,7 @@ export const thunkGetSong = (songId) => async (dispatch) => {
 const initialState = { songs: {} }
 
 const songReducer = (state=initialState, action) => {
+    let newState;
     switch(action.type) {
         case GET_SONG:
             newState = {...state};
