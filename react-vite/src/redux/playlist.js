@@ -1,7 +1,7 @@
 import { normalizeObj } from './helpers';
 
 
-const POST_PLAYLIST = 'playlist/POST_PLAYLIST'
+const POST_PLAYLIST = 'playlist/POST_PLAYLIST';
 
 
 export const postPlaylist = (playlist) => ({
@@ -10,19 +10,16 @@ export const postPlaylist = (playlist) => ({
 })
 
 
-export const ThunkAddPlaylist = (playlistId) => async(dispatch) => {
-     const res = await fetch (`/api/${playlistId}/like`)
+export const thunkAddPlaylist = (playlistId) => async(dispatch) => {
+     const res = await fetch (`/api/playlists/${playlistId}`);
 
-     if (res.ok){
-          const { playlist } = await res.json()
-          dispatch(postPlaylist(playlist))
+     if (res.ok) {
+          const { playlist } = await res.json();
+          dispatch(postPlaylist(playlist));
           return playlist;
-     } else {
-          const data = await res.json();
-          if(data.errors){
-               return data
-          }
-     }
+     } 
+     const data = await res.json();
+     if(data.errors) return data;
 }
 
 
@@ -32,12 +29,13 @@ const playlistReducer = (state = initialState, action) => {
      let newState;
      switch (action.type) {
           case POST_PLAYLIST:
-               newState = { ...state };
-               newState.playlist[action.playlist.id] = action.playlist
+               newState = {...state};
+               newState.users = normalizeObj(action.payload);
+               return newState;
           default:
                return state;
      }
 }
 
 
-export default playlistReducer
+export default playlistReducer;
