@@ -1,19 +1,17 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 
-following = db.Table(
-    "following",
+follows = db.Table(
+    "follows",
     db.Column(
         "user_id", 
         db.Integer, 
-        db.ForeignKey(add_prefix_for_prod("users.id")), 
-        primary_key=True
+        db.ForeignKey(add_prefix_for_prod("users.id"))
     ),
     db.Column(
         "follower_id", 
         db.Integer, 
-        db.ForeignKey(add_prefix_for_prod("users.id")), 
-        primary_key=True
+        db.ForeignKey(add_prefix_for_prod("users.id"))
     )
 )
 

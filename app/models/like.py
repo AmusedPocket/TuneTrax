@@ -15,7 +15,7 @@ class Like(db.Model):
     song_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("songs.id")))
     album_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("albums.id")))
     playlist_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("playlists.id")))
-    comment_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("songs.id")))
+    comment_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("comments.id")))
 
     # RELATIONSHIPS: 
     # One to Many

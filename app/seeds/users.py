@@ -24,9 +24,9 @@ def seed_users():
     indiefan = User(
         first_name = 'Indie', last_name = 'Fan',  email='indiefan@aa.io', username ='Indiefan', profile_pic="", header_pic="",      description="", hashed_password='password')
     countryfan = User(
-        first_name = 'country', last_name = 'Fan',  email='countryfan@aa.io', username ='countryfan', profile_pic='', header_pic='',  description='', hashed_password='password')
+        first_name = 'Country', last_name = 'Fan',  email='countryfan@aa.io', username ='countryfan', profile_pic='', header_pic='',  description='', hashed_password='password')
     metalfan = User(
-        first_name = 'country', last_name = 'Fan', email='metalfan@aa.io', username ='Metalfan', profile_pic="", header_pic="",  description="", hashed_password='password')
+        first_name = 'Metal', last_name = 'Fan', email='metalfan@aa.io', username ='Metalfan', profile_pic="", header_pic="",  description="", hashed_password='password')
 
     all_users = [demo, rockfan, popfan, electronicfan, alternativefan, hauntologyfan, classicalfan, rapfan, indiefan, countryfan, metalfan]
 
@@ -45,8 +45,6 @@ def seed_users():
     db.session.commit()
     return all_users
 
-def followers():
-
 
 
 # Uses a raw SQL query to TRUNCATE or DELETE the users table. SQLAlchemy doesn't
@@ -60,5 +58,5 @@ def undo_users():
         db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
     else:
         db.session.execute(text("DELETE FROM users"))
-        
+    db.session.execute(text("DELETE FROM follows"))    
     db.session.commit()
