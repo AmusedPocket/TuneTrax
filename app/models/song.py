@@ -59,3 +59,23 @@ class Song(db.Model):
         "User",
         back_populates="songs"
     )
+
+    def song_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "song_link": self.song_link,
+            "song_pic": self.song_pic,
+            "body": self.body,
+            "genre": self.genre,
+            "visibility": self.visibility,
+            "plays": self.plays,
+            "user_id": self.user_id,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "albums": self.albums,
+            "playlists": self.playlists,
+            "likes": len(self.likes),
+            "comments": self.comments,
+            "user": self.user
+        }
