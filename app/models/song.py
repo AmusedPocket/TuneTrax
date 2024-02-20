@@ -7,7 +7,7 @@ class Genre(Enum):
     Rock = "Rock" # Trevor
     Pop = "Pop" # Trevor
     Alternative = "Alternative" # Garrett
-    Hauntology = "Hauntology" # Garrett 
+    Hauntology = "Hauntology" # Garrett
     Classical = "Classical" # Garrett
     Indie = "Indie" # Kai
     Rap = "Rap" # Kai
@@ -16,10 +16,10 @@ class Genre(Enum):
 
 class Song(db.Model):
     __tablename__ = 'songs'
-    
+
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
-    
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     song_link = db.Column(db.String(255), nullable=False)
@@ -32,7 +32,7 @@ class Song(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    # RELATIONSHIPS: 
+    # RELATIONSHIPS:
     # Many to Many
     albums = db.relationship(
         "Album",
@@ -67,15 +67,15 @@ class Song(db.Model):
             "song_link": self.song_link,
             "song_pic": self.song_pic,
             "body": self.body,
-            "genre": self.genre,
+            "genre": self.genre.name,
             "visibility": self.visibility,
             "plays": self.plays,
             "user_id": self.user_id,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
-            "albums": self.albums,
-            "playlists": self.playlists,
+            "albums": [album.album_dict() for album in self.albums],
+            "playlists": [playlist.playlist_dict() for playlist in self.playlists],
             "likes": len(self.likes),
-            "comments": self.comments,
-            "user": self.user
+            "comments": [comment.comment_dict() for comment in self.comments],
+            "user": self.user.public_user_dict()
         }

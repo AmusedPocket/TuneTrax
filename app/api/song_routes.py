@@ -12,8 +12,8 @@ song_routes = Blueprint('songs', __name__)
 def songs():
     songs = Song.query.all()
     print("in songs route")
-    return {song:song.song_dict() for song in songs}
-    
+    return {song.id:song.song_dict() for song in songs}
+
 
 #Get a single song
 @song_routes.route('/<int:id>')
@@ -51,7 +51,7 @@ def post_song():
 
 
 
-#Edit a song by song id 
+#Edit a song by song id
 #Need AWS framework implemented
 @song_routes.route('/<int:id>', methods=["PUT"])
 @login_required
@@ -92,10 +92,8 @@ def delete_song(id):
 
     if not song:
         return {"Error": "Song not found"}, 404
-    
+
     db.session.delete(song)
     db.session.commit()
 
     return {"Message": "Successfully Deleted"}
-
-

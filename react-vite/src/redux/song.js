@@ -1,4 +1,4 @@
-import normalizeObj from "./helpers";
+import { normalizeObj } from "./helpers";
 
 const GET_SONG = 'songs/GET_SONG';
 const GET_SONGS = 'songs/GET_SONGS'

@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    # RELATIONSHIPS: 
+    # RELATIONSHIPS:
     # Many to Many
     followers = db.relationship(
         "User",
@@ -89,4 +89,17 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email
+        }
+
+    def public_user_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "username": self.username,
+            "profile_pic": self.profile_pic,
+            "header_pic": self.header_pic,
+            "description": self.description,
+            "created_at": self.created_at
         }
