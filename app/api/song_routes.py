@@ -32,7 +32,7 @@ def post_song():
     #song_pic = aws
     if "song" not in request.files:
         return {"errors": "song required"}, 400
-    
+
 
 
     song = request.files['song']
@@ -123,7 +123,7 @@ def post_song_comment(id):
             user_id = current_user.id,
             song_id = id,
             song_time = form.data["song_time"],
-            created_at = datetime.utcnow(), 
+            created_at = datetime.utcnow(),
             updated_at = datetime.utcnow()
         )
         db.session.add(comment)
@@ -157,3 +157,25 @@ def edit_song_comment(_id, c_id):
         return comment.comment_dict()
     else:
         return {"Error": "Could not edit comment"}
+
+
+# Add a Like
+@song_routes.route('/<int:id>/like', methods=['POST'])
+@login_required
+def add_like(id):
+    song = Song.query.get(id)
+    song.likes.append(current_user)
+    db.session.add(song)
+    db.session.commit()
+    return song.song_dict()
+
+
+# Delete a Like
+@song_routes.route('/<int:id>/like', methods=['DELETE'])
+@login_required
+def delete_like(id):
+    song = Song.query.get(id)
+    song.likes.delete(current_user)
+    db.session.add(song)
+    db.session.commit()
+    return {"message": "Remove the Like"}
