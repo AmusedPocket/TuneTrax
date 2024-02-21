@@ -38,7 +38,7 @@ class Comment(db.Model):
         return {
             "id": self.id,
             "comment": self.comment,
-            "user_id": self.user_id,
+            "user": self.user.to_dict(),
             "song_id": self.song_id,
             "song_time": self.song_time,
             "created_at": self.created_at,

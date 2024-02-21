@@ -1,8 +1,9 @@
 from flask import Blueprint, request
-from app.models import Song, db, Comment
+from app.models import Song, db, Comment, User
 from flask_login import login_required, current_user
 from datetime import datetime
 import app.s3_helpers as s3
+from app.forms import SongForm
 
 song_routes = Blueprint('songs', __name__)
 
@@ -25,7 +26,7 @@ def single_song(id):
 
 
 #Upload a song
-@song_routes.route('', methods=["POST"])
+@song_routes.route('/', methods=["POST"])
 @login_required
 def post_song():
     #song_link = aws
@@ -33,35 +34,43 @@ def post_song():
     if "song" not in request.files:
         return {"errors": "song required"}, 400
 
-
-
     song = request.files['song']
-
+    
     if not s3.song_file(song.filename):
         return {"errors": "file type not supported"}, 400
 
     song.filename = s3.get_unique_filename(song.filename)
+    upload_song = s3.upload_file_to_s3(song)
+    print("upload song:", upload_song)
+    form = SongForm()
+    form['csrf_token'].data = request.cookies['csrf_token']    
+    
+    upload_pic = {"url": "No Image"}
 
-    upload = s3.upload_file_to_s3(song)
+    if "song_pic" in request.files:
+        song_pic = request.files['song_pic']
+        song_pic.filename = s3.get_unique_filename(song_pic.filename)
+        upload_pic = s3.upload_file_to_s3(song_pic)    
+    
+    if form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        new_song = Song(
+            user = user,
+            title = form.data["title"],
+            body = form.data["body"],
+            genre = form.data["genre"],
+            visibility = form.data["visibility"],
+            plays = 0,
+            user_id = current_user.id,
+            song_link = upload_song['url'],
+            song_pic = upload_pic['url']
+        )
 
-    song_url = upload['url']
-
-    song_data = request.form.to_dict()
-
-    new_song = Song(
-        title = song_data["title"],
-        body = song_data["body"],
-        genre = song_data["genre"],
-        visibility = song_data["visibility"],
-        plays = song_data["plays"],
-        user_id = current_user.id,
-        created_at = datetime.utcnow(),
-        song_link = song_url
-    )
-
-    db.session.add(new_song)
-    db.session.commit()
-    return new_song()
+        db.session.add(new_song)
+        db.session.commit()
+        return new_song.song_dict()
+    
+    return {"errors": form.errors}, 401
 
 #Edit a song by song id
 #Need AWS framework implemented

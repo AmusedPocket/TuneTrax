@@ -88,7 +88,8 @@ class User(db.Model, UserMixin):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'profile_pic': self.profile_pic
         }
 
     def public_user_dict(self):
