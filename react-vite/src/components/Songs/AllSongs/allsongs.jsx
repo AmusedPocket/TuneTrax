@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetSongs } from "../../../redux/song";
 import SingleSong from "../SingleSong/singlesong";
-import SongPlayer from "../../SongPlayer/SongPlayer";
+import SongPlayer from "../../Navigation/SongPlayer/SongPlayer";
 
 
 
@@ -21,7 +21,7 @@ const AllSongs = () => {
 
     return(
         <h1>{songItems}</h1>
-        
+
     )
 }
 

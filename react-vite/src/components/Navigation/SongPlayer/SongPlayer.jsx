@@ -2,7 +2,7 @@ import AudioPlayer from "react-h5-audio-player";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { thunkGetSong } from "../../redux/song";
+import { thunkGetSong } from "../../../redux/song";
 import "./SongPlayer.css"
 
 const SongPlayer = () => {
@@ -19,7 +19,6 @@ const SongPlayer = () => {
   return (
     <div className="react-h5-audio-player">
       <AudioPlayer
-        autoPlay
         volume
         showFilledVolume={true}
         showFilledProgress={true}

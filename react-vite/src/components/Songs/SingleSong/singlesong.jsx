@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import SongPlayer from "../../SongPlayer/SongPlayer";
+import SongPlayer from "../../Navigation/SongPlayer/SongPlayer";
 import AudioPlayer from 'react-h5-audio-player';
 
 const SingleSong = ({song}) => {
