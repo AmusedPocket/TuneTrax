@@ -3,6 +3,7 @@ import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
 import AlbumPage from '../components/AlbumPage';
 import Layout from './Layout';
+import CreateSet from '../components/CreateSet';
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "albums/:albumId",
         element: <AlbumPage />,
+      },
+      {
+        path: "albums/new",
+        element: <CreateSet />,
       },
     ],
   },

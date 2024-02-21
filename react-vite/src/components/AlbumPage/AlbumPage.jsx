@@ -37,6 +37,13 @@ function AlbumPage() {
         return res;
     }
 
+    function firstEightLikedPFP(likes) {
+        let res = [];
+        for (let i = 0; i < Math.min(likes.length, 8); i++)
+            res.push(likes[i]);
+        return res;
+    }
+
     if (!album) return<>not hello</>;
     return (
         <>
@@ -129,16 +136,28 @@ function AlbumPage() {
                             <span>Playlists from this user</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
-                        {album.user.playlists.map(new_playlist => (
-                            <div key={new_playlist.id}>
-                                <img src={new_playlist.playlist_pic} alt={`${new_playlist.title} playlist image`}/>
+                        {album.user.playlists.map(playlist => (
+                            <div key={playlist.id}>
+                                <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
                                 <div>
                                     <span>{album.user.username}</span>
-                                    <span>{new_playlist.title}</span>
-                                    <span>Playlist &bull; {new Date(new_playlist.created_at).getFullYear()}</span>
+                                    <span>{playlist.title}</span>
+                                    <span>Playlist &bull; {new Date(playlist.created_at).getFullYear()}</span>
                                 </div>
                             </div>
                         ))}
+                    </div>
+                    <div>
+                        <div>
+                            <span>{album.likes.length} likes</span>
+                            {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
+                        </div>
+                        {firstEightLikedPFP(album.likes).map(like_user => (
+                            <div key={like_user.id}>
+                                {like_user.profile_pic && <img src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
+                                {!like_user.profile_pic && <div> default colored profile picture </div>}
+                            </div>)
+                        )}
                     </div>
                 </div>
             </div>
