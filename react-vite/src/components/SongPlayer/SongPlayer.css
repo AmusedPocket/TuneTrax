@@ -1,0 +1,10 @@
+.react-h5-audio-player {
+     width: 100%;
+     max-width: 400px;
+     /* background-color: black; */
+}
+
+
+.react-h5-audio-player--volume-filled {
+     background-color: #4caf50;
+   }
