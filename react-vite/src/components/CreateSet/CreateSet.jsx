@@ -1,10 +1,16 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux"
+import { thunkAddAlbum } from "../../redux/album"
+import { thunkAddPlaylist } from "../../redux/playlist"
 
 function CreateSet() {
+    const dispatch = useDispatch();
+    const [errors, setErrors] = useState({});
     const [validation, setValidation] = useState({});
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
 
+    const [songs, setSongs] = useState([]);
     const [albumImg, setAlbumImg] = useState();
     const [title, setTitle] = useState();
     const [type, setType] = useState();
@@ -18,7 +24,7 @@ function CreateSet() {
             setAlbumImg(URL.createObjectURL(e.target.files[0]));
     }
     
-    function onSubmit(e) {
+    async function onSubmit(e) {
         e.preventDefault();
         setDisabled(false);
 
@@ -29,10 +35,8 @@ function CreateSet() {
         setValidation(tempValidation)
 
         // Unsuccessful Validation
-        if (Object.values(tempValid).length != 0) {
-            setDisabled(false);
-            return;
-        }
+        if (Object.values(tempValidation).length != 0) 
+            return setDisabled(false);
 
         const payload = {
             title,
@@ -41,10 +45,24 @@ function CreateSet() {
             privacy,
             genre,
             release_date: releaseDate,
-            set_type: type
+            songs,
+        }
+        const response = await dispatch("Album" == type ? 
+                                    thunkAddAlbum(payload) : 
+                                    thunkAddPlaylist(payload));
+
+        // Unsuccessful Submission
+        if (response.message === "Bad Request") { 
+            setErrors({
+                message: response.message,
+                errors: {...response.errors}
+            });
+            setDisabled(false);
+            return;
         }
 
-        console.log("TODO: dispatch:", payload)
+        // Successful Submission
+        navigate(`/groups/${response.id}`);
     }
     
     return (
@@ -54,13 +72,13 @@ function CreateSet() {
                 <span onClick={() => setCurrentPage("tracks")}>Tracks</span>
             </div>
             <form onSubmit={onSubmit}>
-                {"tracks" == currentPage && (<>
+                {"tracks" == currentPage && (<>=
                     {/* TODO: show tracks for set */}
                 </>)}
                 {"basic info" == currentPage && (<>
                 <div>
                     <img src={albumImg}/>
-                    {/* hid when image is selected */}
+                    {/* hide when image is selected */}
                     <input 
                         type="file"
                         accept="image/*"
@@ -68,6 +86,7 @@ function CreateSet() {
                         />
                 </div>
                 <div>  
+                    {errors.errors && errors.errors.map((error, i) => (<div key={i}>{error}</div>))}
                     <label>
                         Title {/* TODO: make asterisk red */}*
                         <input
@@ -75,6 +94,7 @@ function CreateSet() {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             />
+                        {validation.title && <span>{validation.title}</span>}
                     </label>
                     <div>
                         <label>
@@ -89,12 +109,13 @@ function CreateSet() {
                             </select>
                         </label>
                         <label>
-                            Release date {/* TODO: make asterisk red */}*
+                            Release date {"Album" == type && "*"}{/* TODO: make asterisk red */}
                             <input
                                 type="date"
                                 value={releaseDate}
                                 onChange={(e) => setReleaseDate(e.target.value)}
                                 />
+                            {validation.releaseDate && <span>{validation.releaseDate}</span>}
                         </label>
                     </div>
                         <label>

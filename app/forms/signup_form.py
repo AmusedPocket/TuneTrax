@@ -11,7 +11,6 @@ def user_exists(form, field):
     if user:
         raise ValidationError('Email address is already in use.')
 
-
 def username_exists(form, field):
     # Checking if username is already in use
     username = field.data
@@ -21,7 +20,12 @@ def username_exists(form, field):
 
 
 class SignUpForm(FlaskForm):
-    username = StringField(
-        'username', validators=[DataRequired(), username_exists])
+    first_name = StringField('first_name', validators=[DataRequired()])
+    last_name = StringField('last_name', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(), user_exists])
+    username = StringField('username', validators=[DataRequired(), username_exists])
     password = StringField('password', validators=[DataRequired()])
+    profile_pic = StringField('profile_pic')
+    header_pic = StringField('header_pic')
+    description = StringField('description')
+    

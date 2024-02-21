@@ -12,7 +12,7 @@ class Album(db.Model):
     album_pic = db.Column(db.String(255), default="No Image")
     body = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
-    release_date = db.Column(db.Date)
+    release_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
@@ -36,6 +36,8 @@ class Album(db.Model):
             "title":self.title,
             "album_pic":self.album_pic,
             "release_date":self.release_date,
+            "user":self.user.toDictLimited(),
+            "songs":[song.toDictLimited() for song in self.songs],
         }
 
     # RELATIONSHIPS: 
