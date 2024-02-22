@@ -32,7 +32,38 @@ class Song(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    # RELATIONSHIPS:
+    def toDictLimited(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "genre":self.genre.name,
+            "song_link":self.song_link,
+            "song_pic":self.song_pic,
+            "username":self.user.username,
+            "likes":len(self.likes)
+        }
+
+    def song_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "song_link": self.song_link,
+            "song_pic": self.song_pic,
+            "body": self.body,
+            "genre": self.genre.name,
+            "visibility": self.visibility,
+            "plays": self.plays,
+            "user_id": self.user_id,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "albums": [album.album_dict() for album in self.albums],
+            "playlists": [playlist.playlist_dict() for playlist in self.playlists],
+            "likes": len(self.likes),
+            "comments": [comment.comment_dict() for comment in self.comments],
+            "user": self.user.public_user_dict()
+        }
+
+    # RELATIONSHIPS: 
     # Many to Many
     albums = db.relationship(
         "Album",
@@ -59,23 +90,3 @@ class Song(db.Model):
         "User",
         back_populates="songs"
     )
-
-    def song_dict(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "song_link": self.song_link,
-            "song_pic": self.song_pic,
-            "body": self.body,
-            "genre": self.genre.name,
-            "visibility": self.visibility,
-            "plays": self.plays,
-            "user_id": self.user_id,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-            "albums": [album.album_dict() for album in self.albums],
-            "playlists": [playlist.playlist_dict() for playlist in self.playlists],
-            "likes": len(self.likes),
-            "comments": [comment.comment_dict() for comment in self.comments],
-            "user": self.user.public_user_dict()
-        }

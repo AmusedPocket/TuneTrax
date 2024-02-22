@@ -3,7 +3,7 @@ from app.models import Song, db, Comment, User
 from flask_login import login_required, current_user
 from datetime import datetime
 import app.s3_helpers as s3
-from app.forms import SongForm
+from app.forms import SongForm, CommentForm
 
 song_routes = Blueprint('songs', __name__)
 
@@ -29,8 +29,7 @@ def single_song(id):
 @song_routes.route('/', methods=["POST"])
 @login_required
 def post_song():
-    #song_link = aws
-    #song_pic = aws
+
     if "song" not in request.files:
         return {"errors": "song required"}, 400
 
@@ -74,30 +73,37 @@ def post_song():
 
 #Edit a song by song id
 #Need AWS framework implemented
-@song_routes.route('/<int:id>', methods=["PUT"])
+@song_routes.route('/<int:id>', methods=["POST"])
 @login_required
 def update_song(id):
     song = Song.query.get(id)
 
     if not song:
-        return {"Error": "Song not found"}, 404
+        return {"errors": "Song not found"}, 404
+    
+    updated_song = SongForm()
+    updated_song['csrf_token'].data = request.cookies['csrf_token']
+    print("updated song is: ", updated_song)
+    
+    if updated_song.validate_on_submit():
+        song.title = updated_song.title.data
+        song.song_link = updated_song.song_link.data
+        if request.files['song']:
+            new_song = request.files['song']
+            new_song.filename = s3.get_unique_filename(new_song.filename)
+            upload_song = s3.upload_file_to_s3(new_song)
+            song.song_link = upload_song['url'],
+        song.body = updated_song.body.data
+        song.genre = updated_song.genre.data
 
     song_data = request.form.to_dict()
-
     song.title = song_data["title"]
     song.song_link = song_data["song_link"]
+    
     song.song_pic = song_data["song_pic"]
     song.body = song_data["body"]
     song.genre = song_data["genre"]
-    song.visibility = song_data["visibility"]
-    song.plays = song_data["plays"]
-    song.user_id = song_data["user_id"]
-    song.updated_at = song_data["updated_at"]
-    song.albums = song_data["albums"]
-    song.playlists = song_data["playlists"]
-    song.likes = song_data["likes"]
-    song.comments = song_data["comments"]
-    song.user = song_data["user"]
+    # song.visibility = song_data["visibility"]
 
     db.session.add(song)
     db.session.commit()
@@ -113,6 +119,8 @@ def delete_song(id):
 
     if not song:
         return {"Error": "Song not found"}, 404
+
+    
 
     db.session.delete(song)
     db.session.commit()
@@ -144,6 +152,9 @@ def post_song_comment(id):
 @song_routes.route('/<int:_id>/comments/<int:c_id>', methods=["DELETE"])
 @login_required
 def delete_song_comment(_id, c_id):
+    """
+    Delete a song comment by accessing the song, and deleting the comment from it.
+    """
     comment = Comment.query.get(c_id)
     if not comment:
         return {"Error": "Cannot find comment"}
@@ -155,6 +166,10 @@ def delete_song_comment(_id, c_id):
 @song_routes.route('/<int:_id>/comments/<int:c_id>', methods=["PUT"])
 @login_required
 def edit_song_comment(_id, c_id):
+    """
+    Edit a song comment by accessing it via comments id and adding form to it.
+    """
+
     comment = Comment.query.get(c_id)
     form = CommentForm()
     if comment.user_id == current_user.id:
@@ -172,6 +187,9 @@ def edit_song_comment(_id, c_id):
 @song_routes.route('/<int:id>/like', methods=['POST'])
 @login_required
 def add_like(id):
+    """
+    Add a like to the song by appending the user to the likes.
+    """
     song = Song.query.get(id)
     song.likes.append(current_user)
     db.session.add(song)
@@ -183,8 +201,11 @@ def add_like(id):
 @song_routes.route('/<int:id>/like', methods=['DELETE'])
 @login_required
 def delete_like(id):
+    """
+    Delete a like by removing the user from the likes
+    """
     song = Song.query.get(id)
-    song.likes.delete(current_user)
+    song.likes.remove(current_user)
     db.session.add(song)
     db.session.commit()
-    return {"message": "Remove the Like"}
+    return {"message": "Removed the Like"}

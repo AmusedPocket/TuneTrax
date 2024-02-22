@@ -27,7 +27,11 @@ const SongPage = () => {
     // console.log("user id is", userId)
 
     const displayComments = songComments.map((comment) => {
+<<<<<<< HEAD
         return <h2 key={comment.id}>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h2>
+=======
+        return <h1 key={comment.id}>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h1>
+>>>>>>> dev
     })
 
 

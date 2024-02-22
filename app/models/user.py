@@ -23,7 +23,46 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    # RELATIONSHIPS:
+    def toDictAlbum(self):
+        return {
+            "id":self.id,
+            "username":self.username,
+            "profile_pic":self.profile_pic,
+            "follows":self.followers.count()
+        }
+
+    def toDictLimited(self):
+        return {
+            "id":self.id,
+            "username":self.username,
+            "profile_pic":self.profile_pic,
+            "follows":self.followers.count(),
+            "songs":[song.toDictLimited() for song in self.songs],
+            "playlists":[playlist.toDictLimited() for playlist in self.playlists],
+            "albums":[album.toDictLimited() for album in self.albums]
+        }
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'profile_pic': self.profile_pic
+        }
+
+    def public_user_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "username": self.username,
+            "profile_pic": self.profile_pic,
+            "header_pic": self.header_pic,
+            "description": self.description,
+            "created_at": self.created_at
+        }
+    # RELATIONSHIPS: 
     # Many to Many
     followers = db.relationship(
         "User",
@@ -84,23 +123,4 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'profile_pic': self.profile_pic
-        }
-
-    def public_user_dict(self):
-        return {
-            "id": self.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "email": self.email,
-            "username": self.username,
-            "profile_pic": self.profile_pic,
-            "header_pic": self.header_pic,
-            "description": self.description,
-            "created_at": self.created_at
-        }
+    

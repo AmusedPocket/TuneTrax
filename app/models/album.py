@@ -12,11 +12,35 @@ class Album(db.Model):
     album_pic = db.Column(db.String(255), default="No Image")
     body = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
-    release_date = db.Column(db.Date)
+    release_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    # RELATIONSHIPS:
+    def toDict(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "album_pic":self.album_pic,
+            "body":self.body,
+            "user":self.user.toDictLimited(),
+            "songs":[song.toDictLimited() for song in self.songs],
+            "likes":[user.toDictLimited() for user in self.likes],
+            "release_date":self.release_date.strftime("%Y-%m-%d"),
+            "created_at":self.created_at,
+            "updated_at":self.updated_at,
+        }
+    
+    def toDictLimited(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "album_pic":self.album_pic,
+            "release_date":self.release_date.strftime("%Y-%m-%d"),
+            "user":self.user.toDictAlbum(),
+            "songs":[song.toDictLimited() for song in self.songs],
+        }
+
+    # RELATIONSHIPS: 
     # Many to Many
     songs = db.relationship(
         "Song",
