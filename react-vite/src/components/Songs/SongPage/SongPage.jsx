@@ -4,11 +4,13 @@ import { thunkAddUser } from "../../../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import SongPlayer from "../../Navigation/SongPlayer/SongPlayer";
+import {  useSongContext } from "../../../context/SongPlayerContext";
 
 
 const SongPage = () => {
     const { songId } = useParams()
     const dispatch = useDispatch()
+    const { songs, setSongs } = useSongContext()
 
     useEffect(() => {
         dispatch(thunkGetSong(songId))
@@ -16,6 +18,7 @@ const SongPage = () => {
 
     const song = useSelector((state)=>state.songs)
 
+    
     const songComments = song.songs.comments
     if(!songComments){
         return null;
@@ -27,12 +30,23 @@ const SongPage = () => {
     // console.log("user id is", userId)
 
     const displayComments = songComments.map((comment) => {
-<<<<<<< HEAD
         return <h2 key={comment.id}>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h2>
-=======
-        return <h1 key={comment.id}>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h1>
->>>>>>> dev
     })
+
+    
+
+    function PlaySong(){
+        if(songs[0]?.song_link !== song.song_link){
+            setSongs([{
+                songLink : song.song_link,
+                songPic : song.song_pic,
+                songName : song.song_name,
+                userId : song.user_id,
+                songId : song.id
+            }, ...songs])
+        }
+    }
+
 
 
     return (
