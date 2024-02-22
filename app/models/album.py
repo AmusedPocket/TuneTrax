@@ -36,7 +36,7 @@ class Album(db.Model):
             "title":self.title,
             "album_pic":self.album_pic,
             "release_date":self.release_date,
-            "user":self.user.toDictLimited(),
+            "user":self.user.toDictAlbum(),
             "songs":[song.toDictLimited() for song in self.songs],
         }
 

@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify
-from flask_login import login_required
-from app.models import Album
+from flask import Blueprint, jsonify, request, json
+from flask_login import login_required, current_user
+from app.models import Album, User, db
 from app.forms import AlbumForm
+from datetime import datetime as dt
 
 album_routes = Blueprint('albums', __name__)
 
@@ -21,19 +22,25 @@ def all_albums():
     }
 
 @album_routes.route("/new", methods=["POST"])
+@login_required
 def create_album():
     song_pass_valid = []
     song_fail_valid = []
 
-    #post songs
-    # for song in request.form["songs"]:
-    #     #validate song
-    #     #if song validation fails, add that to a validations error list
-    #     #post each song
-    #     #add each song to list
-    #     pass
-    
+    form_data = json.loads(request.data)
+    user = User.query.get(current_user.id)
 
+    #post songs
+    for song in form_data["songs"]:
+        #validate song
+        #if song validation fails, add that to a validations error list
+        #post each song
+        #add each song to list
+        pass
+    
+    # should any songs fail validation, send the list back and dont create an album
+    if len(song_fail_valid):
+        return json.dumps(song_fail_valid), 400
 
     form = AlbumForm()
     form['csrf_token'].data = request.cookies['csrf_token']
@@ -42,7 +49,12 @@ def create_album():
             title=form.data["title"],
             album_pic=form.data["album_pic"],
             body=form.data["body"],
-            user=None,
-            release_date=form.data["release_date"],
+            user=user,
+            release_date=dt.strptime(form.data["release_date"], "%Y-%m-%d"),
+            songs=song_pass_valid
         )
-    return form.errors, 401    
+        
+        db.session.add(payload)
+        db.session.commit()
+        return { "album": payload.toDict() }, 200
+    return { "errors": form.errors }, 401    

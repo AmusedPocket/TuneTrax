@@ -1,22 +1,23 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom";
 import { thunkAddAlbum } from "../../redux/album"
 import { thunkAddPlaylist } from "../../redux/playlist"
 
-function CreateSet() {
+function CreateSet({ setData }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const [errors, setErrors] = useState({});
     const [validation, setValidation] = useState({});
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
 
-    const [songs, setSongs] = useState([]);
-    const [albumImg, setAlbumImg] = useState();
-    const [title, setTitle] = useState();
-    const [type, setType] = useState();
-    const [releaseDate, setReleaseDate] = useState();
-    const [genre, setGenre] = useState();
-    const [description, setDescription] = useState();
+    const [songs, setSongs] = useState(setData ? setData.songs : []);
+    const [albumImg, setAlbumImg] = useState(setData ? setData.albumImg : "No Image");
+    const [title, setTitle] = useState(setData ? setData.title : "");
+    const [type, setType] = useState(setData ? setData.type : "Album");
+    const [releaseDate, setReleaseDate] = useState(setData ? setData.releaseDate : "");
+    const [description, setDescription] = useState(setData ? setData.description : "");
     const [privacy, setPrivacy] = useState(false);
 
     function onImageChange(e) {
@@ -43,10 +44,10 @@ function CreateSet() {
             album_pic: albumImg,
             body: description,
             privacy,
-            genre,
             release_date: releaseDate,
             songs,
         }
+        console.log("This is the page payload: ", payload)
         const response = await dispatch("Album" == type ? 
                                     thunkAddAlbum(payload) : 
                                     thunkAddPlaylist(payload));
@@ -62,7 +63,7 @@ function CreateSet() {
         }
 
         // Successful Submission
-        navigate(`/groups/${response.id}`);
+        navigate(`/albums/${response.id}`);
     }
     
     return (
@@ -117,27 +118,7 @@ function CreateSet() {
                                 />
                             {validation.releaseDate && <span>{validation.releaseDate}</span>}
                         </label>
-                    </div>
-                        <label>
-                            Genre 
-                            <select
-                                type="select"
-                                value={genre}
-                                onChange={(e) => setGenre(e.target.value)}
-                                >
-                                <option value="None" defaultValue>None</option>
-                                <option value="Electronic">Electronic</option>
-                                <option value="Rock">Rock</option>
-                                <option value="Pop">Pop</option>
-                                <option value="Alternative">Alternative</option>
-                                <option value="Hauntology">Hauntology</option>
-                                <option value="Classical">Classical</option>
-                                <option value="Indie">Indie</option>
-                                <option value="Rap">Rap</option>
-                                <option value="Country">Country</option>
-                                <option value="Metal">Metal</option>
-                            </select>
-                        </label>
+                    </div> 
                     <label>
                         Description
                         <textarea

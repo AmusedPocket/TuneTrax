@@ -7,18 +7,18 @@ function AlbumPage() {
     const { albumId } = useParams();
     const dispatch = useDispatch();
     const album = useSelector(selectSingleAlbum(albumId));
-    console.log(album, albumId)
 
     useEffect(() => {
         dispatch(thunkGetAlbum(albumId));
     }, [dispatch, albumId])
 
     function calcDateSince(release_date){
-        const timeSince = new Date("2024-02-19") - new Date(release_date);
+        const timeSince = new Date() - new Date(release_date);
         const oneDay = 60 * 60 * 24 * 1000;
         const oneMonth = oneDay * 31;
         const oneYear = oneDay * 365;
 
+        if (timeSince < oneDay) return "today"
         if (timeSince < oneMonth) return `${Math.floor(timeSince / oneDay)} day${timeSince/oneDay >= 2 ? "s":""} ago`;
         if (timeSince < oneYear) return `${Math.floor(timeSince / oneMonth)} month${timeSince/oneMonth >= 2 ? "s":""} ago`;
         return `${Math.floor(timeSince / oneYear)} year${timeSince/oneYear >= 2 ? "s":""} ago`;
@@ -39,11 +39,12 @@ function AlbumPage() {
 
     function firstEightLikedPFP(likes) {
         let res = [];
-        for (let i = 0; i < Math.min(likes.length, 8); i++)
+        for (let i = 0; i < Math.min(likes?.length, 8); i++)
             res.push(likes[i]);
         return res;
     }
 
+    console.log(album)
     if (!album) return<>not hello</>;
     return (
         <>
@@ -58,6 +59,7 @@ function AlbumPage() {
                             </div>
                         </div>
                         <div>
+                            <span>released:</span>
                             <span>{calcDateSince(album.release_date)}</span>
                             <div>
                                 {calcSongGenres(album.songs).map(genre => <span key={genre}>#{genre}</span>)}
@@ -67,7 +69,7 @@ function AlbumPage() {
                     <div> {/* bottom */}
                         {/* if not played */}
                         <div>
-                            <span>{album.songs.length}</span>
+                            <span>{album.songs?.length}</span>
                             <span>TRACKS</span>
                             {/* TODO song length */}
                         </div>
@@ -87,7 +89,7 @@ function AlbumPage() {
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>
-                            <a>{album.likes.length}</a>
+                            <a>{album.likes?.length}</a>
                         </div>
                     </div>
                     <div> {/* bottom */}
@@ -97,7 +99,7 @@ function AlbumPage() {
                             {/* TODO: route to user page */} <NavLink>{album.user.username}</NavLink>
                             <div>
                                 <NavLink>{album.user.follows}</NavLink>
-                                <NavLink>{album.user.songs.length}</NavLink>
+                                <NavLink>{album.user.songs?.length}</NavLink>
                             </div>
                             <button>Follow</button>
                         </div>
@@ -149,7 +151,7 @@ function AlbumPage() {
                     </div>
                     <div>
                         <div>
-                            <span>{album.likes.length} likes</span>
+                            <span>{album.likes?.length} likes</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
                         {firstEightLikedPFP(album.likes).map(like_user => (

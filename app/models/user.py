@@ -23,6 +23,15 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
+    def toDictAlbum(self):
+        return {
+            "id":self.id,
+            "username":self.username,
+            "profile_pic":self.profile_pic,
+            "follows":self.followers.count()
+        }
+
+
     def toDictLimited(self):
         return {
             "id":self.id,

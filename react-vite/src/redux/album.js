@@ -53,6 +53,7 @@ export const thunkGetAlbums = () => async (dispatch)=> {
 }
 
 export const thunkAddAlbum = (album) => async (dispatch)=> {
+    console.log("Im the JSON: ",JSON.stringify(album))
     const res = await fetch("/api/albums/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,6 +63,7 @@ export const thunkAddAlbum = (album) => async (dispatch)=> {
     if (res.ok) {
         const { album } = await res.json();
         dispatch(addAlbum(album));
+        console.log(album.id);
         return album;
     }
     const data = await res.json();
