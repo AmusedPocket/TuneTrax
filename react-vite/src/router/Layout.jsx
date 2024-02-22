@@ -20,8 +20,9 @@ export default function Layout() {
         <Navigation />
         {isLoaded && <Outlet />}
         <Modal />
+        <Footer />
       </ModalProvider>
-      <Footer />
+      
     </>
   );
 }
