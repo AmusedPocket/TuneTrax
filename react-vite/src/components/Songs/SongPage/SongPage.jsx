@@ -13,34 +13,32 @@ const SongPage = () => {
     useEffect(() => {
         dispatch(thunkGetSong(songId))
     }, [dispatch, songId])
-    
+
     const song = useSelector((state)=>state.songs)
 
     const songComments = song.songs.comments
     if(!songComments){
         return null;
     }
-    
+    // console.log("songComments", songComments)
+
     const userId = song.songs.comments
 
-    console.log("user id is", userId)
-  
+    // console.log("user id is", userId)
+
     const displayComments = songComments.map((comment) => {
-        return <h1>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h1>
+        return <h2 key={comment.id}>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h2>
     })
-    
+
 
     return (
-        <>  
-            <SongPlayer />          
+        <h1>
             {song.songs.title}
             {/* {song.songs.user.username} */}
             {song.songs.created_at}
-            <p>#{song.songs.genre}</p>
-            <p>{displayComments}</p>
-        
-        
-        </>
+            <span>#{song.songs.genre}</span>
+            <span>{displayComments}</span>
+        </h1>
     )
 }
 
