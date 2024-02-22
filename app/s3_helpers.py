@@ -58,9 +58,3 @@ def remove_file_from_s3(image_url):
     except Exception as e:
         return { "errors": str(e) }
     return True
-
-
-
-class SongForm(FlaskForm):
-    song = FileField("Song File", validators=[FileRequired(), FileAllowed(list(ALLOWED_EXTENSIONS))])
-    submit = SubmitField("Create Post")
