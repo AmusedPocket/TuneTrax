@@ -1,12 +1,16 @@
 import { useDispatch, useSelector } from "react-redux"
 import { selectSingleAlbum, thunkGetAlbum } from "../../redux/album";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import DeleteAlbumModal from "../DeleteAlbumModal";
 
 function AlbumPage() {
     const { albumId } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const album = useSelector(selectSingleAlbum(albumId));
+    const sessionUser = useSelector(state => state.session.user);
 
     useEffect(() => {
         dispatch(thunkGetAlbum(albumId));
@@ -44,8 +48,12 @@ function AlbumPage() {
         return res;
     }
 
-    console.log(album)
-    if (!album) return<>not hello</>;
+    if (!album) return(
+        <>
+            <h1>This album doesn&apos;t exist...</h1>
+            <h5>sad noot noot</h5>
+        </>
+    );
     return (
         <>
             <div>{/* head container */}
@@ -85,7 +93,16 @@ function AlbumPage() {
                         <div>
                             <button>like</button>
                             <button>share</button>
+                            {album.user.id == sessionUser?.id && <button onClick={() => navigate(`/albums/${album.id}/edit`)}>edit</button>}
                             <button>copy link</button>
+                            {album.user.id == sessionUser?.id && 
+                                <button>
+                                    <OpenModalMenuItem
+                                        itemText="delete"
+                                        modalComponent={<DeleteAlbumModal albumId={albumId} navigate={navigate} />}
+                                    />
+                                </button>
+                            }
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>

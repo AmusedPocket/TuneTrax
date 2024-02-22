@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom";
-import { thunkAddAlbum } from "../../redux/album"
+import { thunkAddAlbum, thunkUpdateAlbum } from "../../redux/album"
 import { thunkAddPlaylist } from "../../redux/playlist"
 
-function CreateSet({ setData }) {
+function CreateSet({ editedSet }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [errors, setErrors] = useState({});
@@ -12,12 +12,12 @@ function CreateSet({ setData }) {
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
 
-    const [songs, setSongs] = useState(setData ? setData.songs : []);
-    const [albumImg, setAlbumImg] = useState(setData ? setData.albumImg : "No Image");
-    const [title, setTitle] = useState(setData ? setData.title : "");
-    const [type, setType] = useState(setData ? setData.type : "Album");
-    const [releaseDate, setReleaseDate] = useState(setData ? setData.releaseDate : "");
-    const [description, setDescription] = useState(setData ? setData.description : "");
+    const [songs, setSongs] = useState(editedSet ? editedSet.songs : []);
+    const [albumImg, setAlbumImg] = useState(editedSet ? editedSet.image : "No Image");
+    const [title, setTitle] = useState(editedSet ? editedSet.title : "");
+    const [type, setType] = useState(editedSet ? editedSet.type : "Album");
+    const [releaseDate, setReleaseDate] = useState(editedSet ? editedSet.release_date : "");
+    const [description, setDescription] = useState(editedSet ? editedSet.body : "");
     const [privacy, setPrivacy] = useState(false);
 
     function onImageChange(e) {
@@ -47,10 +47,12 @@ function CreateSet({ setData }) {
             release_date: releaseDate,
             songs,
         }
-        console.log("This is the page payload: ", payload)
+
+        if (editedSet) payload.id = editedSet.id;
+
         const response = await dispatch("Album" == type ? 
-                                    thunkAddAlbum(payload) : 
-                                    thunkAddPlaylist(payload));
+                                    (editedSet ? thunkUpdateAlbum(payload) : thunkAddAlbum(payload)) : 
+                                    (editedSet ? thunkUpdate(payload) : thunkAddAlbum(payload)));
 
         // Unsuccessful Submission
         if (response.message === "Bad Request") { 
@@ -99,7 +101,7 @@ function CreateSet({ setData }) {
                     </label>
                     <div>
                         <label>
-                            Album type 
+                            Set type 
                             <select
                                 type="select"
                                 value={type}

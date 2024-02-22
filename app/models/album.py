@@ -25,7 +25,7 @@ class Album(db.Model):
             "user":self.user.toDictLimited(),
             "songs":[song.toDictLimited() for song in self.songs],
             "likes":[user.toDictLimited() for user in self.likes],
-            "release_date":self.release_date,
+            "release_date":self.release_date.strftime("%Y-%m-%d"),
             "created_at":self.created_at,
             "updated_at":self.updated_at,
         }
@@ -35,7 +35,7 @@ class Album(db.Model):
             "id":self.id,
             "title":self.title,
             "album_pic":self.album_pic,
-            "release_date":self.release_date,
+            "release_date":self.release_date.strftime("%Y-%m-%d"),
             "user":self.user.toDictAlbum(),
             "songs":[song.toDictLimited() for song in self.songs],
         }

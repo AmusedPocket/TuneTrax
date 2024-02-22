@@ -20,8 +20,16 @@ export const putPlaylist = (playlist) => ({
 })
 
 
+export const thunkAddPlaylist = (playlist) => async (dispatch) => {
+     
+}
+
+export const thunkUpdatePlaylist = (playlist) => async (dispatch) => {
+     
+}
+
 // Thunk Post
-export const ThunkPostLike = (playlistId) => async(dispatch) => {
+export const thunkPostLike = (playlistId) => async(dispatch) => {
      const res = await fetch (`/api/playlists/${playlistId}/like`, {
           method: 'POST',
           headers: {
@@ -44,7 +52,7 @@ export const ThunkPostLike = (playlistId) => async(dispatch) => {
 
 
 // Thunk Put
-export const ThunkPutPlaylist = (updateplaylist, playlistId) => async (dispatch) => {
+export const thunkPutPlaylist = (updateplaylist, playlistId) => async (dispatch) => {
      const { title, playlistPic } = updateplaylist;
 
      const res = await fetch(`/api/playlists/${playlistId}`, {

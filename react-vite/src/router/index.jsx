@@ -4,6 +4,7 @@ import SignupFormPage from '../components/SignupFormPage';
 import AlbumPage from '../components/AlbumPage';
 import Layout from './Layout';
 import CreateSet from '../components/CreateSet';
+import UpdateAlbum from '../components/UpdateAlbum';
 import AllSongs from '../components/Songs/AllSongs/allsongs';
 import SongPage from '../components/Songs/SongPage/SongPage';
 
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: "albums/:albumId",
         element: <AlbumPage />,
+      },
+      {
+        path: "albums/:albumId/edit",
+        element: <UpdateAlbum />,
       },
       {
         path: "albums/new",

@@ -1,9 +1,11 @@
 import { createSelector } from "reselect";
 import { normalizeObj } from "./helpers";
+import { thunkGetSongs } from "./song";
 
 const GET_ALBUM= 'album/GET_ALBUM';
 const GET_ALBUMS= 'album/GET_ALBUMS';
 const ADD_ALBUM= 'album/ADD_ALBUM';
+const DELETE_ALBUM= 'album/DELETE_ALBUM';
 
 // Custom Selectors
 export const selectSingleAlbum = (id) => createSelector(
@@ -27,8 +29,14 @@ export const addAlbum = (album) => ({
     payload: album
 })
 
+export const deleteAlbum = (albumId) => ({
+    type: DELETE_ALBUM,
+    payload: albumId
+})
+
 // Thunks
 export const thunkGetAlbum = (albumId) => async (dispatch)=> {
+    if (!albumId) return; 
     const res = await fetch(`/api/albums/${albumId}`);
 
     if (res.ok) {
@@ -53,7 +61,6 @@ export const thunkGetAlbums = () => async (dispatch)=> {
 }
 
 export const thunkAddAlbum = (album) => async (dispatch)=> {
-    console.log("Im the JSON: ",JSON.stringify(album))
     const res = await fetch("/api/albums/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,7 +70,37 @@ export const thunkAddAlbum = (album) => async (dispatch)=> {
     if (res.ok) {
         const { album } = await res.json();
         dispatch(addAlbum(album));
-        console.log(album.id);
+        return album;
+    }
+    const data = await res.json();
+    if(data.errors) return data;
+}
+
+export const thunkUpdateAlbum = (album) => async (dispatch)=> {
+    const res = await fetch(`/api/albums/${album.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(album)
+    });
+
+    if (res.ok) {
+        const { album } = await res.json();
+        dispatch(addAlbum(album));
+        return album;
+    }
+    const data = await res.json();
+    if(data.errors) return data;
+}
+
+export const thunkDeleteAlbum = (albumId) => async (dispatch)=> {
+    const res = await fetch(`/api/albums/${albumId}`, {
+        method: "DELETE"
+    });
+
+    if (res.ok) {
+        const { album } = await res.json();
+        dispatch(deleteAlbum(albumId));
+        dispatch(thunkGetSongs());
         return album;
     }
     const data = await res.json();
@@ -85,6 +122,10 @@ const albumReducer = (state = initialState, action)=> {
         case ADD_ALBUM:
             newState = {...state}
             newState[action.payload.id] = action.payload
+            return newState;
+        case DELETE_ALBUM:
+            newState = {...state};
+            delete newState[action.payload];
             return newState;
         default:
             return state;
