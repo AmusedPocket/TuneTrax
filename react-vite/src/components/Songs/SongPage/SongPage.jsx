@@ -19,7 +19,7 @@ const SongPage = () => {
     const song = useSelector((state)=>state.songs.songs[songId])
     
 
-    if(!song) return;
+    if(!song) return "this is breaking it";
 
     // console.log("user id is", userId)
     const songComments = song.comments
