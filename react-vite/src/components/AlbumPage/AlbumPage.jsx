@@ -148,7 +148,7 @@ function AlbumPage() {
                                     <span>Album &bull; {new Date(new_album.release_date).getFullYear()}</span>
                                 </div>
                             </div>
-                        ) : (<></>))}
+                        ) : (null))}
                     </div>
                     <div>
                         <div>
