@@ -108,7 +108,7 @@ export const thunkDeleteAlbum = (albumId) => async (dispatch)=> {
 }
 
 // Reducer
-const initialState = {  }
+const initialState = {};
 const albumReducer = (state = initialState, action)=> {
     let newState;
     switch (action.type){

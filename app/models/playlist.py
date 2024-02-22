@@ -10,9 +10,25 @@ class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     playlist_pic = db.Column(db.String(255))
+    body = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
+    release_date = db.Column(db.Date)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+
+    def toDict(self):
+        return {
+            "id":self.id,
+            "title":self.title,
+            "playlist_pic":self.playlist_pic,
+            "body":self.body,
+            "user":self.user.toDictLimited(),
+            "songs":[song.toDictLimited() for song in self.songs],
+            "likes":[user.toDictLimited() for user in self.likes],
+            "release_date":self.release_date.strftime("%Y-%m-%d"),
+            "created_at":self.created_at,
+            "updated_at":self.updated_at,
+        }
 
     def toDictLimited(self):
         return {
@@ -20,7 +36,18 @@ class Playlist(db.Model):
             "title":self.title,
             "playlist_pic":self.playlist_pic,
             "num_likes":len(self.likes),
-            "created_at":self.created_at
+            "created_at":self.created_at,
+            "updated_at":self.updated_at,
+        }
+
+    def playlist_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "playlist_pic": self.playlist_pic,
+            "user_id": self.user_id,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
         }
     
     # RELATIONSHIPS: 
@@ -42,13 +69,3 @@ class Playlist(db.Model):
         "User",
         back_populates="playlists"
     )
-
-    def playlist_dict(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "playlist_pic": self.playlist_pic,
-            "user_id": self.user_id,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-        }

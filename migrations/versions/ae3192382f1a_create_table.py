@@ -1,8 +1,8 @@
-"""create tables
+"""create table
 
-Revision ID: 57ecb1a8fe31
+Revision ID: ae3192382f1a
 Revises: 
-Create Date: 2024-02-19 22:01:40.693461
+Create Date: 2024-02-22 11:05:12.587734
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '57ecb1a8fe31'
+revision = 'ae3192382f1a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -40,7 +40,7 @@ def upgrade():
     sa.Column('album_pic', sa.String(length=255), nullable=True),
     sa.Column('body', sa.Text(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('release_date', sa.Date(), nullable=True),
+    sa.Column('release_date', sa.Date(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
@@ -56,7 +56,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=255), nullable=False),
     sa.Column('playlist_pic', sa.String(length=255), nullable=True),
+    sa.Column('body', sa.Text(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('release_date', sa.Date(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate, useParams } from "react-router-dom";
-import { selectSingleAlbum, thunkUpdateAlbum, thunkGetAlbum } from "../../redux/album"
-import { thunkAddPlaylist } from "../../redux/playlist"
+import { useParams } from "react-router-dom";
+import { selectSingleAlbum, thunkGetAlbum } from "../../redux/album"
 import CreateSet from "../CreateSet";
 
 function UpdateAlbum() {

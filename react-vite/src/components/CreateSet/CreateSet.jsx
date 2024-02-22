@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { thunkAddAlbum, thunkUpdateAlbum } from "../../redux/album"
-import { thunkAddPlaylist } from "../../redux/playlist"
+import { thunkAddPlaylist, thunkUpdatePlaylist } from "../../redux/playlist"
 
 function CreateSet({ editedSet }) {
     const dispatch = useDispatch();
@@ -52,20 +52,19 @@ function CreateSet({ editedSet }) {
 
         const response = await dispatch("Album" == type ? 
                                     (editedSet ? thunkUpdateAlbum(payload) : thunkAddAlbum(payload)) : 
-                                    (editedSet ? thunkUpdate(payload) : thunkAddAlbum(payload)));
+                                    (editedSet ? thunkUpdatePlaylist(payload) : thunkAddPlaylist(payload)));
 
         // Unsuccessful Submission
-        if (response.message === "Bad Request") { 
-            setErrors({
-                message: response.message,
-                errors: {...response.errors}
-            });
+        if (response.errors) { 
+            setErrors(Object.keys(response.errors).reduce((acc, errKey) => 
+                acc[errKey] = response.errors[errKey], {}));
             setDisabled(false);
             return;
         }
 
         // Successful Submission
-        navigate(`/albums/${response.id}`);
+        console.log(response);
+        navigate(`/${"Album" == type ? "albums" : "playlists"}/${response.id}`);
     }
     
     return (

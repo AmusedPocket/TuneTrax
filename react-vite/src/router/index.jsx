@@ -7,6 +7,8 @@ import CreateSet from '../components/CreateSet';
 import UpdateAlbum from '../components/UpdateAlbum';
 import AllSongs from '../components/Songs/AllSongs/allsongs';
 import SongPage from '../components/Songs/SongPage/SongPage';
+import PlaylistPage from '../components/PlaylistPage';
+import UpdatePlaylist from '../components/UpdatePlaylist';
 
 export const router = createBrowserRouter([
   {
@@ -33,7 +35,15 @@ export const router = createBrowserRouter([
         element: <UpdateAlbum />,
       },
       {
-        path: "albums/new",
+        path: "playlists/:playlistId",
+        element: <PlaylistPage />,
+      },
+      {
+        path: "playlists/:playlistId/edit",
+        element: <UpdatePlaylist />,
+      },
+      {
+        path: "set/new",
         element: <CreateSet />,
       },
       {
