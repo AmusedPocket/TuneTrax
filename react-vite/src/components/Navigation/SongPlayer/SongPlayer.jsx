@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { thunkGetSong } from "../../../redux/song";
 import "./SongPlayer.css"
+import { useSongContext } from "../../../context/SongPlayerContext";
 
 const SongPlayer = () => {
   const { songId } = useParams();
   const dispatch = useDispatch();
+  const {songs, setSongs, songTime, setSongTime} = useSongContext()
 
   useEffect(() => {
     dispatch(thunkGetSong(songId));
@@ -19,7 +21,7 @@ const SongPlayer = () => {
   return (
     <div className="react-h5-audio-player">
       <AudioPlayer
-        autoPlay
+        // autoPlay
         volume={0.1}
         showFilledVolume={true}
         showFilledProgress={true}

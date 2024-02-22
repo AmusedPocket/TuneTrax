@@ -18,4 +18,4 @@ album_likes = db.Table(
 )
 
 if environment == "production":
-    album_songs.schema = SCHEMA
+    album_likes.schema = SCHEMA
