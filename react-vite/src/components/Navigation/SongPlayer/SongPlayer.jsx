@@ -19,7 +19,8 @@ const SongPlayer = () => {
   return (
     <div className="react-h5-audio-player">
       <AudioPlayer
-        volume
+        autoPlay
+        volume={0.1}
         showFilledVolume={true}
         showFilledProgress={true}
         progressUpdateInterval={100}

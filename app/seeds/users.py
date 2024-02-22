@@ -32,7 +32,7 @@ def seed_users():
 
     for user in all_users:
         following = sample(all_users, randint(1, 4))
-        
+
         try:
             remove = following.index(user)
             following.pop(remove)
@@ -40,7 +40,7 @@ def seed_users():
             pass
 
         user.following = following
-    
+
     db.session.add_all(all_users)
     db.session.commit()
     return all_users
@@ -58,5 +58,5 @@ def undo_users():
         db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
     else:
         db.session.execute(text("DELETE FROM users"))
-    db.session.execute(text("DELETE FROM follows"))    
+    db.session.execute(text("DELETE FROM follows"))
     db.session.commit()
