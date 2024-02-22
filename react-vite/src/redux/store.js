@@ -6,9 +6,17 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import sessionReducer from "./session";
+import userReducer from "./user";
+import songReducer from "./song";
+import playlistReducer from "./playlist";
+import albumReducer from "./album";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
+  users: userReducer,
+  songs: songReducer,
+  playlists: playlistReducer,
+  albums: albumReducer,
 });
 
 let enhancer;
