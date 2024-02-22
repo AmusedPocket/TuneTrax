@@ -3,10 +3,10 @@ from datetime import datetime
 
 class Album(db.Model):
     __tablename__ = 'albums'
-    
+
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
-    
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     album_pic = db.Column(db.String(255), default="No Image")
@@ -16,7 +16,7 @@ class Album(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    # RELATIONSHIPS: 
+    # RELATIONSHIPS:
     # Many to Many
     songs = db.relationship(
         "Song",
@@ -34,3 +34,15 @@ class Album(db.Model):
         "User",
         back_populates="albums"
     )
+
+    def album_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "album_pic": self.album_pic,
+            "body": self.body,
+            "user_id": self.user_id,
+            "release_date": self.release_date,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
