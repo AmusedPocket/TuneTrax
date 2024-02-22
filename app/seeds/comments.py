@@ -1,4 +1,4 @@
-from app.models import Comment, db
+from app.models import Comment, db, environment, SCHEMA
 from sqlalchemy.sql import text
 from random import sample, randint
 
@@ -292,8 +292,14 @@ def comment_seeds(all_users, all_songs):
     db.session.commit()
 
 def undo_comment_seeds():
-    db.session.execute(text("DELETE FROM comments"))
-    db.session.execute(text("DELETE FROM comment_likes"))
+
+    if environment == "production":
+        db.session.execute(f"TRUNCATE table {SCHEMA}.comments RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.comment_likes RESTART IDENTITY CASCADE;")
+    else:
+        db.session.execute(text("DELETE FROM comments"))
+        db.session.execute(text("DELETE FROM comment_likes"))    
+   
     db.session.commit()
 
 
