@@ -10,10 +10,14 @@ const SongPlayer = () => {
   const { songId } = useParams();
   const dispatch = useDispatch();
   const {songs, setSongs, songTime, setSongTime} = useSongContext()
+  
+  
 
   useEffect(() => {
     dispatch(thunkGetSong(songId));
   }, [dispatch, songId]);
+
+
 
   const song = useSelector((state) => state.songs);
   // const song_like = song.songs.song_link
@@ -25,8 +29,9 @@ const SongPlayer = () => {
         volume={0.1}
         showFilledVolume={true}
         showFilledProgress={true}
+        onListen={(e) => setSongTime(e.target.currentTime)}
         progressUpdateInterval={100}
-        src={songs[0]?.song_link}
+        src={songs && songs[0]?.songLink}
         onPlay={(e) => console.log("onPlay")}
         // onListen={true}
       />
