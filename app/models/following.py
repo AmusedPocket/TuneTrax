@@ -16,4 +16,4 @@ follows = db.Table(
 )
 
 if environment == "production":
-    following.schema = SCHEMA
+    follows.schema = SCHEMA

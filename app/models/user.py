@@ -30,7 +30,7 @@ class User(db.Model, UserMixin):
         secondary="follows",
         primaryjoin=(follows.c.follower_id == id),
         secondaryjoin=(follows.c.user_id == id),
-        backref=db.backref("following", lazy="dynamic"),
+        backref=db.backref("follows", lazy="dynamic"),
         lazy="dynamic"
     )
     user_liked_songs = db.relationship(
