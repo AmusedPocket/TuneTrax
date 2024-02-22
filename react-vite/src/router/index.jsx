@@ -4,6 +4,8 @@ import SignupFormPage from '../components/SignupFormPage';
 import AlbumPage from '../components/AlbumPage';
 import Layout from './Layout';
 import CreateSet from '../components/CreateSet';
+import AllSongs from '../components/Songs/AllSongs/allsongs';
+import SongPage from '../components/Songs/SongPage/SongPage';
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ export const router = createBrowserRouter([
         path: "albums/new",
         element: <CreateSet />,
       },
+      {
+        path: "songs",
+        element: <AllSongs />
+      },
+      {
+        path: "songs/:songId",
+        element: <SongPage />
+      }
     ],
   },
 ]);

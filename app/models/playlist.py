@@ -3,10 +3,10 @@ from datetime import datetime
 
 class Playlist(db.Model):
     __tablename__ = 'playlists'
-    
+
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
-    
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     playlist_pic = db.Column(db.String(255))
@@ -22,6 +22,7 @@ class Playlist(db.Model):
             "num_likes":len(self.likes),
             "created_at":self.created_at
         }
+    
     # RELATIONSHIPS: 
     # Many to Many
     songs = db.relationship(
@@ -41,3 +42,13 @@ class Playlist(db.Model):
         "User",
         back_populates="playlists"
     )
+
+    def playlist_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "playlist_pic": self.playlist_pic,
+            "user_id": self.user_id,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+        }
