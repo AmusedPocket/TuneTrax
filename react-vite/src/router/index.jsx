@@ -9,6 +9,7 @@ import AllSongs from '../components/Songs/AllSongs/allsongs';
 import SongPage from '../components/Songs/SongPage/SongPage';
 import PlaylistPage from '../components/PlaylistPage';
 import UpdatePlaylist from '../components/UpdatePlaylist';
+import CreateSong from '../components/Songs/CreateSong';
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
       {
         path: "songs/:songId",
         element: <SongPage />
+      },
+      {
+        path: "songs/new",
+        element: <CreateSong />
       }
     ],
   },

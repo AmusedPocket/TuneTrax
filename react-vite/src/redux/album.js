@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { normalizeObj } from "./helpers";
-import { thunkGetSongs } from "./song";
+import { thunkClearAlbumSongs, thunkGetSongs } from "./song";
 
 const GET_ALBUM= 'album/GET_ALBUM';
 const GET_ALBUMS= 'album/GET_ALBUMS';
@@ -69,6 +69,7 @@ export const thunkAddAlbum = (album) => async (dispatch)=> {
 
     if (res.ok) {
         const { album } = await res.json();
+        dispatch(thunkClearAlbumSongs());
         dispatch(addAlbum(album));
         return album;
     }
