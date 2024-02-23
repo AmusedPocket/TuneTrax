@@ -27,9 +27,11 @@ def playlist_seed_data(all_users, all_songs):
 
 def undo_playlists():
     if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.playlists RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.playlist_likes RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.playlist_songs RESTART IDENTITY CASCADE;")
     else:
         db.session.execute(text("DELETE FROM playlists"))
-    db.session.execute(text("DELETE FROM playlist_likes"))    
-    db.session.execute(text("DELETE FROM playlist_songs"))    
+        db.session.execute(text("DELETE FROM playlist_likes"))    
+        db.session.execute(text("DELETE FROM playlist_songs"))    
     db.session.commit()

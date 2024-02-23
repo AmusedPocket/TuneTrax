@@ -39,7 +39,7 @@ def seed_users():
         except:
             pass
 
-        user.following = following
+        user.followers = following
 
     db.session.add_all(all_users)
     db.session.commit()
@@ -56,7 +56,8 @@ def seed_users():
 def undo_users():
     if environment == "production":
         db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.follows RESTART IDENTITY CASCADE;")
     else:
         db.session.execute(text("DELETE FROM users"))
-    db.session.execute(text("DELETE FROM follows"))
+        db.session.execute(text("DELETE FROM follows"))
     db.session.commit()
