@@ -223,7 +223,7 @@ const songReducer = (state=initialState, action) => {
     switch(action.type) {
         case GET_SONG:
             newState = {...state};
-            newState.songs = action.payload;
+            newState.songs[action.payload.id] = action.payload;
             return newState;
         case GET_SONGS:
             newState = {...state};
