@@ -28,7 +28,7 @@ const EditComment = ({comment}) => {
     return (
         <>
         <form onSubmit={submitEdit}>
-            <textarea 
+            <textarea
             value={commentText}
             placeholder=""
             onChange={(e)=> setCommentText(e.target.value)}

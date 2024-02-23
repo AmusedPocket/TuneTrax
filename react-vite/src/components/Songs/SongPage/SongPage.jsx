@@ -8,6 +8,7 @@ import CreateComment from "../../Comments/CreateComment/CreateComment";
 import { thunkPostComment } from "../../../redux/song";
 import OpenModalButton from "../../OpenModalButton/OpenModalButton";
 import EditComment from "../../Comments/EditComment/EditComment";
+import DeleteComment from "../../Comments/DeleteComment/DeleteComment";
 
 const SongPage = () => {
     const { songId } = useParams()
@@ -17,17 +18,17 @@ const SongPage = () => {
     const [errors, setErrors] = useState([])
     const {songTime} = useSongContext()
     const [enabaleManage, setEnableManage] = useState(false)
-    
+
     const user = useSelector(state => state.session.user)
 
     console.log("user is:", user.id)
-    
-    
+
+
     useEffect(() => {
         dispatch(thunkGetSong(songId))
     }, [dispatch, songId])
 
-    
+
 
     const song = useSelector((state) => state.songs.songs[songId])
     // console.log("song commentssssssssssssssssssss =====>>>>", songComments)
@@ -37,7 +38,7 @@ const SongPage = () => {
     // console.log("user id is", userId)
     const songComments = song.comments
 
-    
+
 
 
     function PlaySong() {
@@ -94,9 +95,12 @@ const SongPage = () => {
                         {(comment.user.id === user.id) &&
                         <OpenModalButton
                         buttonText="Manage Comment"
-                        modalComponent={<EditComment comment={comment}/>}
-                        />
-                        }
+                        modalComponent={<EditComment comment={comment} songComments={songComments}/>}
+                        />}
+                        {(comment.user.id === user.id) &&<OpenModalButton
+                        buttonText="Delete Comment"
+                        modalComponent={<DeleteComment comment={comment}/>}
+                        />}
                     </span>
                 </>
             })}</span>
@@ -111,7 +115,7 @@ const SongPage = () => {
                 <input type="submit"/>
             </form>
         </h1>
- 
+
 
     )
 }
