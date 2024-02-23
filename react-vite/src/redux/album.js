@@ -19,9 +19,9 @@ export const getAlbum = (album) => ({
     payload: album
 })
 
-export const getAlbums = (album) => ({
+export const getAlbums = (albums) => ({
     type: GET_ALBUMS,
-    payload: album
+    payload: albums
 })
 
 export const addAlbum = (album) => ({
@@ -52,9 +52,9 @@ export const thunkGetAlbums = () => async (dispatch)=> {
     const res = await fetch(`/api/albums/`);
 
     if (res.ok) {
-        const { album } = await res.json();
-        dispatch(getAlbums(album));
-        return album;
+        const { albums } = await res.json();
+        dispatch(getAlbums(albums));
+        return albums;
     }
     const data = await res.json();
     if(data.errors) return data;

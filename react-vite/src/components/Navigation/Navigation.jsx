@@ -7,9 +7,12 @@ function Navigation() {
     <ul>
       <li>
         <NavLink to="/">Home</NavLink>
-        <NavLink to="/songs">Songs</NavLink>
-        <NavLink to="/songs/new">Upload Song</NavLink>
-        <NavLink to="/set/new">Upload Set</NavLink>
+      </li>
+      <li>
+        <NavLink to="/feed">Feed</NavLink>
+      </li>
+      <li>
+        <NavLink to="/set/new">Upload</NavLink>
       </li>
 
       <li>
