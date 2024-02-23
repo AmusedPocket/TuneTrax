@@ -163,7 +163,7 @@ def delete_song_comment(_id, c_id):
     return {"message": "Deleted successful"}
 
 # Edit a comment
-@song_routes.route('/<int:_id>/comments/<int:c_id>', methods=["PUT"])
+@song_routes.route('/<int:_id>/comments/<int:c_id>', methods=["POST"])
 @login_required
 def edit_song_comment(_id, c_id):
     """
@@ -172,9 +172,9 @@ def edit_song_comment(_id, c_id):
 
     comment = Comment.query.get(c_id)
     form = CommentForm()
-    if comment.user_id == current_user.id:
+    
+    if form.validate_on_submit() and comment.user_id == current_user.id:
         comment.comment = form.data['comment']
-        comment.song_time = form.data['song_time']
         comment.updated_at = datetime.utcnow()
         db.session.add(comment)
         db.session.commit()

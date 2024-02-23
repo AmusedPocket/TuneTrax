@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../../context/Modal";
 
 
-const EditComment = ({comment}) => {
+const EditComment = ({comment, songComments}) => {
     const [commentText, setCommentText] = useState(comment.comment)
     const songId = comment.song_id
     const dispatch = useDispatch()
@@ -12,16 +12,16 @@ const EditComment = ({comment}) => {
 
     console.log("songId is: ", songId)
 
+    
     const submitEdit = async (e) => {
         e.preventDefault();
         const edits = {
             comment: commentText
         }
 
-        const response = await dispatch(thunkEditComment(songId, edits))
-        if(response.ok){
-            await dispatch(thunkGetSong(songId))
-        }
+        await dispatch(thunkEditComment(songId, edits))
+        await dispatch(thunkGetSong(songId))
+     
         closeModal()
     }
 
