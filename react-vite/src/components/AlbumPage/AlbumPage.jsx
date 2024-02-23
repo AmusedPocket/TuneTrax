@@ -139,7 +139,7 @@ function AlbumPage() {
                             <span>Albums from this user</span>
                             {/* TODO: route to user page/albums */}<NavLink>View All</NavLink>
                         </div>
-                        {album.user.albums.map(new_album => new_album.id != album.id ? (
+                        {album.user.albums?.map(new_album => new_album.id != album.id ? (
                             <div key={new_album.id}>
                                 <img src={new_album.album_pic} alt={`${new_album.title} album image`}/>
                                 <div>
@@ -155,7 +155,7 @@ function AlbumPage() {
                             <span>Playlists from this user</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
-                        {album.user.playlists.map(playlist => (
+                        {album.user.playlists?.map(playlist => (
                             <div key={playlist.id}>
                                 <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
                                 <div>

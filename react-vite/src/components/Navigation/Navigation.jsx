@@ -8,6 +8,12 @@ function Navigation() {
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
+      <li>
+        <NavLink to="/feed">Feed</NavLink>
+      </li>
+      <li>
+        <NavLink to="/set/new">Upload</NavLink>
+      </li>
 
       <li>
         <ProfileButton />

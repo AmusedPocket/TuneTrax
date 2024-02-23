@@ -10,6 +10,8 @@ const POST_COMMENT = 'songs/POST_COMMENT';
 const DELETE_COMMENT = 'songs/DELETE_COMMENT';
 const EDIT_COMMENT = 'songs/EDIT_COMMENT';
 const ADD_LIKE = 'songs/ADD_LIKE';
+const POST_ALBUM_SONG = 'songs/POST_ALBUM_SONG';
+const CLEAR_ALBUM_SONGS = 'songs/CLEAR_ALBUM_SONGS';
 
 
 const getSong = (song) => ({
@@ -56,7 +58,16 @@ const addLike = () => ({
     type: ADD_LIKE
 })
 
+const postAlbumSongs = (song) => ({
+    type: POST_ALBUM_SONG,
+    payload: song
+})
 
+const clearAlbumSongs = () => ({
+    type: CLEAR_ALBUM_SONGS
+})
+
+// Thunks
 export const thunkGetSong = (songId) => async (dispatch) => {
     const response = await fetch(`/api/songs/${songId}`);
 
@@ -196,15 +207,26 @@ export const thunkAddLike = (songId) => async(dispatch) => {
     })
 }
 
+export const thunkPostAlbumSong = (song) => async(dispatch) => {
+    song = await dispatch(thunkPostSong(song));
 
-const initialState = { songs: {} }
+    dispatch(postAlbumSongs(song));
+    return song;
+}
+
+export const thunkClearAlbumSongs = () => async(dispatch) => {
+    dispatch(clearAlbumSongs());
+}
+
+
+const initialState = { songs: {}, postedAlbumSongs: {} }
 
 const songReducer = (state=initialState, action) => {
     let newState;
     switch(action.type) {
         case GET_SONG:
             newState = {...state};
-            newState.songs = action.payload;
+            newState.songs[action.payload.id] = action.payload;
             return newState;
         case GET_SONGS:
             newState = {...state};
@@ -217,10 +239,10 @@ const songReducer = (state=initialState, action) => {
             return {
                 ...state,
                 song: action.payload
-            }
+            };
         case DELETE_SONG:
-            newState.songs = { ...state.songs }
-            delete newState.songs[action.songId]
+            newState.songs = { ...state.songs };
+            delete newState.songs[action.songId];
             return newState;
         case POST_COMMENT:
             newState = { ...state }
@@ -228,11 +250,19 @@ const songReducer = (state=initialState, action) => {
             return newState;
         case DELETE_COMMENT:
             newState.songs = { ...state.songs }
-            delete newState.songs[action.songId.commentId]
-            return newState
+            delete newState.songs[action.songId.commentId];
+            return newState;
         case EDIT_COMMENT:
-            newState = { ...state, comment: action.comment }
-            return newState
+            newState = { ...state, comment: action.comment };
+            return newState;
+        case POST_ALBUM_SONG:
+            newState = { ...state };
+            newState.postedAlbumSongs[action.payload.id] = action.payload;
+            return newState;
+        case CLEAR_ALBUM_SONGS:
+            newState = { ...state };
+            newState.postedAlbumSongs = {};
+            return newState;
         default:
             return state;
     }

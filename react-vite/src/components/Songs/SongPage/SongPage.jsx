@@ -24,9 +24,6 @@ const SongPage = () => {
     // console.log("user id is", userId)
     const songComments = song.comments
 
-
-
-
     function PlaySong() {
         console.log("song is:", song)
         if (songs[0]?.songLink !== song.song_link) {
@@ -45,9 +42,6 @@ const SongPage = () => {
             element.play()
         }
     }
-
-
-
 
     return (
 
