@@ -1,4 +1,4 @@
-from app.models import Song, db
+from app.models import Song, db, environment, SCHEMA
 from sqlalchemy.sql import text
 from random import sample, randint
 
@@ -115,8 +115,12 @@ def song_seed_data(all_users):
     return all_songs
 
 def undo_song_seeds():
-    db.session.execute(text("DELETE FROM songs"))
-    db.session.execute(text("DELETE FROM song_likes"))
+    if environment == "production":
+        db.session.execute(f"TRUNCATE table {SCHEMA}.songs RESTART IDENTITY CASCADE;")
+        db.session.execute(f"TRUNCATE table {SCHEMA}.song_likes RESTART IDENTITY CASCADE;")
+    else:
+        db.session.execute(text("DELETE FROM songs"))
+        db.session.execute(text("DELETE FROM song_likes"))
     db.session.commit()
 
 
