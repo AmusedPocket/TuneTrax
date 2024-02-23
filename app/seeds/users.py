@@ -39,7 +39,7 @@ def seed_users():
         except:
             pass
 
-        user.following = following
+        user.followers = following
 
     db.session.add_all(all_users)
     db.session.commit()
