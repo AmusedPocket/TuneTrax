@@ -9,6 +9,8 @@ import AllSongs from '../components/Songs/AllSongs/allsongs';
 import SongPage from '../components/Songs/SongPage/SongPage';
 import PlaylistPage from '../components/PlaylistPage';
 import UpdatePlaylist from '../components/UpdatePlaylist';
+import CreateSong from '../components/Songs/CreateSong';
+import HomePage from '../components/HomePage/HomePage';
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +18,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>Welcome!</h1>,
+        element: <HomePage />
       },
       {
         path: "login",
@@ -53,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "songs/:songId",
         element: <SongPage />
+      },
+      {
+        path: "songs/new",
+        element: <CreateSong />
       }
     ],
   },

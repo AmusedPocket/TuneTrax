@@ -63,7 +63,6 @@ function CreateSet({ editedSet }) {
         }
 
         // Successful Submission
-        console.log(response);
         navigate(`/${"Album" == type ? "albums" : "playlists"}/${response.id}`);
     }
     
