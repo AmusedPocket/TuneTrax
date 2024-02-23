@@ -173,7 +173,7 @@ export const thunkDeleteComment = (songId, commentId) => async(dispatch) => {
 }
 
 export const thunkEditComment = (songId, comment) => async (dispatch) => {
-    const response = await fetch(`api/songs/${songId}/comments/${comment.id}`, {
+    const response = await fetch(`api/songs/${songId}`, {
         method: "PUT",
         body: JSON.stringify(comment)
     })
