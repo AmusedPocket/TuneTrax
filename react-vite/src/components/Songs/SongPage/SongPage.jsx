@@ -3,7 +3,8 @@ import { thunkGetSong } from "../../../redux/song";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useSongContext } from "../../../context/SongPlayerContext";
-
+import CreateComment from "../../Comments/CreateComment/CreateComment";
+// import { selectComments } from "../../../redux/song";
 
 
 const SongPage = () => {
@@ -16,20 +17,13 @@ const SongPage = () => {
     }, [dispatch, songId])
 
     const song = useSelector((state) => state.songs.songs[songId])
-
+    // console.log("song commentssssssssssssssssssss =====>>>>", songComments)
 
     if (!song) return "this is breaking it";
 
     // console.log("user id is", userId)
     const songComments = song.comments
-    const displayComments = songComments?.map((comment) => {
-        return <>
-            <span key={comment.id}>
-                <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {comment.song_time} {comment.created_at}</p>
-                <p>{comment.comment} </p>
-            </span>
-        </>
-    })
+
 
 
 
@@ -56,14 +50,25 @@ const SongPage = () => {
 
 
     return (
+
         <h1>
             <button onClick={PlaySong}>Play Song</button>
             {song.title}
             {/* {song.user.username} */}
             {song.created_at}
             <span>#{song.genre}</span>
-            <span>{displayComments}</span>
+            <span> {songComments?.map((comment) => {
+                return <>
+                    <span key={comment.id}>
+                        <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {comment.song_time} {comment.created_at}</p>
+                        <p>{comment.comment} </p>
+                    </span>
+                </>
+            })}</span>
+            <CreateComment song={song} />
         </h1>
+ 
+
     )
 }
 

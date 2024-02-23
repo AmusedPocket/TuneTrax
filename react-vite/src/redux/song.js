@@ -1,4 +1,5 @@
 import { normalizeObj } from "./helpers";
+import {createSelector} from "reselect"
 
 const GET_SONG = 'songs/GET_SONG';
 const GET_SONGS = 'songs/GET_SONGS';
@@ -137,11 +138,13 @@ export const thunkDeleteSong = (songId) => async (dispatch) => {
 export const thunkPostComment = (songId, comment) => async (dispatch) => {
     const response = await fetch(`/api/songs/${songId}/comments`, {
         method: "POST",
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(comment)
     })
 
     if (response.ok) {
         const post_comment = await response.json()
+        console.log("post comment is ", post_comment)
         dispatch(postComment(post_comment))
         return post_comment
     } else {
@@ -220,7 +223,8 @@ const songReducer = (state=initialState, action) => {
             delete newState.songs[action.songId]
             return newState;
         case POST_COMMENT:
-            newState.songs = { ...state.songs, [action.comment.id]: action.comment}
+            newState = { ...state }
+            newState.songs = { ...state.songs, [action.payload.id]: action.payload}
             return newState;
         case DELETE_COMMENT:
             newState.songs = { ...state.songs }
