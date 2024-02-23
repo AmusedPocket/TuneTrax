@@ -36,7 +36,7 @@ const editSong = (song) => ({
 
 const deleteSong = (songId) => ({
     type: DELETE_SONG,
-    payload: songId
+    payload: { songId, commentId }
 })
 
 const postComment = (comment) => ({

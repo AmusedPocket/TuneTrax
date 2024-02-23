@@ -60,6 +60,8 @@ const SongPage = () => {
         await dispatch(thunkDeleteComment(songId, commentId))
         const removeComment = songComments.indexOf(songComments.find((comment) => comment.id === commentId))
         songComments.splice(removeComment, 1)
+        
+        
 
         return closeModal();
     }
