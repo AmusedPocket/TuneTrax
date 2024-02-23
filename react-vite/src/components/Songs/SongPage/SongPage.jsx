@@ -16,27 +16,23 @@ const SongPage = () => {
         dispatch(thunkGetSong(songId))
     }, [dispatch, songId])
 
-    const song = useSelector((state)=>state.songs)
-
+    const song = useSelector((state)=>state.songs.songs[songId])
     
-    const songComments = song.songs.comments
-    if(!songComments){
-        return null;
-    }
-    // console.log("songComments", songComments)
 
-    const userId = song.songs.comments
+    if(!song) return "this is breaking it";
 
     // console.log("user id is", userId)
-
-    const displayComments = songComments.map((comment) => {
+    const songComments = song.comments
+    const displayComments = songComments?.map((comment) => {
         return <h2 key={comment.id}>{comment.user_id} {comment.comment} {comment.song_time} {comment.created_at} </h2>
     })
 
     
 
     function PlaySong(){
-        if(songs[0]?.song_link !== song.song_link){
+        console.log("song is:", song)
+        if(songs[0]?.songLink !== song.song_link){
+            console.log("inside if statement")
             setSongs([{
                 songLink : song.song_link,
                 songPic : song.song_pic,
@@ -44,17 +40,24 @@ const SongPage = () => {
                 userId : song.user_id,
                 songId : song.id
             }, ...songs])
-        }
+        } 
+        const element = document.querySelector("audio")
+        if(element){
+            element.currentTime = 0
+            element.play()
+            }
     }
+    
 
 
-
+    
     return (
         <h1>
-            {song.songs.title}
-            {/* {song.songs.user.username} */}
-            {song.songs.created_at}
-            <span>#{song.songs.genre}</span>
+            <button onClick={PlaySong}>Play Song</button>
+            {song.title}
+            {/* {song.user.username} */}
+            {song.created_at}
+            <span>#{song.genre}</span>
             <span>{displayComments}</span>
         </h1>
     )
