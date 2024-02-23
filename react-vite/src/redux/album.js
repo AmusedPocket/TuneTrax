@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { normalizeObj } from "./helpers";
-import { thunkGetSongs } from "./song";
+import { thunkClearAlbumSongs, thunkGetSongs } from "./song";
 
 const GET_ALBUM= 'album/GET_ALBUM';
 const GET_ALBUMS= 'album/GET_ALBUMS';
@@ -19,9 +19,9 @@ export const getAlbum = (album) => ({
     payload: album
 })
 
-export const getAlbums = (album) => ({
+export const getAlbums = (albums) => ({
     type: GET_ALBUMS,
-    payload: album
+    payload: albums
 })
 
 export const addAlbum = (album) => ({
@@ -52,9 +52,9 @@ export const thunkGetAlbums = () => async (dispatch)=> {
     const res = await fetch(`/api/albums/`);
 
     if (res.ok) {
-        const { album } = await res.json();
-        dispatch(getAlbums(album));
-        return album;
+        const { albums } = await res.json();
+        dispatch(getAlbums(albums));
+        return albums;
     }
     const data = await res.json();
     if(data.errors) return data;
@@ -69,6 +69,7 @@ export const thunkAddAlbum = (album) => async (dispatch)=> {
 
     if (res.ok) {
         const { album } = await res.json();
+        dispatch(thunkClearAlbumSongs());
         dispatch(addAlbum(album));
         return album;
     }

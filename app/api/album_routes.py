@@ -112,8 +112,9 @@ def create_album():
             db.session.commit()
             #add each song to list
             song_pass_valid.append(new_song)
-
-        #if song validation fails, add that to a validations error list
+        else:
+            #if song validation fails, add that to a validations error list
+            song_fail_valid.append(song)
     
     # should any songs fail validation, send the list back and dont create an album
     if len(song_fail_valid):

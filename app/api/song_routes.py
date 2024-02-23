@@ -40,7 +40,7 @@ def post_song():
 
     song.filename = s3.get_unique_filename(song.filename)
     upload_song = s3.upload_file_to_s3(song)
-    print("upload song:", upload_song)
+    
     form = SongForm()
     form['csrf_token'].data = request.cookies['csrf_token']    
     
