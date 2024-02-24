@@ -101,6 +101,8 @@ const SongPage = () => {
         songComments.push(updatingComments)
     }
 
+    console.log("comments are: ", songComments)
+
     // Edit Comment functionality
     const submitEdit = async (e) => {
         e.preventDefault();
@@ -108,7 +110,6 @@ const SongPage = () => {
             id: editingComment,
             comment: commentText
         }
-        console.log("I am the edits: ", edits)
 
         await dispatch(thunkEditComment(songId, edits))
         await dispatch(thunkGetSong(songId))
@@ -131,13 +132,14 @@ const SongPage = () => {
 
     const postedAtDate = (created_at) => {
        
-        const date = new Date(created_at)
-      
+        const date = new Date(created_at + " UTC")
+        
         const now = new Date()
 
-   
+        console.log("now time zone offset: ", now.getTimezoneOffset())
+        console.log("date time zone offset :", date.getTimezoneOffset())
 
-        const timeDiff = now - date - (now.getTimezoneOffset() + date.getTimezoneOffset()) * 60000
+        const timeDiff = now - date -  date.getTimezoneOffset() * 60000
         const secondsDiff = Math.floor(timeDiff / 1000)
         const minutesDiff = Math.floor(secondsDiff / 60)
         const hoursDiff = Math.floor(minutesDiff / 60)
