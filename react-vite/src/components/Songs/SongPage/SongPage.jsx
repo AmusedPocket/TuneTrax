@@ -25,6 +25,7 @@ const SongPage = () => {
     const user = useSelector(state => state.session.user)
     const [commentText, setCommentText] = useState('')
     const [editingComment, setEditingComment] = useState(-1)
+    const [canLike, setCanLike] = useState(false)
     
 
     useEffect(() => {
@@ -36,14 +37,21 @@ const SongPage = () => {
     const song = useSelector((state) => state.songs.songs[songId])
   
 
-    const [currentLikes, setCurrentLikes] = useState(song?.likes)
+    const [currentLikes, setCurrentLikes] = useState(0)
+
+    useEffect(()=> {
+        if(song) setCurrentLikes(song.likes)
+        }, [song])
+
+
     const likeClick = () => {
         // const song_likes = song.likes;
-        console.log("before dispatch: ", song.likes)
+        setCanLike(true)
         dispatch(thunkAddLike(song.id, user))
             .then(result =>{ 
                 song.likes += result
                 setCurrentLikes(song.likes)
+                setCanLike(false)
             })
     }
 
@@ -136,8 +144,8 @@ const SongPage = () => {
         
         const now = new Date()
 
-        console.log("now time zone offset: ", now.getTimezoneOffset())
-        console.log("date time zone offset :", date.getTimezoneOffset())
+        console.log("now time zone offset: ", now.toUTCString())
+        console.log("date time zone offset :", date.toUTCString())
 
         const timeDiff = now - date -  date.getTimezoneOffset() * 60000
         const secondsDiff = Math.floor(timeDiff / 1000)
@@ -154,12 +162,10 @@ const SongPage = () => {
         } else if (daysDiff >= 1){
             return `${daysDiff} day${daysDiff !== 1 ? 's' : ''} ago`
         } else {
-            return `${hoursDiff} hour${hoursDiff !== 1 ? 's' : ''} ago`
+            const happyTime = Math.max(0, hoursDiff)
+            return `${happyTime} hour${happyTime !== 1 ? 's' : ''} ago`
         }
-    }
-
-
-    
+    }    
     
 
     return (
@@ -182,7 +188,7 @@ const SongPage = () => {
                 <input type="submit" />
             </form>
             <div>
-            <p><button onClick={()=>likeClick()}><i className="fa-solid fa-heart">{currentLikes}</i></button></p>
+            <p><button onClick={()=>likeClick()} disabled={canLike}><i className="fa-solid fa-heart">{currentLikes}</i></button></p>
             </div>
             
             {song.body}

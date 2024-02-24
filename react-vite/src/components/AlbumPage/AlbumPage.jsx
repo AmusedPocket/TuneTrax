@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
-import { selectSingleAlbum, thunkGetAlbum } from "../../redux/album";
+import { selectSingleAlbum, thunkAddAlbumLike, thunkGetAlbum } from "../../redux/album";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteAlbumModal from "../DeleteAlbumModal";
 import "./AlbumPage.css"
+import { useState } from "react";
 
 function AlbumPage() {
     const { albumId } = useParams();
@@ -12,6 +13,13 @@ function AlbumPage() {
     const navigate = useNavigate()
     const album = useSelector(selectSingleAlbum(albumId));
     const sessionUser = useSelector(state => state.session.user);
+    const [albumLikes, setAlbumLikes] = useState(0)
+    const [canLike, setCanLike] = useState(false)
+
+    useEffect(()=>{
+        if(album) setAlbumLikes(album.likes.length)
+    }, [album])
+    
 
     useEffect(() => {
         dispatch(thunkGetAlbum(albumId));
@@ -40,6 +48,16 @@ function AlbumPage() {
             }
 
         return res;
+    }
+
+    const likeClick = () => {
+        setCanLike(true)
+        dispatch(thunkAddAlbumLike(albumId, sessionUser))
+            .then(result =>{ 
+                setAlbumLikes(albumLikes + result),
+                setCanLike(false)
+            })
+        
     }
 
     function firstEightLikedPFP(likes) {
@@ -91,7 +109,7 @@ function AlbumPage() {
                 <div className="album-body_left"> {/* left side - album/user data */}
                     <div className="album-body_left-top"> {/* top */}
                         <div>
-                            <button>Like</button>
+                            <button onClick={()=>likeClick()} disabled={canLike}>Like</button>
                             <button>Share</button>
                             {album.user.id == sessionUser?.id && <button onClick={() => navigate(`/albums/${album.id}/edit`)}>Edit</button>}
                             <button>Copy Link</button>
@@ -106,7 +124,7 @@ function AlbumPage() {
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>
-                            <i className="fa-solid fa-heart"></i> {album.likes?.length}
+                            <i className="fa-solid fa-heart"></i> {albumLikes}
                         </div>
                     </div>
                     <div className="album-body_left-bottom"> {/* bottom */}
