@@ -6,11 +6,11 @@ export const SongContext = createContext()
 export const useSongContext = () => useContext(SongContext)
 
 export default function SongPlayerContext({children}) {
-    const [songs, setSongs] = useState()
+    const [songs, setSongs] = useState([])
     const [songTime, setSongTime] = useState()
 
     useEffect(()=> {
-        if(songs){
+        if(songs.length){
           sessionStorage.setItem("songs", JSON.stringify(songs))
         }
       }, [songs])

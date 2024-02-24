@@ -30,7 +30,7 @@ const SongPlayer = () => {
         showFilledVolume={true}
         showFilledProgress={true}
         onListen={(e) => setSongTime(e.target.currentTime)}
-        progressUpdateInterval={100}
+        listenInterval={100}
         src={songs && songs[0]?.songLink}
         onPlay={(e) => console.log("onPlay")}
         // onListen={true}

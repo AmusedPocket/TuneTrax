@@ -14,7 +14,8 @@ function Navigation() {
       <li>
         <NavLink to="/upload">Upload</NavLink>
       </li>
-
+    <ul>
+    </ul>
       <li>
         <ProfileButton />
       </li>

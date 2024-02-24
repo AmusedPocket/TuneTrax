@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useSongContext } from "../../../context/SongPlayerContext";
 import CreateComment from "../../Comments/CreateComment/CreateComment";
+import WaveSurfer from 'wavesurfer.js'
+import Waveform from "../../Waveform";
 // import { selectComments } from "../../../redux/song";
 import { thunkPostComment } from "../../../redux/song";
 import OpenModalButton from "../../OpenModalButton/OpenModalButton";
@@ -108,15 +110,16 @@ const SongPage = () => {
 
     return (
 
-        <h1>
+        <>
             <button onClick={PlaySong}>Play Song</button>
             {song.title}
             {/* {song.user.username} */}
             {song.created_at}
             <span>#{song.genre}</span>
-            <span> {songComments?.map((comment) => {
-                return <>
-                    <span key={comment.id}>
+            <Waveform audio={song} />
+            <span> 
+                {songComments?.map((comment) => {
+                    return <><span key={comment.id}>
                         <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {comment.song_time} {comment.created_at}</p>
                         {comment.id === editingComment ? (<form onSubmit={submitEdit}>
                     <textarea
@@ -151,7 +154,7 @@ const SongPage = () => {
                 />
                 <input type="submit" />
             </form>
-        </h1>
+        </>
 
 
     )
