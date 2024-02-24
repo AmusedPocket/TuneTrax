@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "react-h5-audio-player": "^3.9.1"
+    "react-h5-audio-player": "^3.9.1",
+    "reselect": "^5.1.0"
   },
   "name": "tunetrax",
   "description": "This is the starter for the Flask React project.",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
