@@ -37,7 +37,7 @@ export const deleteAlbum = (albumId) => ({
 // Thunks
 export const thunkGetAlbum = (albumId) => async (dispatch)=> {
     if (!albumId) return; 
-    const res = await fetch(`/api/albums/${albumId}`);
+    const res = await fetch(`/api/albums/${albumId}/`);
 
     if (res.ok) {
         const { album } = await res.json();
@@ -61,10 +61,13 @@ export const thunkGetAlbums = () => async (dispatch)=> {
 }
 
 export const thunkAddAlbum = (album) => async (dispatch)=> {
-    const res = await fetch("/api/albums/new", {
+    const formData = new FormData();
+    for (let key of Object.keys(album))
+        formData.append(key, album[key]);
+
+    const res = await fetch("/api/albums/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(album)
+        body: formData
     });
 
     if (res.ok) {
@@ -78,7 +81,7 @@ export const thunkAddAlbum = (album) => async (dispatch)=> {
 }
 
 export const thunkUpdateAlbum = (album) => async (dispatch)=> {
-    const res = await fetch(`/api/albums/${album.id}`, {
+    const res = await fetch(`/api/albums/${album.id}/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(album)
@@ -94,7 +97,7 @@ export const thunkUpdateAlbum = (album) => async (dispatch)=> {
 }
 
 export const thunkDeleteAlbum = (albumId) => async (dispatch)=> {
-    const res = await fetch(`/api/albums/${albumId}`, {
+    const res = await fetch(`/api/albums/${albumId}/`, {
         method: "DELETE"
     });
 

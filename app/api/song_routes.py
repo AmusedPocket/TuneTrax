@@ -7,7 +7,36 @@ from app.forms import SongForm, CommentForm
 
 song_routes = Blueprint('songs', __name__)
 
+# Helper function for posting a song with a validated songForm 
+def post_song(songForm):
+    song = songForm.data["song_file"]
 
+    song.filename = s3.get_unique_filename(song.filename)
+    upload_song = s3.upload_file_to_s3(song)
+    
+    upload_pic = {"url": "No Image"}
+
+    song_pic = songForm.data['song_pic']
+    if song_pic:
+        song_pic.filename = s3.get_unique_filename(song_pic.filename)
+        upload_pic = s3.upload_file_to_s3(song_pic)   
+    
+    user = User.query.get(current_user.id)
+    new_song = Song(
+        user = user,
+        title = songForm.data["title"],
+        body = songForm.data["body"],
+        genre = songForm.data["genre"],
+        visibility = songForm.data["visibility"],
+        plays = 0,
+        user_id = current_user.id,
+        song_link = upload_song['url'],
+        song_pic = upload_pic['url']
+    )
+
+    db.session.add(new_song)
+    db.session.commit()
+    return new_song
 
 #Get all song routes
 @song_routes.route('/')
@@ -27,40 +56,12 @@ def single_song(id):
 
 #Upload a song
 @song_routes.route('/', methods=["POST"])
-def post_song():
-    print("im hitting the right route")
+@login_required
+def post_song_route():
     form = SongForm()
     form['csrf_token'].data = request.cookies['csrf_token']    
     if form.validate_on_submit():
-        song = form.data["song_file"]
-
-        print("IM A SONG FILEEEEE", song.filename)
-
-        song.filename = s3.get_unique_filename(song.filename)
-        upload_song = s3.upload_file_to_s3(song)
-        
-        upload_pic = {"url": "No Image"}
-
-        if "song_pic" in form.data:
-            song_pic = form.files['song_pic']
-            song_pic.filename = s3.get_unique_filename(song_pic.filename)
-            upload_pic = s3.upload_file_to_s3(song_pic)   
-        
-        user = User.query.get(current_user.id)
-        new_song = Song(
-            user = user,
-            title = form.data["title"],
-            body = form.data["body"],
-            genre = form.data["genre"],
-            visibility = form.data["visibility"],
-            plays = 0,
-            user_id = current_user.id,
-            song_link = upload_song['url'],
-            song_pic = upload_pic['url']
-        )
-
-        db.session.add(new_song)
-        db.session.commit()
+        new_song = post_song(form)
         return new_song.song_dict()
     
     return {"errors": form.errors}, 401

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { thunkAddAlbum, thunkUpdateAlbum } from "../../redux/album"
 import { thunkAddPlaylist, thunkUpdatePlaylist } from "../../redux/playlist"
+import CreateSong from "../Songs/CreateSong";
 
 function CreateSet({ editedSet, songFiles }) {
     const dispatch = useDispatch();
@@ -68,6 +69,16 @@ function CreateSet({ editedSet, songFiles }) {
         navigate(`/${"Album" == type ? "albums" : "playlists"}/${response.id}`);
     }
     
+    function clearForm (e) {
+        e.preventDefault();
+        setAlbumImg("No Image");
+        setTitle("");
+        setType("Album");
+        setReleaseDate("");
+        setDescription("");
+        setPrivacy(false);
+    }
+
     return (
         <>
             <div>
@@ -75,8 +86,8 @@ function CreateSet({ editedSet, songFiles }) {
                 <span onClick={() => setCurrentPage("tracks")}>Tracks</span>
             </div>
             <form onSubmit={onSubmit}>
-                {"tracks" == currentPage && (<>=
-                    {/* TODO: show tracks for set */}
+                {"tracks" == currentPage && (<>
+                    {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} dontNavigate={true} />)}
                 </>)}
                 {"basic info" == currentPage && (<>
                 <div>
@@ -149,7 +160,7 @@ function CreateSet({ editedSet, songFiles }) {
                 <div>
                     <span>{/* TODO: make asterisk red */}* Required fields</span>
                     <div>
-                        <button type="cancel">Cancel</button>
+                        <button type="cancel" onClick={clearForm}>Cancel</button>
                         <button type="submit" disabled={disabled}>Submit</button>
                     </div>
                 </div>

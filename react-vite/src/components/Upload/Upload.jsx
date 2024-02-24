@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { thunkPostSong } from "../../redux/song";
-import { useNavigate } from "react-router";
 import CreateSong from "../Songs/CreateSong";
 import CreateSet from "../CreateSet";
 
 
 const Upload = () => {
-
     const [songFiles, setSongFiles] = useState()
 
     function onSongChange(e) {
         console.log("e target files", e.target.files)
         if (e.target.files) {
+            const songList = [];
+            for (let i = 0; i < e.target.files.length; i++) {
+                e.target.files[i].tempId = i;
+                songList.push(e.target.files[i]);
+            }
             setSongFiles(Object.values(e.target.files));
         }
     }

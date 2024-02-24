@@ -97,8 +97,8 @@ export const thunkPostSong = (song) => async (dispatch) => {
     const data = new FormData();
     for (let key of Object.keys(song))
         data.append(key, song[key]);
-    
-    const response = await fetch('/api/songs',{
+
+    const response = await fetch('/api/songs/',{
         method: 'POST',
         body: data
     })

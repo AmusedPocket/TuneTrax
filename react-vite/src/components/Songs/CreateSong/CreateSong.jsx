@@ -22,11 +22,7 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
             setSongImg(URL.createObjectURL(e.target.files[0]));
     }
 
-    async function onSubmit(e) {
-        e.preventDefault();
-        setDisabled(false);
-
-        // Validations
+    function validate() {
         const tempValidation = {};
         if ("" == title) tempValidation.title = "Enter a title.";
         if ("" == description) tempValidation.description = "Enter a description.";
@@ -35,7 +31,15 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
 
         // Unsuccessful Validation
         if (Object.values(tempValidation).length != 0) 
-            return setDisabled(false);
+            return false;
+        return true;
+    }
+
+    async function onSubmit(e) {
+        e.preventDefault();
+        setDisabled(false);
+
+        if (!validate()) return setDisabled(false);
 
         const payload = {
             title,
@@ -63,6 +67,30 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
         // Successful Submission
         if (!dontNavigate) navigate(`/songs/${response.id}`);
         else setHasSubmitted(true);
+    }
+
+    function onBulkSubmit (e) {
+        e.preventDefault();
+
+        if (!validate()) return setDisabled(false);
+
+        songFile.title = title;
+        songFile.song_file = songFile;
+        songFile.song_pic = songImg;
+        songFile.body = description;
+        songFile.genre = genre;
+        songFile.visibility = privacy;
+
+        setHasSubmitted(true);
+    }
+
+    function clearForm (e) {
+        e.preventDefault();
+        setSongImg("No Image");
+        setTitle("");
+        setDescription("");
+        setGenre("");
+        setPrivacy(false);
     }
 
     return !hasSubmitted || !dontNavigate ? (
@@ -140,8 +168,10 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
             <div>
                 <span>{/* TODO: make asterisk red */}* Required fields</span>
                 <div>
-                    <button type="cancel">Cancel</button>
-                    <button type="submit" disabled={disabled}>Submit</button>
+                    <button type="cancel" onClick={clearForm}>Cancel</button>
+                    {dontNavigate ? 
+                        <button type="preparedForBulkSubmit" onClick={onBulkSubmit} disabled={disabled}>Done</button> :
+                        <button type="submit" disabled={disabled}>Submit</button>}
                 </div>
             </div>
         </form>

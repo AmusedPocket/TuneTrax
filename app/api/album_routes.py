@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app.models import Album, Song, User, db
 from app.forms import AlbumForm, SongForm
 from datetime import datetime as dt
+from app.api.song_routes import post_song
 import app.s3_helpers as s3
 
 album_routes = Blueprint('albums', __name__)
@@ -63,7 +64,7 @@ def all_albums():
         "albums":[album.toDictLimited() for album in albums]
     }
 
-@album_routes.route("/new", methods=["POST"])
+@album_routes.route("/", methods=["POST"])
 @login_required
 def create_album():
     song_pass_valid = []
@@ -75,41 +76,22 @@ def create_album():
     #post songs
     for song in form_data["songs"]:
         #validate song
-        if not s3.song_file(song.files["song"].filename):
+        print(song)
+        if not s3.song_file(song.filename):
             song_fail_valid.append(song.title)
 
         song_form = SongForm(
             title=song.title or None,
             body=song.body or None,
-            genre=form_data["genre"] or None,
-            visibility=form_data["privacy"] or False
+            genre=song.genre or None,
+            visibility=song.visibility or False,
+            song_file=song.song_file,
+            song_pic=song.song_pic if song.song_pic else None
         )
 
         if song_form.validate_on_submit():
             #post each song    
-            song.filename = s3.get_unique_filename(song.filename)
-            upload_song = s3.upload_file_to_s3(song)
-            
-            upload_pic = {"url": "No Image"}
-            if "song_pic" in song.files:
-                song_pic = request.files['song_pic']
-                song_pic.filename = s3.get_unique_filename(song_pic.filename)
-                upload_pic = s3.upload_file_to_s3(song_pic)  
-
-            new_song = Song(
-                user = user,
-                title = song_form.data["title"],
-                body = song_form.data["body"],
-                genre = song_form.data["genre"],
-                visibility = song_form.data["visibility"],
-                plays = 0,
-                user_id = current_user.id,
-                song_link = upload_song['url'],
-                song_pic = upload_pic['url']
-            )
-
-            db.session.add(new_song)
-            db.session.commit()
+            new_song = post_song(song_form)
             #add each song to list
             song_pass_valid.append(new_song)
         else:
