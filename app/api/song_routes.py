@@ -27,31 +27,25 @@ def single_song(id):
 
 #Upload a song
 @song_routes.route('/', methods=["POST"])
-@login_required
 def post_song():
-
-    if "song" not in request.files:
-        return {"errors": "song required"}, 400
-
-    song = request.files['song']
-    
-    if not s3.song_file(song.filename):
-        return {"errors": "file type not supported"}, 400
-
-    song.filename = s3.get_unique_filename(song.filename)
-    upload_song = s3.upload_file_to_s3(song)
-    
+    print("im hitting the right route")
     form = SongForm()
     form['csrf_token'].data = request.cookies['csrf_token']    
-    
-    upload_pic = {"url": "No Image"}
-
-    if "song_pic" in request.files:
-        song_pic = request.files['song_pic']
-        song_pic.filename = s3.get_unique_filename(song_pic.filename)
-        upload_pic = s3.upload_file_to_s3(song_pic)    
-    
     if form.validate_on_submit():
+        song = form.data["song_file"]
+
+        print("IM A SONG FILEEEEE", song.filename)
+
+        song.filename = s3.get_unique_filename(song.filename)
+        upload_song = s3.upload_file_to_s3(song)
+        
+        upload_pic = {"url": "No Image"}
+
+        if "song_pic" in form.data:
+            song_pic = form.files['song_pic']
+            song_pic.filename = s3.get_unique_filename(song_pic.filename)
+            upload_pic = s3.upload_file_to_s3(song_pic)   
+        
         user = User.query.get(current_user.id)
         new_song = Song(
             user = user,

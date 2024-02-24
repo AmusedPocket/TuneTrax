@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { thunkAddAlbum, thunkUpdateAlbum } from "../../redux/album"
 import { thunkAddPlaylist, thunkUpdatePlaylist } from "../../redux/playlist"
 
-function CreateSet({ editedSet }) {
+function CreateSet({ editedSet, songFiles }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [errors, setErrors] = useState({});
@@ -12,7 +12,6 @@ function CreateSet({ editedSet }) {
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
 
-    const [songs, setSongs] = useState(editedSet ? editedSet.songs : []);
     const [albumImg, setAlbumImg] = useState(editedSet ? editedSet.image : "No Image");
     const [title, setTitle] = useState(editedSet ? editedSet.title : "");
     const [type, setType] = useState(editedSet ? editedSet.type : "Album");
@@ -39,13 +38,16 @@ function CreateSet({ editedSet }) {
         if (Object.values(tempValidation).length != 0) 
             return setDisabled(false);
 
+        console.log("song", songFiles)
+        console.log("image", albumImg)
+
         const payload = {
             title,
             album_pic: albumImg,
             body: description,
             privacy,
             release_date: releaseDate,
-            songs,
+            songs: songFiles,
         }
 
         if (editedSet) payload.id = editedSet.id;

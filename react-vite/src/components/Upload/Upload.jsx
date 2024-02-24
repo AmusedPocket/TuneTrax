@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { thunkPostSong } from "../../../redux/song";
+import { thunkPostSong } from "../../redux/song";
 import { useNavigate } from "react-router";
-import CreateSong from "../CreateSong";
-import CreateSet from "../../CreateSet";
+import CreateSong from "../Songs/CreateSong";
+import CreateSet from "../CreateSet";
 
 
 const Upload = () => {
@@ -28,11 +28,11 @@ const Upload = () => {
                 />}
             {songFiles && songFiles.length === 1 &&
                 <>
-                    <CreateSong songFile={songFiles} />
+                    <CreateSong songFile={songFiles[0]} />
                 </>}
             {songFiles && songFiles.length > 1 &&
                 <>
-                    <CreateSet songFile={songFiles} />
+                    <CreateSet songFiles={songFiles} />
                 </>}
         </>
     )
