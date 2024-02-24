@@ -97,7 +97,7 @@ export const thunkPostSong = (song) => async (dispatch) => {
     const data = new FormData();
     for (let key of Object.keys(song))
         data.append(key, song[key]);
-
+    console.log(data)
     const response = await fetch('/api/songs/',{
         method: 'POST',
         body: data
@@ -234,6 +234,7 @@ const songReducer = (state=initialState, action) => {
             newState.songs = action.payload;
             return newState;
         case POST_SONG:
+            newState = {...state}
             newState.songs = { ...state.songs, [action.payload.id]: action.payload };
             return newState;
         case EDIT_SONG:

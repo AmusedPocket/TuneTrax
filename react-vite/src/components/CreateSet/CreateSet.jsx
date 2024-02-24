@@ -18,7 +18,6 @@ function CreateSet({ editedSet, songFiles }) {
     const [type, setType] = useState(editedSet ? editedSet.type : "Album");
     const [releaseDate, setReleaseDate] = useState(editedSet ? editedSet.release_date : "");
     const [description, setDescription] = useState(editedSet ? editedSet.body : "");
-    const [privacy, setPrivacy] = useState(false);
 
     function onImageChange(e) {
         if (e.target.files && e.target.files[0]);
@@ -46,7 +45,6 @@ function CreateSet({ editedSet, songFiles }) {
             title,
             album_pic: albumImg,
             body: description,
-            privacy,
             release_date: releaseDate,
             songs: songFiles,
         }
@@ -76,7 +74,6 @@ function CreateSet({ editedSet, songFiles }) {
         setType("Album");
         setReleaseDate("");
         setDescription("");
-        setPrivacy(false);
     }
 
     return (
@@ -85,11 +82,11 @@ function CreateSet({ editedSet, songFiles }) {
                 <span onClick={() => setCurrentPage("basic info")}>Basic info</span>
                 <span onClick={() => setCurrentPage("tracks")}>Tracks</span>
             </div>
-            <form onSubmit={onSubmit}>
-                {"tracks" == currentPage && (<>
+            {"tracks" == currentPage && (<>
                     {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} dontNavigate={true} />)}
                 </>)}
-                {"basic info" == currentPage && (<>
+            {"basic info" == currentPage && (<>
+            <form onSubmit={onSubmit}>
                 <div>
                     <img src={albumImg}/>
                     {/* hide when image is selected */}
@@ -139,23 +136,6 @@ function CreateSet({ editedSet, songFiles }) {
                             onChange={(e) => setDescription(e.target.value)}
                             />
                     </label>
-                    <span>Privacy:</span>
-                    <label>
-                        <input
-                            type="radio"
-                            onChange={() => setPrivacy(true)}
-                            checked={privacy}
-                            />
-                        Public
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            onChange={() => setPrivacy(false)}
-                            checked={!privacy}
-                            />
-                        Private
-                    </label>
                 </div>
                 <div>
                     <span>{/* TODO: make asterisk red */}* Required fields</span>
@@ -164,8 +144,8 @@ function CreateSet({ editedSet, songFiles }) {
                         <button type="submit" disabled={disabled}>Submit</button>
                     </div>
                 </div>
-                </>)}
             </form>
+            </>)}
         </>
     );
 }
