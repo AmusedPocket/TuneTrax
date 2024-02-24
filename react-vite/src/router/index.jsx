@@ -11,6 +11,7 @@ import PlaylistPage from '../components/PlaylistPage';
 import UpdatePlaylist from '../components/UpdatePlaylist';
 import CreateSong from '../components/Songs/CreateSong';
 import HomePage from '../components/HomePage/HomePage';
+import Upload from '../components/Songs/UploadSong/UploadSong';
 
 export const router = createBrowserRouter([
   {
@@ -45,10 +46,6 @@ export const router = createBrowserRouter([
         element: <UpdatePlaylist />,
       },
       {
-        path: "set/new",
-        element: <CreateSet />,
-      },
-      {
         path: "songs",
         element: <AllSongs />
       },
@@ -57,8 +54,8 @@ export const router = createBrowserRouter([
         element: <SongPage />
       },
       {
-        path: "songs/new",
-        element: <CreateSong />
+        path: "upload",
+        element: <Upload />
       }
     ],
   },

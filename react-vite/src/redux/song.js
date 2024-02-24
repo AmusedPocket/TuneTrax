@@ -36,7 +36,7 @@ const editSong = (song) => ({
 
 const deleteSong = (songId) => ({
     type: DELETE_SONG,
-    payload: songId
+    payload: { songId, commentId }
 })
 
 const postComment = (comment) => ({
@@ -86,11 +86,11 @@ export const thunkGetSongs = () => async (dispatch) => {
         const songs = await response.json();
         dispatch(getSongs(songs))
         return songs;
-    } 
-    
+    }
+
     const data = await response.json()
     if(data.errors) return data;
-    
+
 }
 
 export const thunkPostSong = (song) => async (dispatch) => {
@@ -173,7 +173,7 @@ export const thunkDeleteComment = (songId, commentId) => async(dispatch) => {
 
     if(response.ok){
         const delete_comment = await response.json()
-        dispatch(deleteComment(delete_comment))
+        dispatch(deleteComment(commentId))
         return delete_comment
     } else {
         const data = await response.json();
@@ -184,8 +184,8 @@ export const thunkDeleteComment = (songId, commentId) => async(dispatch) => {
 }
 
 export const thunkEditComment = (songId, comment) => async (dispatch) => {
-    const response = await fetch(`api/songs/${songId}/comments/${comment.id}`, {
-        method: "PUT",
+    const response = await fetch(`/api/songs/${songId}/comments/${comment.id}`, {
+        method: "POST",
         body: JSON.stringify(comment)
     })
     if(response.ok){
@@ -249,6 +249,7 @@ const songReducer = (state=initialState, action) => {
             newState.songs = { ...state.songs, [action.payload.id]: action.payload}
             return newState;
         case DELETE_COMMENT:
+            newState = { ...state }
             newState.songs = { ...state.songs }
             delete newState.songs[action.songId.commentId];
             return newState;
