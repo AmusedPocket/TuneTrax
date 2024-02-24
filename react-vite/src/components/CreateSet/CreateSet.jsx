@@ -36,7 +36,7 @@ function CreateSet({ editedSet, songFiles }) {
         setValidation(tempValidation)
 
         // Unsuccessful Validation
-        if (Object.values(tempValidation).length != 0) 
+        if (Object.values(tempValidation)?.length != 0) 
             return setDisabled(false);
 
         console.log("song", songFiles)

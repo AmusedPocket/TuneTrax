@@ -21,9 +21,9 @@ const CreateComment = ({song}) => {
         e.preventDefault();
         setErrors([]);
         const errors = []
-        if (comment.length > 255) errors.push("Comment needs to be less than 255 characters.")
+        if (comment?.length > 255) errors.push("Comment needs to be less than 255 characters.")
 
-        if (errors.length > 0){
+        if (errors?.length > 0){
             setErrors(errors);
             return;
         }

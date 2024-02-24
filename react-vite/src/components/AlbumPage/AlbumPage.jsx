@@ -15,9 +15,10 @@ function AlbumPage() {
     const sessionUser = useSelector(state => state.session.user);
     const [albumLikes, setAlbumLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)
+    console.log("album is ", album)
 
     useEffect(()=>{
-        if(album) setAlbumLikes(album.likes.length)
+        if(album?.likes) setAlbumLikes(album.likes?.length)
     }, [album])
     
 
@@ -123,7 +124,7 @@ function AlbumPage() {
                             }
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
-                        <div>
+                        <div onClick={()=>likeClick()} disabled={canLike}>
                             <i className="fa-solid fa-heart"></i> {albumLikes}
                         </div>
                     </div>

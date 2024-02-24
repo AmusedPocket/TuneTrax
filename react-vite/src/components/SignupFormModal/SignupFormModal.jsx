@@ -24,7 +24,7 @@ function SignupFormModal() {
     const tempErrors = {};
     if (password !== confirmPassword) 
       tempErrors.confirmPassword = "Confirm Password field must be the same as the Password field";
-    if (Object.values(tempErrors).length)
+    if (Object.values(tempErrors)?.length)
       return setErrors(tempErrors);
 
     const serverResponse = await dispatch(

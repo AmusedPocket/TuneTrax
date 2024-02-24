@@ -30,7 +30,7 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
         setValidation(tempValidation)
 
         // Unsuccessful Validation
-        if (Object.values(tempValidation).length != 0) 
+        if (Object.values(tempValidation)?.length != 0) 
             return false;
         return true;
     }
