@@ -18,11 +18,11 @@ function SingleAlbum({ album }) {
             </Link>
             <div>
                 {firstFiveSongs(album.songs).map(song => (
-                    <div key={song.id}>
+                    <div key={song.id} className="single-album-image-text">
                         <Link to={`/songs/${song.id}`}>
                             {song.song_pic && <img src={song.song_pic} alt={`${song.title} song picture`} className="single-album-song-picture"/>}
-                        </Link>
                         <span className="first-five-album-song-text">{song.username} -- {song.title}</span>
+                        </Link>
                     </div>
                 ))}
             </div>

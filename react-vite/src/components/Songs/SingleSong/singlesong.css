@@ -21,6 +21,7 @@
 .album {
     display: flex;
     border: 1.5px solid rgba(0, 4, 51, .25);
-    height: 50px; 
+    height: 50px;
+    width: 50px; 
     /* float: left; */
 }

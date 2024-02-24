@@ -21,7 +21,7 @@ const AllSongs = () => {
     })
 
     return(
-        <h1 className="song-page"> hi {songItems}</h1>
+        <h1 className="song-page"> {songItems}</h1>
 
     )
 }

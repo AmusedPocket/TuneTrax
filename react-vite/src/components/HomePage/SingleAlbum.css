@@ -7,20 +7,31 @@
 }
 
 .first-five-album-song-text{
-    display: flex;
+    display: inline-flex;
+    padding: 5px;
+    width: fit-content;
 }
 
 .single-album-album{
     border: 1.5px solid rgba(0, 4, 51, .25);
     width: 200px;
+    height: 200px;
 
 }
 
 .single-album-song-picture {
-    width: 100px;
+    width: 30px;
+    width: 30px;
+    margin: 0px 5px;
 }
 
-.album-pic {
+.single-album-image-text{
+    border: 2px solid black;
+    display: flex;
+    width: fit-content;
+}
+
+.album-pic{
     width: 200px;
     height: 200px;
 }
