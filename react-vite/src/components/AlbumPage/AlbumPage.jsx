@@ -171,12 +171,14 @@ function AlbumPage() {
                             <span><i className="fa-solid fa-heart"></i> {album.likes?.length} likes</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
-                        {firstEightLikedPFP(album.likes).map(like_user => (
-                            <div key={like_user.id}>
-                                {like_user.profile_pic && <img src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
-                                {!like_user.profile_pic && <div> default colored profile picture </div>}
-                            </div>)
-                        )}
+                        <div>
+                            {firstEightLikedPFP(album.likes).map(like_user => (
+                                <div key={like_user.id}>
+                                    {like_user.profile_pic && <img className="profile-pic" src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
+                                    {!like_user.profile_pic && <div className="profile-pic default-pic"></div>}
+                                </div>)
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
