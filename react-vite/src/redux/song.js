@@ -76,7 +76,7 @@ const clearAlbumSongs = () => ({
 
 // Thunks
 export const thunkGetSong = (songId) => async (dispatch) => {
-    const response = await fetch(`/api/songs/${songId}/`);
+    const response = await fetch(`/api/songs/${songId}`);
 
     if (response.ok) {
         const song = await response.json();

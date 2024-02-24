@@ -12,6 +12,7 @@ const SingleSong = ({song}) => {
     const [currentLikes, setCurrentLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)
 
+
     useEffect(()=>{
         if(song) setCurrentLikes(song.likes)
     }, [song])
