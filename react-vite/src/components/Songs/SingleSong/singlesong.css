@@ -1,0 +1,25 @@
+.single-song-container {
+    display: flex;
+    
+    gap: 10px;
+    background-image: linear-gradient(135deg, #EFDC2B 0%, #EF912B 45%, #EF3E2B 100%);
+    border-top: 1.5px solid rgba(0, 4, 51, .25);
+
+    padding: 5px;
+    height: 50px; 
+    justify-content: space-between;
+    
+}
+
+.artist {
+    /* border: 2px solid black; */
+    
+    
+}
+
+.album {
+    display: flex;
+    border: 1.5px solid rgba(0, 4, 51, .25);
+    height: 50px; 
+    /* float: left; */
+}
