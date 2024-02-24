@@ -269,6 +269,8 @@ const songReducer = (state=initialState, action) => {
         case DELETE_COMMENT:
             newState = { ...state }
             newState.songs = { ...state.songs }
+            console.log('Action song id: ', action.payload)
+            console.log('New state songs is: ', newState.songs)
             delete newState.songs[action.songId.commentId];
             return newState;
         case EDIT_COMMENT:

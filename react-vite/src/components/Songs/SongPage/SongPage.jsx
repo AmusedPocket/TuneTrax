@@ -13,6 +13,7 @@ import { useModal } from "../../../context/Modal";
 import { thunkDeleteComment } from "../../../redux/song";
 
 
+
 const SongPage = () => {
     const { songId } = useParams()
     const dispatch = useDispatch()
@@ -35,13 +36,22 @@ const SongPage = () => {
     const song = useSelector((state) => state.songs.songs[songId])
   
 
-    const [currentLikes, setCurrentLikes] = useState(song.likes)
+    const [currentLikes, setCurrentLikes] = useState(song?.likes)
+    const likeClick = () => {
+        // const song_likes = song.likes;
+        console.log("before dispatch: ", song.likes)
+        dispatch(thunkAddLike(song.id, user))
+            .then(result =>{ 
+                song.likes += result
+                setCurrentLikes(song.likes)
+            })
+    }
 
     if (!song) return;
 
     // console.log("user id is", userId)
     const songComments = song.comments
-
+    
     function PlaySong() {
         console.log("song is:", song)
         if (songs[0]?.songLink !== song.song_link) {
@@ -62,6 +72,8 @@ const SongPage = () => {
 
     // Delete comment handle
     const yesButtonClick = async (commentId) => {
+        
+     
         await dispatch(thunkDeleteComment(songId, commentId))
         const removeComment = songComments.indexOf(songComments.find((comment) => comment.id === commentId))
         songComments.splice(removeComment, 1)
@@ -118,10 +130,14 @@ const SongPage = () => {
     }
 
     const postedAtDate = (created_at) => {
+       
         const date = new Date(created_at)
+      
         const now = new Date()
 
-        const timeDiff = now - date
+   
+
+        const timeDiff = now - date - (now.getTimezoneOffset() + date.getTimezoneOffset()) * 60000
         const secondsDiff = Math.floor(timeDiff / 1000)
         const minutesDiff = Math.floor(secondsDiff / 60)
         const hoursDiff = Math.floor(minutesDiff / 60)
@@ -140,15 +156,7 @@ const SongPage = () => {
         }
     }
 
-    const likeClick = () => {
-        // const song_likes = song.likes;
-        console.log("before dispatch: ", song.likes)
-        dispatch(thunkAddLike(song.id, user))
-            .then(result =>{ 
-                song.likes += result
-                setCurrentLikes(song.likes)
-            })
-    }
+
     
     
 
