@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useSongContext } from "../../../context/SongPlayerContext";
 import CreateComment from "../../Comments/CreateComment/CreateComment";
+import WaveSurfer from 'wavesurfer.js'
+import Waveform from "../../Waveform";
 // import { selectComments } from "../../../redux/song";
 
 
 const SongPage = () => {
     const { songId } = useParams()
     const dispatch = useDispatch()
-    const { songs, setSongs } = useSongContext()
+    const { songs, setSongs, songTime } = useSongContext()
 
     useEffect(() => {
         dispatch(thunkGetSong(songId))
@@ -43,24 +45,27 @@ const SongPage = () => {
         }
     }
 
+
+    console.log(song);
     return (
 
-        <h1>
+        <>
             <button onClick={PlaySong}>Play Song</button>
             {song.title}
             {/* {song.user.username} */}
             {song.created_at}
             <span>#{song.genre}</span>
-            <span> {songComments?.map((comment) => {
-                return <>
+            <Waveform audio={song} />
+            <span> 
+                {songComments?.map((comment) => 
                     <span key={comment.id}>
                         <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {comment.song_time} {comment.created_at}</p>
                         <p>{comment.comment} </p>
-                    </span>
-                </>
-            })}</span>
+                    </span>)
+                }
+            </span>
             <CreateComment song={song} />
-        </h1>
+        </>
  
 
     )

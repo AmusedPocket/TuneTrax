@@ -1,1 +1,38 @@
 /* TODO: Add sitewide styles */
+a, ul, span, button {
+    all: unset;
+}
+
+body {
+    margin: auto;
+    width:1200px;
+    background-color: #FFFFAB;
+}
+
+.play-button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 25px;
+    text-shadow: 5px 5px 4px rgba(0, 4, 51, .25);
+    box-shadow: 2px 2px 4px rgba(0, 4, 51, .25);
+    color: white;
+    
+    border: 2px solid #EF912B;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    background-color: #EF3E2B;
+}
+
+.default-pic {
+    background: linear-gradient(45deg, #EFDC2B 0%, #EF912B 50%, #EF3E2B 100%);
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}

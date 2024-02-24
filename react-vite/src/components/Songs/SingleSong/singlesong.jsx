@@ -1,7 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import SongPlayer from "../../Navigation/SongPlayer/SongPlayer";
-import AudioPlayer from 'react-h5-audio-player';
 
 const SingleSong = ({song}) => {
     const { songId } = useParams()
@@ -9,12 +6,6 @@ const SingleSong = ({song}) => {
     console.log(song)
     return(
         <div className="single-song-container">
-            {/* <AudioPlayer
-            autoPlay
-            src={song.song_link}
-            onPlay={(e) => console.log("onPlay")}
-        // other props here
-        /> */}
             <p>{song.user.username}</p>
             {song.albums && <p>{song.albums[0].title}</p>}
             <p>{song.title}</p>
