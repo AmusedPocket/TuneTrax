@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
-import { thunkGetSong, thunkEditComment } from "../../../redux/song";
+import { thunkGetSong, thunkEditComment, thunkAddLike } from "../../../redux/song";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useSongContext } from "../../../context/SongPlayerContext";
 import CreateComment from "../../Comments/CreateComment/CreateComment";
-import WaveSurfer from 'wavesurfer.js'
+// import WaveSurfer from 'wavesurfer.js'
 import Waveform from "../../Waveform";
 // import { selectComments } from "../../../redux/song";
 import { thunkPostComment } from "../../../redux/song";
@@ -24,7 +24,7 @@ const SongPage = () => {
     const user = useSelector(state => state.session.user)
     const [commentText, setCommentText] = useState('')
     const [editingComment, setEditingComment] = useState(-1)
-
+    
 
     useEffect(() => {
         dispatch(thunkGetSong(songId))
@@ -33,6 +33,9 @@ const SongPage = () => {
 
 
     const song = useSelector((state) => state.songs.songs[songId])
+  
+
+    const [currentLikes, setCurrentLikes] = useState(song.likes)
 
     if (!song) return;
 
@@ -106,6 +109,47 @@ const SongPage = () => {
         setCommentText(comment.comment)     
     }
 
+    const minuteSecond = (song_time) => {
+        const totalSeconds = parseFloat(song_time);
+        const minutes = Math.floor(totalSeconds / 60)
+        const seconds = Math.floor(totalSeconds % 60)
+        const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+        return formattedTime
+    }
+
+    const postedAtDate = (created_at) => {
+        const date = new Date(created_at)
+        const now = new Date()
+
+        const timeDiff = now - date
+        const secondsDiff = Math.floor(timeDiff / 1000)
+        const minutesDiff = Math.floor(secondsDiff / 60)
+        const hoursDiff = Math.floor(minutesDiff / 60)
+        const daysDiff = Math.floor(hoursDiff / 24)
+        const monthsDiff = Math.floor(daysDiff / 30)
+        const yearsDiff = Math.floor(monthsDiff / 12)
+
+        if(yearsDiff >=1){
+            return `${yearsDiff} year${yearsDiff !== 1 ? 's': ''} ago`
+        } else if (monthsDiff >= 1){
+            return `${monthsDiff} month${monthsDiff !== 1 ? 's': ''} ago`
+        } else if (daysDiff >= 1){
+            return `${daysDiff} day${daysDiff !== 1 ? 's' : ''} ago`
+        } else {
+            return `${hoursDiff} hour${hoursDiff !== 1 ? 's' : ''} ago`
+        }
+    }
+
+    const likeClick = () => {
+        // const song_likes = song.likes;
+        console.log("before dispatch: ", song.likes)
+        dispatch(thunkAddLike(song.id, user))
+            .then(result =>{ 
+                song.likes += result
+                setCurrentLikes(song.likes)
+            })
+    }
+    
     
 
     return (
@@ -117,10 +161,27 @@ const SongPage = () => {
             {song.created_at}
             <span>#{song.genre}</span>
             <Waveform audio={song} />
+            <form onSubmit={handleSubmit} type='submit'>
+                <input
+                    placeholder="Write a comment for the song"
+                    type="text"
+                    maxLength="255"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                />
+                <input type="submit" />
+            </form>
+            <div>
+            <p><button onClick={()=>likeClick()}><i className="fa-solid fa-heart">{currentLikes}</i></button></p>
+            </div>
+            
+            {song.body}
             <span> 
-                {songComments?.map((comment) => {
+                {songComments
+                    ?.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
+                    .map((comment) => {
                     return <><span key={comment.id}>
-                        <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {comment.song_time} {comment.created_at}</p>
+                        <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {minuteSecond(comment.song_time)} · {postedAtDate(comment.created_at)}</p>
                         {comment.id === editingComment ? (<form onSubmit={submitEdit}>
                     <textarea
                         value={commentText}
@@ -144,16 +205,7 @@ const SongPage = () => {
                     </span>
                 </>
             })}</span>
-            <form onSubmit={handleSubmit} type='submit'>
-                <input
-                    placeholder="Write a comment for the song"
-                    type="text"
-                    maxLength="255"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                />
-                <input type="submit" />
-            </form>
+            
         </>
 
 
