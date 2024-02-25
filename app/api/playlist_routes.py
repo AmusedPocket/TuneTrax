@@ -134,4 +134,20 @@ def create_playlist():
         db.session.add(payload)
         db.session.commit()
         return { "playlist": payload.toDict() }, 200
-    return { "errors": form.errors }, 401    
+    return { "errors": form.errors }, 401
+
+@playlist_routes.route('/<int:id>/like/', methods=['POST', 'DELETE'])
+@login_required
+def add_like(id):
+    found = False
+    playlist = Playlist.query.get(id)
+    for user in playlist.likes:
+        if user.id == current_user.id:
+            playlist.likes.remove(user)
+            found = True
+            break
+    if not found:
+        playlist.likes.append(current_user)
+    db.session.add(playlist)
+    db.session.commit()
+    return {"message": "deleted like" if found else "added like"}, 202 if found else 200

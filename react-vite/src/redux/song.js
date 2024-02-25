@@ -10,6 +10,7 @@ const POST_COMMENT = 'songs/POST_COMMENT';
 const DELETE_COMMENT = 'songs/DELETE_COMMENT';
 const EDIT_COMMENT = 'songs/EDIT_COMMENT';
 const ADD_LIKE = 'songs/ADD_LIKE';
+const DELETE_LIKE = 'songs/DELETE_LIKE';
 const POST_ALBUM_SONG = 'songs/POST_ALBUM_SONG';
 const CLEAR_ALBUM_SONGS = 'songs/CLEAR_ALBUM_SONGS';
 
@@ -54,8 +55,14 @@ const editComment = (comment) => ({
     payload: comment
 })
 
-const addLike = () => ({
-    type: ADD_LIKE
+const addLike = (songId, current_user, song) => ({
+    type: ADD_LIKE,
+    payload: {songId, current_user, song}
+})
+
+const deleteLike = (songId, current_user) => ({
+    type: DELETE_LIKE,
+    payload: {songId, current_user}
 })
 
 const postAlbumSongs = (song) => ({
@@ -200,12 +207,23 @@ export const thunkEditComment = (songId, comment) => async (dispatch) => {
     }
 }
 
-export const thunkAddLike = (songId) => async(dispatch) => {
+export const thunkAddLike = (songId, current_user) => async(dispatch) => {
     const response = await fetch(`/api/songs/${songId}/like`, {
         method: "POST",
-
     })
+
+    const song = await response.json()
+    if(song.message === "added like"){
+
+        dispatch(addLike(songId, current_user, song))
+        return 1
+    } else if (song.message === "deleted like"){
+        dispatch(deleteLike(songId, current_user))
+        return -1
+    }
+    return 0
 }
+
 
 export const thunkPostAlbumSong = (song) => async(dispatch) => {
     song = await dispatch(thunkPostSong(song));
@@ -251,6 +269,8 @@ const songReducer = (state=initialState, action) => {
         case DELETE_COMMENT:
             newState = { ...state }
             newState.songs = { ...state.songs }
+            console.log('Action song id: ', action.payload)
+            console.log('New state songs is: ', newState.songs)
             delete newState.songs[action.songId.commentId];
             return newState;
         case EDIT_COMMENT:
@@ -264,6 +284,10 @@ const songReducer = (state=initialState, action) => {
             newState = { ...state };
             newState.postedAlbumSongs = {};
             return newState;
+        case ADD_LIKE:
+            newState = {...state};
+            newState.songs = {...state.songs, [action.payload.id]: action.payload}
+            return newState;            
         default:
             return state;
     }

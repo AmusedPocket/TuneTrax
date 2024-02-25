@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetSongs } from "../../../redux/song";
 import SingleSong from "../SingleSong";
-import SongPlayer from "../../Navigation/SongPlayer/SongPlayer";
+
 
 
 
