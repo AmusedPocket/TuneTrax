@@ -77,18 +77,18 @@ function PlaylistPage() {
     );
     return (
         <>
-            <div>{/* head container */}
-                <div> {/* Left side */}
-                    <div> {/* top */}
-                        <div>
-                            <div>play playlist</div>
+            <div className="playlist-header">{/* head container */}
+                <div className="playlist-header_data"> {/* Left side */}
+                    <div className="playlist-header_data-top"> {/* top */}
+                        <div id="playlist-header_data-top-left">
+                            <div className="play-button"><i className="fa-solid fa-play"></i></div>
                             <div>
                           
                                 <span>{playlist.title}</span>
                                 <span>{playlist.user.username}</span>
                             </div>
                         </div>
-                        <div>
+                        <div id="playlist-header_data-top-right">
                             <span>released:</span>
                             <span>{calcDateSince(playlist.release_date)}</span>
                             <div>
@@ -98,7 +98,7 @@ function PlaylistPage() {
                     </div>
                     <div> {/* bottom */}
                         {/* if not played */}
-                        <div>
+                        <div id="playlist-header_data-track-count">
                             <span>{playlist.songs?.length}</span>
                             <span>TRACKS</span>
                             {/* TODO song length */}
@@ -109,9 +109,9 @@ function PlaylistPage() {
                 </div>
                 <img src={playlist.playlist_pic} alt={`${playlist.title} cover image`}/>
             </div>
-            <div> {/* body container */}
-                <div> {/* left side - playlist/user data */}
-                    <div> {/* top */}
+            <div className="playlist-body"> {/* body container */}
+                <div className="playlist-body_left"> {/* left side - playlist/user data */}
+                    <div className="playlist-body_left-top"> {/* top */}
                         <div>
                             <button onClick={()=>likeClick()} disabled={canLike}>like</button>
                             <button>share</button>
@@ -128,11 +128,11 @@ function PlaylistPage() {
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>
-                            <a>{currentLikes}</a>
+                            <i className="fa-solid fa-heart"></i> {albumLikes}
                         </div>
                     </div>
-                    <div> {/* bottom */}
-                        <div> {/* left side - user stuff */}
+                    <div className="album-body_left-bottom"> {/* bottom */}
+                        <div className="album-body_left-bottom_profile"> {/* left side - user stuff */}
                             {playlist.user.profile_pic && <img src={playlist.user.profile_pic} alt={`${playlist.user?.username} profile image`}/>}
                             {!playlist.user.profile_pic && <div> default colored profile picture </div>}
                             {/* TODO: route to user page */} <NavLink>{playlist.user?.username}</NavLink>
