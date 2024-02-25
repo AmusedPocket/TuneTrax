@@ -199,14 +199,14 @@ const SongPage = () => {
                     <button onSubmit={submitEdit} type="submit">Submit Edit</button>
                 </form>) : <p>{comment.comment} </p>}
                         {user && (comment.user.id === user.id) &&
-                            <button onClick={()=>editComment(comment)}>Manage Comment</button>
+                            <button onClick={() => window.alert('Feature coming soon')}>Manage Comment</button>
                         }
 
                         {user && (comment.user.id === user.id) && <OpenModalButton
                             buttonText="Delete Comment"
                             modalComponent={<>
                                 <h2>Confirm Delete</h2>
-                                <button onClick={() => yesButtonClick(comment.id)}>Yes</button>
+                                <button onClick={() => window.alert('Feature coming soon')}>Yes</button>
                                 <button onClick={closeModal}>No</button>
                                 {/* DeleteComment comment={comment} songComments={songComments} */}
                             </>}

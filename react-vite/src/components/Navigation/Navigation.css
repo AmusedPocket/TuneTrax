@@ -40,3 +40,13 @@ nav > ul > li:hover {
   transition: background-color .2s;
   background-color:  rgba(37,37,77,1);
 }
+
+.nav-link-title {
+  color: #Ef3E2B;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large;
+  height: 100%;
+}
