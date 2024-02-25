@@ -35,7 +35,7 @@ const editSong = (song) => ({
     payload: song
 })
 
-const deleteSong = (songId) => ({
+const deleteSong = (songId, commentId) => ({
     type: DELETE_SONG,
     payload: { songId, commentId }
 })

@@ -148,14 +148,14 @@
     cursor: pointer;
 }
 
-.playlist-body_left-bottom_album-details {
+.playlist-body_left-bottom_playlist-details {
     display: flex;
     flex-direction: column;
     width: 100%;
     border-bottom: 1.5px solid rgba(0, 4, 51, .25);
 }
 
-.playlist-body_left-bottom_album-details_body {
+.playlist-body_left-bottom_playlist-details_body {
     padding: 15px 0;
 }
 
@@ -215,4 +215,8 @@
 .playlist-body_right_container_set > div {
     display: flex;
     flex-direction: column;
+}
+.playlist-body_right_container_likes {
+    display: flex;
+    padding: 5px 15px;
 }

@@ -36,3 +36,9 @@ body {
     height: 120px;
     border-radius: 50%;
 }
+.profile-pic_likes {
+    width: 40px;
+    height: 40px;
+    margin-left: -10px;
+    border-radius: 50%;
+}
