@@ -29,8 +29,8 @@ class Song(db.Model):
     visibility = db.Column(db.Boolean, nullable=False, default=False)
     plays = db.Column(db.Integer, nullable=False, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
 
     def toDictLimited(self):
         return {

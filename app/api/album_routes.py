@@ -92,3 +92,24 @@ def create_album():
         db.session.commit()
         return { "album": payload.toDict() }, 200
     return { "errors": form.errors }, 401    
+
+
+# Add a Like
+@album_routes.route('/<int:id>/like', methods=['POST', 'DELETE'])
+@login_required
+def add_like(id):
+    """
+    Add a like to the album by appending the user to the likes.
+    """
+    found = False
+    album = Album.query.get(id)
+    for user in album.likes:
+        if user.id == current_user.id:
+            album.likes.remove(user)
+            found = True
+            break
+    if not found:
+        album.likes.append(current_user)
+    db.session.add(album)
+    db.session.commit()
+    return {"message": "deleted like" if found else "added like"}, 202 if found else 200

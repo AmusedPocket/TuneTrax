@@ -179,28 +179,21 @@ def edit_song_comment(_id, c_id):
 
 
 # Add a Like
-@song_routes.route('/<int:id>/like', methods=['POST'])
+@song_routes.route('/<int:id>/like', methods=['POST', 'DELETE'])
 @login_required
 def add_like(id):
     """
     Add a like to the song by appending the user to the likes.
     """
+    found = False
     song = Song.query.get(id)
-    song.likes.append(current_user)
+    for user in song.likes:
+        if user.id == current_user.id:
+            song.likes.remove(user)
+            found = True
+            break
+    if not found:
+        song.likes.append(current_user)
     db.session.add(song)
     db.session.commit()
-    return song.song_dict()
-
-
-# Delete a Like
-@song_routes.route('/<int:id>/like', methods=['DELETE'])
-@login_required
-def delete_like(id):
-    """
-    Delete a like by removing the user from the likes
-    """
-    song = Song.query.get(id)
-    song.likes.remove(current_user)
-    db.session.add(song)
-    db.session.commit()
-    return {"message": "Removed the Like"}
+    return {"message": "deleted like" if found else "added like"}, 202 if found else 200
