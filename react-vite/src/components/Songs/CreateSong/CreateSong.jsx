@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { thunkEditSong, thunkPostAlbumSong, thunkPostSong } from "../../../redux/song";
+import "./CreateSong.css"
 
 function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
     const dispatch = useDispatch();
@@ -82,29 +83,32 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
     }
 
     return !hasSubmitted || !dontNavigate ? (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="upload-form_song">
             <div>
-                <img src={songImg} alt="Song image."/>
-                {songImg == "No Image" &&
-                <input 
-                    type="file"
-                    accept="image/*"
-                    onChange={onImageChange}
-                    />
-                }
+                <h1>Upload a Song</h1>
             </div>
-            <div>  
-                {errors.errors && errors.errors.map((error, i) => (<div key={i}>{error}</div>))}
-                <label>
-                    Title {/* TODO: make asterisk red */}*
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+            <div>
+                <div className="upload-form_song_pic">
+                    <img src={songImg} alt="Song image."/>
+                    {songImg == "No Image" &&
+                    <input 
+                        type="file"
+                        accept="image/*"
+                        onChange={onImageChange}
                         />
-                    {validation.title && <span>{validation.title}</span>}
-                </label>
-                <div>
+                    }
+                </div>
+                <div className="upload-form_song_data">  
+                    {errors.errors && errors.errors.map((error, i) => (<div key={i}>{error}</div>))}
+                    <label>
+                        Title {/* TODO: make asterisk red */}*
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            />
+                        {validation.title && <p>{validation.title}</p>}
+                    </label>
                     <label>
                         Set Genre {/* TODO: make asterisk red */}*
                         <select
@@ -124,49 +128,51 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
                             <option value="Country">Country</option>
                             <option value="Metal">Metal</option>
                         </select>
-                        {validation.genre && <span>{validation.genre}</span>}
+                        {validation.genre && <p>{validation.genre}</p>}
                     </label>
-                </div> 
-                <label>
-                    Description
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        />
-                    {validation.description && <span>{validation.description}</span>}
-                </label>
-                <span>Privacy:</span>
-                <label>
-                    <input
-                        type="radio"
-                        onChange={() => setPrivacy(true)}
-                        checked={privacy}
-                        />
-                    Public
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        onChange={() => setPrivacy(false)}
-                        checked={!privacy}
-                        />
-                    Private
-                </label>
-            </div>
-            <div>
-                <span>{/* TODO: make asterisk red */}* Required fields</span>
-                <div>
-                    <button type="cancel" onClick={clearForm}>Cancel</button>
-                    <button type="submit" disabled={disabled}>Submit</button>
+                    <label>
+                        Description
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            />
+                        {validation.description && <p>{validation.description}</p>}
+                    </label>
+                    <label>
+                        <span>Privacy:</span>
+                        <div>
+                            <label>
+                                Public
+                                <input
+                                    type="radio"
+                                    onChange={() => setPrivacy(true)}
+                                    checked={privacy}
+                                    />
+                            </label>
+                            <label>
+                                Private
+                                <input
+                                    type="radio"
+                                    onChange={() => setPrivacy(false)}
+                                    checked={!privacy}
+                                    />
+                            </label>
+                        </div>
+                    </label>
+                    <span>{/* TODO: make asterisk red */}* Required fields</span>
+                    <div className="upload-form_song_button-container">
+                        <button type="cancel" onClick={clearForm}>Cancel</button>
+                        <button type="submit" disabled={disabled}>Submit</button>
+                    </div>
                 </div>
             </div>
         </form>
     ) : (
-        <>
+        <div className="submitted-song">
             <img src={songImg} alt={`${title} picture.`}/>
             <span>{title}</span>
             <span>{privacy ? "Public" : "Private"}</span>
-        </>
+        </div>
     )
 }
 

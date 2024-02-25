@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { thunkAddAlbum, thunkUpdateAlbum } from "../../redux/album"
 import { thunkAddPlaylist, thunkUpdatePlaylist } from "../../redux/playlist"
 import CreateSong from "../Songs/CreateSong";
+import "./CreateSet.css"
 
 function CreateSet({ editedSet, songFiles }) {
     const dispatch = useDispatch();
@@ -27,6 +28,18 @@ function CreateSet({ editedSet, songFiles }) {
     
     async function onSubmit(e) {
         e.preventDefault();
+        setErrors([])
+
+        if (songFiles.length != songIds.length) {
+            setValidation({tracks: "All tracks must be successfuly submitted."})
+            return;
+        }
+        
+        if (type == "Playlist") {
+            alert("Posting playlist feature is coming soon!");
+            return;
+        }
+
         setDisabled(false);
 
         // Validations
@@ -83,27 +96,29 @@ function CreateSet({ editedSet, songFiles }) {
     }
 
     return (
-        <>
+        <div className="upload-form_set">
+            <h1>Create a Set</h1>
             <div>
-                <span onClick={() => setCurrentPage("basic info")}>Basic info</span>
-                <span onClick={() => setCurrentPage("tracks")}>Tracks</span>
+                <h3 className={"tracks" != currentPage && "selected"} onClick={() => setCurrentPage("basic info")}>Basic info</h3>
+                <h3 className={"basic info" != currentPage && "selected"} onClick={() => setCurrentPage("tracks")}>Tracks</h3>
             </div>
             {"tracks" == currentPage && (<>
                     {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} addFunc={addToSongList} dontNavigate={true} />)}
                 </>)}
             {"basic info" == currentPage && (<>
-            <form onSubmit={onSubmit}>
-                <div>
+            <form onSubmit={onSubmit} className="upload-form_set_form">
+                <div className="upload-form_set_image">
                     <img src={albumImg}/>
-                    {/* hide when image is selected */}
+                    {albumImg == "No Image" &&
                     <input 
                         type="file"
                         accept="image/*"
                         onChange={onImageChange}
                         />
+                    }
                 </div>
-                <div>  
-                    {errors.errors && errors.errors.map((error, i) => (<div key={i}>{error}</div>))}
+                <div className="upload-form_set_data">  
+                    {errors.length != 0 && errors.map((error, i) => (<p key={i}>{error}</p>))}
                     <label>
                         Title {/* TODO: make asterisk red */}*
                         <input
@@ -111,8 +126,8 @@ function CreateSet({ editedSet, songFiles }) {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             />
-                        {validation.title && <span>{validation.title}</span>}
                     </label>
+                    {validation.title && <p>{validation.title}</p>}
                     <div>
                         <label>
                             Set type 
@@ -132,8 +147,8 @@ function CreateSet({ editedSet, songFiles }) {
                                 value={releaseDate}
                                 onChange={(e) => setReleaseDate(e.target.value)}
                                 />
-                            {validation.releaseDate && <span>{validation.releaseDate}</span>}
                         </label>
+                        {validation.releaseDate && <p>{validation.releaseDate}</p>}
                     </div> 
                     <label>
                         Description
@@ -142,17 +157,16 @@ function CreateSet({ editedSet, songFiles }) {
                             onChange={(e) => setDescription(e.target.value)}
                             />
                     </label>
-                </div>
-                <div>
+                    {validation.tracks && <p>{validation.tracks}</p>}
                     <span>{/* TODO: make asterisk red */}* Required fields</span>
-                    <div>
+                    <div className="upload-form_set_button-container">
                         <button type="cancel" onClick={clearForm}>Cancel</button>
                         <button type="submit" disabled={disabled}>Submit</button>
                     </div>
                 </div>
             </form>
             </>)}
-        </>
+        </div>
     );
 }
 

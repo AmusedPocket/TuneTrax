@@ -11,6 +11,7 @@ import { thunkPostComment } from "../../../redux/song";
 import OpenModalButton from "../../OpenModalButton/OpenModalButton";
 import { useModal } from "../../../context/Modal";
 import { thunkDeleteComment } from "../../../redux/song";
+import "./SongPage.css"
 
 
 
@@ -26,7 +27,7 @@ const SongPage = () => {
     const [commentText, setCommentText] = useState('')
     const [editingComment, setEditingComment] = useState(-1)
     const [canLike, setCanLike] = useState(false)
-    
+
 
     useEffect(() => {
         dispatch(thunkGetSong(songId))
@@ -35,7 +36,7 @@ const SongPage = () => {
 
 
     const song = useSelector((state) => state.songs.songs[songId])
-  
+
 
     const [currentLikes, setCurrentLikes] = useState(0)
 
@@ -48,7 +49,7 @@ const SongPage = () => {
         // const song_likes = song.likes;
         setCanLike(true)
         dispatch(thunkAddLike(song.id, user))
-            .then(result =>{ 
+            .then(result =>{
                 song.likes += result
                 setCurrentLikes(song.likes)
                 setCanLike(false)
@@ -59,7 +60,7 @@ const SongPage = () => {
 
     // console.log("user id is", userId)
     const songComments = song.comments
-    
+
     function PlaySong() {
         console.log("song is:", song)
         if (songs[0]?.songLink !== song.song_link) {
@@ -80,13 +81,13 @@ const SongPage = () => {
 
     // Delete comment handle
     const yesButtonClick = async (commentId) => {
-        
-     
+
+
         await dispatch(thunkDeleteComment(songId, commentId))
         const removeComment = songComments.indexOf(songComments.find((comment) => comment.id === commentId))
         songComments.splice(removeComment, 1)
-        
-        
+
+
 
         return closeModal();
     }
@@ -125,7 +126,7 @@ const SongPage = () => {
 
     const editComment = (comment) => {
         setEditingComment(comment.id)
-        setCommentText(comment.comment)     
+        setCommentText(comment.comment)
     }
 
     const minuteSecond = (song_time) => {
@@ -158,63 +159,107 @@ const SongPage = () => {
             const happyTime = Math.max(0, hoursDiff)
             return `${happyTime} hour${happyTime !== 1 ? 's' : ''} ago`
         }
-    }    
-    
+    }
+
 
     return (
 
         <>
-            <button onClick={PlaySong}>Play Song</button>
-            {song.title}
-            {/* {song.user.username} */}
-            {song.created_at}
-            <span>#{song.genre}</span>
-            <Waveform audio={song} />
-            <form onSubmit={handleSubmit} type='submit'>
-                <input
-                    placeholder="Write a comment for the song"
-                    type="text"
-                    maxLength="255"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                />
-                <input type="submit" />
-            </form>
-            <div>
-            <p><button onClick={()=>likeClick()} disabled={canLike}><i className="fa-solid fa-heart">{currentLikes}</i></button></p>
-            </div>
-            
-            {song.body}
-            <span> 
-                {songComments
-                    ?.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
-                    .map((comment) => {
-                    return <><span key={comment.id}>
-                        <p><h2><img src={comment.user.profile_pic} /> {comment.user.username} </h2>at {minuteSecond(comment.song_time)} · {postedAtDate(comment.created_at)}</p>
-                        {comment.id === editingComment ? (<form onSubmit={submitEdit}>
-                    <textarea
-                        value={commentText}
-                        placeholder={comment.comment}
-                        onChange={(e) => setCommentText(e.target.value)} />
-                    <button onSubmit={submitEdit} type="submit">Submit Edit</button>
-                </form>) : <p>{comment.comment} </p>}
-                        {user && (comment.user.id === user.id) &&
-                            <button onClick={() => window.alert('Feature coming soon')}>Manage Comment</button>
-                        }
+            <div className="song-header">
+                {/* head container */}
 
-                        {user && (comment.user.id === user.id) && <OpenModalButton
-                            buttonText="Delete Comment"
-                            modalComponent={<>
-                                <h2>Confirm Delete</h2>
-                                <button onClick={() => window.alert('Feature coming soon')}>Yes</button>
-                                <button onClick={closeModal}>No</button>
-                                {/* DeleteComment comment={comment} songComments={songComments} */}
-                            </>}
-                        />}
-                    </span>
-                </>
-            })}</span>
-            
+                <div className="song-header_data">
+                    <div className="song-header_data-top">
+                        <div id="song-header_data-top-left">
+                            <div className="song-header_data-top-button">
+                                <button onClick={PlaySong} className="play-button"><i className="fa-solid fa-play"></i></button>
+                            </div>
+                        <div>
+                            <h3>{song.title}</h3>
+                            {/* {song.user.username} */}
+                            <h5>{song.created_at}</h5>
+                        </div>
+                            <span>#{song.genre}</span>
+                        </div>
+                    </div>
+                    <div className="song-header-waveform">
+                        <Waveform audio={song} />
+                    </div>
+                </div>
+                    <div className="song-header_data-bottom">
+                        <p><button onClick={()=>likeClick()} disabled={canLike} style={{cursor: "pointer"}}>
+                            <div>
+                                <i className="fa-solid fa-heart">{currentLikes}</i>
+                            </div></button></p>
+                    </div>
+            </div>
+
+            <div className="song-comment">
+                {/* song body container */}
+                <div className="song-body-text">
+                    <h2 style={{color: "rgba(0, 4, 51)"}}>Song Body:</h2>
+                    <h4 style={{color: "rgba(0, 4, 51)"}}>{song.body}</h4>
+                </div>
+                <div className="song-comment-input">
+                        <form onSubmit={handleSubmit} type='submit'>
+                            <input
+                                placeholder="Write a comment for the song"
+                                type="text"
+                                maxLength="255"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                            />
+                            <input type="submit"  style={{cursor: "pointer", marginLeft: "20px",  color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)"}}/>
+                        </form>
+                </div>
+
+                <div className="song-comment-all">
+                    <span>
+                        {songComments
+                            ?.sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
+                            .map((comment) => {
+                            return <>
+                                <span key={comment.id} className="song-comment-eachone">
+                                    <p>
+                                        <h2 style={{padding: "5px", color:"#FFFFAB", backgroundColor: "rgba(0, 4, 51)", marginTop: "20px", borderRadius: "10px", width:"150px"}}>
+                                            <img src={comment.user.profile_pic} /> {comment.user.username}
+                                        </h2>at {minuteSecond(comment.song_time)} · {postedAtDate(comment.created_at)}
+                                    </p>
+                                {comment.id === editingComment ? (<form onSubmit={submitEdit}>
+                            <div style={{padding: "20px 0px"}}>
+                                <textarea
+                                    value={commentText}
+                                    placeholder={comment.comment}
+                                    onChange={(e) => setCommentText(e.target.value)}/>
+                                <button onSubmit={submitEdit} type="submit" style={{color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)", borderRadius: "5px", padding: "1px 5px", margin: "10px"}}>Submit Edit</button>
+                            </div>
+                        </form>) : <p>{comment.comment} </p>}
+                                {(comment.user.id === user.id) &&
+                                    <button onClick={() => window.alert('Feature coming soon')}>Manage Comment</button>
+                                }
+
+                                {(comment.user.id === user.id) && <OpenModalButton
+                                    buttonText="Delete Comment"
+                                    modalComponent={
+                                    <div style={{backgroundColor: "#FFFFAB", padding:"30px"}}>
+                                        <h2>Confirm Delete</h2>
+
+                                        <button onClick={() => window.alert('Feature coming soon')} style={{color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)", borderRadius: "5px", padding: "1px 15px", margin: "10px", backgroundColor: "#EF3E2B"}}>
+                                            Yes
+                                        </button>
+
+                                        <button onClick={closeModal} style={{color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)", borderRadius: "5px", padding: "1px 15px", margin: "10px", backgroundColor: "rgba(0, 4, 51, .3)"}}>
+                                            No
+                                        </button>
+                                        {/* DeleteComment comment={comment} songComments={songComments} */}
+                                    </div>}
+                                />}
+                            </span>
+                        </>
+                    })}</span>
+                </div>
+            </div>
+
         </>
 
 
