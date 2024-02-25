@@ -18,6 +18,7 @@ function CreateSet({ editedSet, songFiles }) {
     const [type, setType] = useState(editedSet ? editedSet.type : "Album");
     const [releaseDate, setReleaseDate] = useState(editedSet ? editedSet.release_date : "");
     const [description, setDescription] = useState(editedSet ? editedSet.body : "");
+    const [songIds, setSongIds] = useState([])
 
     function onImageChange(e) {
         if (e.target.files && e.target.files[0]);
@@ -46,7 +47,7 @@ function CreateSet({ editedSet, songFiles }) {
             album_pic: albumImg,
             body: description,
             release_date: releaseDate,
-            songs: songFiles,
+            songs: songIds.join(",")
         }
 
         if (editedSet) payload.id = editedSet.id;
@@ -76,6 +77,11 @@ function CreateSet({ editedSet, songFiles }) {
         setDescription("");
     }
 
+    const addToSongList = (id) => {
+        console.log([...songIds, id])
+        setSongIds([...songIds, id])
+    }
+
     return (
         <>
             <div>
@@ -83,7 +89,7 @@ function CreateSet({ editedSet, songFiles }) {
                 <span onClick={() => setCurrentPage("tracks")}>Tracks</span>
             </div>
             {"tracks" == currentPage && (<>
-                    {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} dontNavigate={true} />)}
+                    {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} addFunc={addToSongList} dontNavigate={true} />)}
                 </>)}
             {"basic info" == currentPage && (<>
             <form onSubmit={onSubmit}>

@@ -67,42 +67,17 @@ def all_albums():
 @album_routes.route("/", methods=["POST"])
 @login_required
 def create_album():
-    song_pass_valid = []
-    song_fail_valid = []
-
     user = User.query.get(current_user.id)
 
+    print("Im not there quite yet")
     form = AlbumForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         #post songs
-        for song in form.data["songs"]:
-            #validate song
-            print(song)
-            if not s3.song_file(song.filename):
-                song_fail_valid.append(song.title)
-
-            song_form = SongForm(
-                title=song.title or None,
-                body=song.body or None,
-                genre=song.genre or None,
-                visibility=song.visibility or False,
-                song_file=song.song_file,
-                song_pic=song.song_pic if song.song_pic else None
-            )
-
-            if song_form.validate_on_submit():
-                #post each song    
-                new_song = post_song(song_form)
-                #add each song to list
-                song_pass_valid.append(new_song)
-            else:
-                #if song validation fails, add that to a validations error list
-                song_fail_valid.append(song)
-        
-        # should any songs fail validation, send the list back and dont create an album
-        if len(song_fail_valid):
-            return json.dumps(song_fail_valid), 400
+        songStr = form.data["songs"]
+        songs = []
+        for songId in songStr.split(","):
+            songs.append(Song.query.get(songId))
 
         payload = Album(
             title=form.data["title"],
@@ -110,7 +85,7 @@ def create_album():
             body=form.data["body"],
             user=user,
             release_date=dt.strptime(form.data["release_date"], "%Y-%m-%d"),
-            songs=song_pass_valid
+            songs=songs
         )
         
         db.session.add(payload)

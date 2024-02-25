@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { thunkEditSong, thunkPostAlbumSong, thunkPostSong } from "../../../redux/song";
 
-function CreateSong({ editedSong, songFile, dontNavigate=false }) {
+function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [errors, setErrors] = useState({});
@@ -66,22 +66,10 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
 
         // Successful Submission
         if (!dontNavigate) navigate(`/songs/${response.id}`);
-        else setHasSubmitted(true);
-    }
-
-    function onBulkSubmit (e) {
-        e.preventDefault();
-
-        if (!validate()) return setDisabled(false);
-
-        songFile.title = title;
-        songFile.song_file = songFile;
-        songFile.song_pic = songImg;
-        songFile.body = description;
-        songFile.genre = genre;
-        songFile.visibility = privacy;
-
-        setHasSubmitted(true);
+        else {
+            addFunc(response.id);
+            setHasSubmitted(true);
+        }
     }
 
     function clearForm (e) {
@@ -169,9 +157,7 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
                 <span>{/* TODO: make asterisk red */}* Required fields</span>
                 <div>
                     <button type="cancel" onClick={clearForm}>Cancel</button>
-                    {dontNavigate ? 
-                        <button type="preparedForBulkSubmit" onClick={onBulkSubmit} disabled={disabled}>Done</button> :
-                        <button type="submit" disabled={disabled}>Submit</button>}
+                    <button type="submit" disabled={disabled}>Submit</button>
                 </div>
             </div>
         </form>
