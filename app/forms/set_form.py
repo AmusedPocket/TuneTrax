@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, ValidationError
-from datetime import datetime as dt, timedelta
+from datetime import datetime as dt
 
 def is_before_today(_form, field):
     if not field:
@@ -14,10 +14,12 @@ class AlbumForm(FlaskForm):
     album_pic = StringField("album_pic")
     body = StringField("body")
     release_date = StringField('release_date', validators=[DataRequired(), is_before_today])
+    songs = StringField("songs")
+
 
 class PlaylistForm(FlaskForm):
     title = StringField('title', validators=[DataRequired()])
     playlist_pic = StringField("playlist_pic")
     body = StringField("body")
     release_date = StringField('release_date', validators=[is_before_today])
-    
+    songs = StringField("songs")

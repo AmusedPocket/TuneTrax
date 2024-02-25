@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { thunkEditSong, thunkPostAlbumSong, thunkPostSong } from "../../../redux/song";
 
-function CreateSong({ editedSong, songFile, dontNavigate=false }) {
+function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [errors, setErrors] = useState({});
@@ -22,23 +22,28 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
             setSongImg(URL.createObjectURL(e.target.files[0]));
     }
 
-    async function onSubmit(e) {
-        e.preventDefault();
-        setDisabled(false);
-
-        // Validations
+    function validate() {
         const tempValidation = {};
         if ("" == title) tempValidation.title = "Enter a title.";
-        if ("" == description) tempValidation.title = "Enter a description.";
-        if ("" == genre) tempValidation.title = "Pick a genre.";
+        if ("" == description) tempValidation.description = "Enter a description.";
+        if ("" == genre) tempValidation.genre = "Pick a genre.";
         setValidation(tempValidation)
 
         // Unsuccessful Validation
         if (Object.values(tempValidation).length != 0) 
-            return setDisabled(false);
+            return false;
+        return true;
+    }
+
+    async function onSubmit(e) {
+        e.preventDefault();
+        setDisabled(false);
+
+        if (!validate()) return setDisabled(false);
 
         const payload = {
             title,
+            song_file: songFile,
             song_pic: songImg,
             body: description,
             genre,
@@ -54,15 +59,26 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
             
         // Unsuccessful Submission
         if (response.errors) { 
-            setErrors(Object.keys(response.errors).reduce((acc, errKey) => 
-                acc[errKey] = response.errors[errKey], {}));
+            setErrors({errors: [response.errors]});
             setDisabled(false);
             return;
         }
 
         // Successful Submission
         if (!dontNavigate) navigate(`/songs/${response.id}`);
-        else setHasSubmitted(true);
+        else {
+            addFunc(response.id);
+            setHasSubmitted(true);
+        }
+    }
+
+    function clearForm (e) {
+        e.preventDefault();
+        setSongImg("No Image");
+        setTitle("");
+        setDescription("");
+        setGenre("");
+        setPrivacy(false);
     }
 
     return !hasSubmitted || !dontNavigate ? (
@@ -108,6 +124,7 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
                             <option value="Country">Country</option>
                             <option value="Metal">Metal</option>
                         </select>
+                        {validation.genre && <span>{validation.genre}</span>}
                     </label>
                 </div> 
                 <label>
@@ -116,6 +133,7 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         />
+                    {validation.description && <span>{validation.description}</span>}
                 </label>
                 <span>Privacy:</span>
                 <label>
@@ -138,7 +156,7 @@ function CreateSong({ editedSong, songFile, dontNavigate=false }) {
             <div>
                 <span>{/* TODO: make asterisk red */}* Required fields</span>
                 <div>
-                    <button type="cancel">Cancel</button>
+                    <button type="cancel" onClick={clearForm}>Cancel</button>
                     <button type="submit" disabled={disabled}>Submit</button>
                 </div>
             </div>

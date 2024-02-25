@@ -53,7 +53,7 @@ export const deleteLike = (playlistId, current_user) => ({
 // Thunks
 export const thunkGetPlaylist = (playlistId) => async (dispatch)=> {
      if (!playlistId) return; 
-     const res = await fetch(`/api/playlists/${playlistId}`);
+     const res = await fetch(`/api/playlists/${playlistId}/`);
 
      if (res.ok) {
           const { playlist } = await res.json();
@@ -77,7 +77,7 @@ export const thunkGetPlaylists = () => async (dispatch)=> {
 }
 
 export const thunkAddPlaylist = (playlist) => async (dispatch)=> {
-     const res = await fetch("/api/playlists/new", {
+     const res = await fetch("/api/playlists/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(playlist)
@@ -93,7 +93,7 @@ export const thunkAddPlaylist = (playlist) => async (dispatch)=> {
 }
 
 export const thunkUpdatePlaylist = (playlist) => async (dispatch)=> {
-     const res = await fetch(`/api/playlists/${playlist.id}`, {
+     const res = await fetch(`/api/playlists/${playlist.id}/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(playlist)
@@ -109,7 +109,7 @@ export const thunkUpdatePlaylist = (playlist) => async (dispatch)=> {
 }
 
 export const thunkDeletePlaylist = (playlistId) => async (dispatch)=> {
-     const res = await fetch(`/api/playlists/${playlistId}`, {
+     const res = await fetch(`/api/playlists/${playlistId}/`, {
           method: "DELETE"
      });
 

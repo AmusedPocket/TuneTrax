@@ -5,12 +5,6 @@ import { thunkGetSongs } from "../../redux/song";
 
 export default function Footer() {
 
-     const dispatch = useDispatch()
-
-  
-
-     // const eachSong = allSongs.map(song => )
-
      return (
           <SongPlayer />
      )

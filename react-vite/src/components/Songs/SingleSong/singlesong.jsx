@@ -30,7 +30,7 @@ const SingleSong = ({song}) => {
     return(
         <div className="single-song-container">
             <p>{song.username}</p>
-            {song.albums && <p>{song.albums[0].title}</p>}
+            {song.albums && <p>{song.albums[0]?.title}</p>}
             <p>{song.title}</p>
             <p>#{song.genre}</p>
             <p>{song.plays}</p>

@@ -73,10 +73,13 @@ export const thunkGetAlbums = () => async (dispatch)=> {
 }
 
 export const thunkAddAlbum = (album) => async (dispatch)=> {
-    const res = await fetch("/api/albums/new", {
+    const formData = new FormData();
+    for (let key of Object.keys(album)) 
+        formData.append(key, album[key]);
+
+    const res = await fetch("/api/albums/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(album)
+        body: formData
     });
 
     if (res.ok) {

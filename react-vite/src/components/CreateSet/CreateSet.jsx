@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { thunkAddAlbum, thunkUpdateAlbum } from "../../redux/album"
 import { thunkAddPlaylist, thunkUpdatePlaylist } from "../../redux/playlist"
+import CreateSong from "../Songs/CreateSong";
 
-function CreateSet({ editedSet }) {
+function CreateSet({ editedSet, songFiles }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [errors, setErrors] = useState({});
@@ -12,13 +13,12 @@ function CreateSet({ editedSet }) {
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
 
-    const [songs, setSongs] = useState(editedSet ? editedSet.songs : []);
     const [albumImg, setAlbumImg] = useState(editedSet ? editedSet.image : "No Image");
     const [title, setTitle] = useState(editedSet ? editedSet.title : "");
     const [type, setType] = useState(editedSet ? editedSet.type : "Album");
     const [releaseDate, setReleaseDate] = useState(editedSet ? editedSet.release_date : "");
     const [description, setDescription] = useState(editedSet ? editedSet.body : "");
-    const [privacy, setPrivacy] = useState(false);
+    const [songIds, setSongIds] = useState([])
 
     function onImageChange(e) {
         if (e.target.files && e.target.files[0]);
@@ -39,13 +39,15 @@ function CreateSet({ editedSet }) {
         if (Object.values(tempValidation).length != 0) 
             return setDisabled(false);
 
+        console.log("song", songFiles)
+        console.log("image", albumImg)
+
         const payload = {
             title,
             album_pic: albumImg,
             body: description,
-            privacy,
             release_date: releaseDate,
-            songs,
+            songs: songIds.join(",")
         }
 
         if (editedSet) payload.id = editedSet.id;
@@ -66,17 +68,31 @@ function CreateSet({ editedSet }) {
         navigate(`/${"Album" == type ? "albums" : "playlists"}/${response.id}`);
     }
     
+    function clearForm (e) {
+        e.preventDefault();
+        setAlbumImg("No Image");
+        setTitle("");
+        setType("Album");
+        setReleaseDate("");
+        setDescription("");
+    }
+
+    const addToSongList = (id) => {
+        console.log([...songIds, id])
+        setSongIds([...songIds, id])
+    }
+
     return (
         <>
             <div>
                 <span onClick={() => setCurrentPage("basic info")}>Basic info</span>
                 <span onClick={() => setCurrentPage("tracks")}>Tracks</span>
             </div>
-            <form onSubmit={onSubmit}>
-                {"tracks" == currentPage && (<>=
-                    {/* TODO: show tracks for set */}
+            {"tracks" == currentPage && (<>
+                    {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} addFunc={addToSongList} dontNavigate={true} />)}
                 </>)}
-                {"basic info" == currentPage && (<>
+            {"basic info" == currentPage && (<>
+            <form onSubmit={onSubmit}>
                 <div>
                     <img src={albumImg}/>
                     {/* hide when image is selected */}
@@ -126,33 +142,16 @@ function CreateSet({ editedSet }) {
                             onChange={(e) => setDescription(e.target.value)}
                             />
                     </label>
-                    <span>Privacy:</span>
-                    <label>
-                        <input
-                            type="radio"
-                            onChange={() => setPrivacy(true)}
-                            checked={privacy}
-                            />
-                        Public
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            onChange={() => setPrivacy(false)}
-                            checked={!privacy}
-                            />
-                        Private
-                    </label>
                 </div>
                 <div>
                     <span>{/* TODO: make asterisk red */}* Required fields</span>
                     <div>
-                        <button type="cancel">Cancel</button>
+                        <button type="cancel" onClick={clearForm}>Cancel</button>
                         <button type="submit" disabled={disabled}>Submit</button>
                     </div>
                 </div>
-                </>)}
             </form>
+            </>)}
         </>
     );
 }

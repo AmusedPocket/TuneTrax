@@ -76,7 +76,7 @@ const clearAlbumSongs = () => ({
 
 // Thunks
 export const thunkGetSong = (songId) => async (dispatch) => {
-    const response = await fetch(`/api/songs/${songId}`);
+    const response = await fetch(`/api/songs/${songId}/`);
 
     if (response.ok) {
         const song = await response.json();
@@ -88,7 +88,7 @@ export const thunkGetSong = (songId) => async (dispatch) => {
 }
 
 export const thunkGetSongs = () => async (dispatch) => {
-    const response = await fetch('/api/songs')
+    const response = await fetch('/api/songs/')
     if (response.ok){
         const songs = await response.json();
         dispatch(getSongs(songs))
@@ -101,12 +101,13 @@ export const thunkGetSongs = () => async (dispatch) => {
 }
 
 export const thunkPostSong = (song) => async (dispatch) => {
-    const response = await fetch('/api/songs',{
+    const data = new FormData();
+    for (let key of Object.keys(song))
+        data.append(key, song[key]);
+    console.log(data.song)
+    const response = await fetch('/api/songs/',{
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-       },
-        body: JSON.stringify(song)
+        body: data
     })
     if (response.ok){
         const new_song = await response.json()
@@ -121,7 +122,7 @@ export const thunkPostSong = (song) => async (dispatch) => {
 }
 
 export const thunkEditSong = (song, songId) => async (dispatch) => {
-    const response = await fetch(`/api/songs/${songId}`, {
+    const response = await fetch(`/api/songs/${songId}/`, {
         method: 'PUT',
         body: JSON.stringify(song)
     })
@@ -138,7 +139,7 @@ export const thunkEditSong = (song, songId) => async (dispatch) => {
 }
 
 export const thunkDeleteSong = (songId) => async (dispatch) => {
-    const response = await fetch(`/api/songs/${songId}`, {
+    const response = await fetch(`/api/songs/${songId}/`, {
         method: 'DELETE',
     })
     if (response.ok){
@@ -251,6 +252,7 @@ const songReducer = (state=initialState, action) => {
             newState.songs = action.payload;
             return newState;
         case POST_SONG:
+            newState = {...state}
             newState.songs = { ...state.songs, [action.payload.id]: action.payload };
             return newState;
         case EDIT_SONG:
