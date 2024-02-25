@@ -3,14 +3,13 @@ import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
 import AlbumPage from '../components/AlbumPage';
 import Layout from './Layout';
-import CreateSet from '../components/CreateSet';
 import UpdateAlbum from '../components/UpdateAlbum';
 import AllSongs from '../components/Songs/AllSongs/allsongs';
 import SongPage from '../components/Songs/SongPage/SongPage';
 import PlaylistPage from '../components/PlaylistPage';
 import UpdatePlaylist from '../components/UpdatePlaylist';
-import CreateSong from '../components/Songs/CreateSong';
 import HomePage from '../components/HomePage/HomePage';
+import Upload from '../components/Upload';
 
 export const router = createBrowserRouter([
   {
@@ -45,10 +44,6 @@ export const router = createBrowserRouter([
         element: <UpdatePlaylist />,
       },
       {
-        path: "set/new",
-        element: <CreateSet />,
-      },
-      {
         path: "songs",
         element: <AllSongs />
       },
@@ -57,8 +52,8 @@ export const router = createBrowserRouter([
         element: <SongPage />
       },
       {
-        path: "songs/new",
-        element: <CreateSong />
+        path: "upload",
+        element: <Upload />
       }
     ],
   },

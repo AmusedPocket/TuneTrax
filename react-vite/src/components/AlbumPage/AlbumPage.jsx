@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
-import { selectSingleAlbum, thunkGetAlbum } from "../../redux/album";
+import { selectSingleAlbum, thunkAddAlbumLike, thunkGetAlbum } from "../../redux/album";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteAlbumModal from "../DeleteAlbumModal";
+import "./AlbumPage.css"
+import { useState } from "react";
 
 function AlbumPage() {
     const { albumId } = useParams();
@@ -11,6 +13,13 @@ function AlbumPage() {
     const navigate = useNavigate()
     const album = useSelector(selectSingleAlbum(albumId));
     const sessionUser = useSelector(state => state.session.user);
+    const [albumLikes, setAlbumLikes] = useState(0)
+    const [canLike, setCanLike] = useState(false)
+
+    useEffect(()=>{
+        if(album) setAlbumLikes(album.likes.length)
+    }, [album])
+    
 
     useEffect(() => {
         dispatch(thunkGetAlbum(albumId));
@@ -41,6 +50,16 @@ function AlbumPage() {
         return res;
     }
 
+    const likeClick = () => {
+        setCanLike(true)
+        dispatch(thunkAddAlbumLike(albumId, sessionUser))
+            .then(result =>{ 
+                setAlbumLikes(albumLikes + result),
+                setCanLike(false)
+            })
+        
+    }
+
     function firstEightLikedPFP(likes) {
         let res = [];
         for (let i = 0; i < Math.min(likes?.length, 8); i++)
@@ -56,19 +75,18 @@ function AlbumPage() {
     );
     return (
         <>
-            <div>{/* head container */}
-                <div> {/* Left side */}
-                    <div> {/* top */}
-                        <div>
-                            <div>play album</div>
+            <div className="album-header">{/* head container */}
+                <div className="album-header_data"> {/* Left side */}
+                    <div className="album-header_data-top"> {/* top */}
+                        <div id="album-header_data-top-left">
+                            <div className="play-button"><i className="fa-solid fa-play"></i></div>
                             <div>
-                                <span>{album.title}</span>
-                                <span>{album.user.username}</span>
+                                <h3>{album.title}</h3>
+                                <h5>{album.user.username}</h5>
                             </div>
                         </div>
-                        <div>
-                            <span>released:</span>
-                            <span>{calcDateSince(album.release_date)}</span>
+                        <div id="album-header_data-top-right">
+                            <span>released: {calcDateSince(album.release_date)}</span>
                             <div>
                                 {calcSongGenres(album.songs).map(genre => <span key={genre}>#{genre}</span>)}
                             </div>
@@ -76,9 +94,9 @@ function AlbumPage() {
                     </div>
                     <div> {/* bottom */}
                         {/* if not played */}
-                        <div>
-                            <span>{album.songs?.length}</span>
-                            <span>TRACKS</span>
+                        <div id="album-header_data-track-count">
+                            <h2>{album.songs?.length}</h2>
+                            <h5>TRACKS</h5>
                             {/* TODO song length */}
                         </div>
                         {/* if played */}
@@ -87,18 +105,18 @@ function AlbumPage() {
                 </div>
                 <img src={album.album_pic} alt={`${album.title} cover image`}/>
             </div>
-            <div> {/* body container */}
-                <div> {/* left side - album/user data */}
-                    <div> {/* top */}
+            <div className="album-body"> {/* body container */}
+                <div className="album-body_left"> {/* left side - album/user data */}
+                    <div className="album-body_left-top"> {/* top */}
                         <div>
-                            <button>like</button>
-                            <button>share</button>
-                            {album.user.id == sessionUser?.id && <button onClick={() => navigate(`/albums/${album.id}/edit`)}>edit</button>}
-                            <button>copy link</button>
+                            <button onClick={()=>likeClick()} disabled={canLike}>Like</button>
+                            <button>Share</button>
+                            {album.user.id == sessionUser?.id && <button onClick={() => navigate(`/albums/${album.id}/edit`)}>Edit</button>}
+                            <button>Copy Link</button>
                             {album.user.id == sessionUser?.id && 
                                 <button>
                                     <OpenModalMenuItem
-                                        itemText="delete"
+                                        itemText="Delete"
                                         modalComponent={<DeleteAlbumModal albumId={albumId} navigate={navigate} />}
                                     />
                                 </button>
@@ -106,77 +124,79 @@ function AlbumPage() {
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>
-                            <a>{album.likes?.length}</a>
+                            <i className="fa-solid fa-heart"></i> {albumLikes}
                         </div>
                     </div>
-                    <div> {/* bottom */}
-                        <div> {/* left side - user stuff */}
-                            {album.user.profile_pic && <img src={album.user.profile_pic} alt={`${album.user.username} profile image`}/>}
-                            {!album.user.profile_pic && <div> default colored profile picture </div>}
+                    <div className="album-body_left-bottom"> {/* bottom */}
+                        <div className="album-body_left-bottom_profile"> {/* left side - user stuff */}
+                            {album.user.profile_pic && <img className="profile-pic" src={album.user.profile_pic} alt={`${album.user.username} profile image`}/>}
+                            {!album.user.profile_pic && <div className="profile-pic default-pic" />}
                             {/* TODO: route to user page */} <NavLink>{album.user.username}</NavLink>
                             <div>
-                                <NavLink>{album.user.follows}</NavLink>
-                                <NavLink>{album.user.songs?.length}</NavLink>
+                                <NavLink><i className="fa-solid fa-people-group"></i>{album.user.follows}</NavLink>
+                                <NavLink><i className="fa-solid fa-record-vinyl"></i>{album.user.songs?.length}</NavLink>
                             </div>
-                            <button>Follow</button>
+                            <button><i className="fa-solid fa-user-plus"></i> Follow</button>
                         </div>
-                        <div> {/* right side */}
-                            <span>{album.body}</span>
+                        <div className="album-body_left-bottom_album-details"> {/* right side */}
+                            <span className="album-body_left-bottom_album-details_body">{album.body}</span>
                             {album.songs.map((song, index) => (
-                                <NavLink key={song.id}>
+                                <NavLink className="album-body_left-bottom_song-details" key={song.id}>
                                     <img src={song.song_pic} alt={`${song.title} song image`}/>
                                     <span>{index + 1}</span>
                                     <span>{song.username} - {song.title}</span>
-                                    <span>{song.likes}</span>
+                                    <span><i className="fa-solid fa-heart"></i> {song.likes}</span>
                                 </NavLink>
                             ))}
                         </div>
                     </div>
                 </div>
-                <div> {/* right side - user albums, user playlists, likes, reposts */}
-                    <div>
-                        <div>
-                            <span>Albums from this user</span>
+                <div className="album-body_right"> {/* right side - user albums, user playlists, likes, reposts */}
+                    <div className="album-body_right_container">
+                        <div className="album-body_right_container_header">
+                            <span><i className="fa-solid fa-layer-group"></i> Albums from this user</span>
                             {/* TODO: route to user page/albums */}<NavLink>View All</NavLink>
                         </div>
                         {album.user.albums?.map(new_album => new_album.id != album.id ? (
-                            <div key={new_album.id}>
+                            <div className="album-body_right_container_set" key={new_album.id}>
                                 <img src={new_album.album_pic} alt={`${new_album.title} album image`}/>
                                 <div>
-                                    <span>{album.user.username}</span>
-                                    <span>{new_album.title}</span>
+                                    <NavLink>{album.user.username}</NavLink>
+                                    <NavLink>{new_album.title}</NavLink>
                                     <span>Album &bull; {new Date(new_album.release_date).getFullYear()}</span>
                                 </div>
                             </div>
                         ) : (null))}
                     </div>
-                    <div>
-                        <div>
-                            <span>Playlists from this user</span>
+                    <div className="album-body_right_container">
+                        <div className="album-body_right_container_header">
+                            <span><i className="fa-solid fa-layer-group"></i> Playlists from this user</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
                         {album.user.playlists?.map(playlist => (
-                            <div key={playlist.id}>
+                            <div className="album-body_right_container_set" key={playlist.id}>
                                 <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
                                 <div>
-                                    <span>{album.user.username}</span>
-                                    <span>{playlist.title}</span>
+                                    <NavLink>{album.user.username}</NavLink>
+                                    <NavLink>{playlist.title}</NavLink>
                                     <span>Playlist &bull; {new Date(playlist.created_at).getFullYear()}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div>
-                        <div>
-                            <span>{album.likes?.length} likes</span>
+                    <div className="album-body_right_container">
+                        <div className="album-body_right_container_header">
+                            <span><i className="fa-solid fa-heart"></i> {album.likes?.length} likes</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
-                        {firstEightLikedPFP(album.likes).map(like_user => (
-                            <div key={like_user.id}>
-                                {like_user.profile_pic && <img src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
-                                {!like_user.profile_pic && <div> default colored profile picture </div>}
-                            </div>)
-                        )}
+                        <div>
+                            {firstEightLikedPFP(album.likes).map(like_user => (
+                                <div key={like_user.id}>
+                                    {like_user.profile_pic && <img className="profile-pic" src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
+                                    {!like_user.profile_pic && <div className="profile-pic default-pic"></div>}
+                                </div>)
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

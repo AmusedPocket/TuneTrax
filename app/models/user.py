@@ -47,7 +47,8 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'profile_pic': self.profile_pic
+            'profile_pic': self.profile_pic,
+            'user_liked_songs': [song.id for song in self.user_liked_songs]
         }
 
     def public_user_dict(self):

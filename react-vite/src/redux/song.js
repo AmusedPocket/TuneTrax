@@ -10,6 +10,7 @@ const POST_COMMENT = 'songs/POST_COMMENT';
 const DELETE_COMMENT = 'songs/DELETE_COMMENT';
 const EDIT_COMMENT = 'songs/EDIT_COMMENT';
 const ADD_LIKE = 'songs/ADD_LIKE';
+const DELETE_LIKE = 'songs/DELETE_LIKE';
 const POST_ALBUM_SONG = 'songs/POST_ALBUM_SONG';
 const CLEAR_ALBUM_SONGS = 'songs/CLEAR_ALBUM_SONGS';
 
@@ -36,7 +37,7 @@ const editSong = (song) => ({
 
 const deleteSong = (songId) => ({
     type: DELETE_SONG,
-    payload: songId
+    payload: { songId, commentId }
 })
 
 const postComment = (comment) => ({
@@ -54,8 +55,14 @@ const editComment = (comment) => ({
     payload: comment
 })
 
-const addLike = () => ({
-    type: ADD_LIKE
+const addLike = (songId, current_user, song) => ({
+    type: ADD_LIKE,
+    payload: {songId, current_user, song}
+})
+
+const deleteLike = (songId, current_user) => ({
+    type: DELETE_LIKE,
+    payload: {songId, current_user}
 })
 
 const postAlbumSongs = (song) => ({
@@ -81,25 +88,26 @@ export const thunkGetSong = (songId) => async (dispatch) => {
 }
 
 export const thunkGetSongs = () => async (dispatch) => {
-    const response = await fetch('/api/songs')
+    const response = await fetch('/api/songs/')
     if (response.ok){
         const songs = await response.json();
         dispatch(getSongs(songs))
         return songs;
-    } 
-    
+    }
+
     const data = await response.json()
     if(data.errors) return data;
-    
+
 }
 
 export const thunkPostSong = (song) => async (dispatch) => {
-    const response = await fetch('/api/songs',{
+    const data = new FormData();
+    for (let key of Object.keys(song))
+        data.append(key, song[key]);
+    console.log(data.song)
+    const response = await fetch('/api/songs/',{
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-       },
-        body: JSON.stringify(song)
+        body: data
     })
     if (response.ok){
         const new_song = await response.json()
@@ -114,7 +122,7 @@ export const thunkPostSong = (song) => async (dispatch) => {
 }
 
 export const thunkEditSong = (song, songId) => async (dispatch) => {
-    const response = await fetch(`/api/songs/${songId}`, {
+    const response = await fetch(`/api/songs/${songId}/`, {
         method: 'PUT',
         body: JSON.stringify(song)
     })
@@ -131,7 +139,7 @@ export const thunkEditSong = (song, songId) => async (dispatch) => {
 }
 
 export const thunkDeleteSong = (songId) => async (dispatch) => {
-    const response = await fetch(`/api/songs/${songId}`, {
+    const response = await fetch(`/api/songs/${songId}/`, {
         method: 'DELETE',
     })
     if (response.ok){
@@ -173,7 +181,7 @@ export const thunkDeleteComment = (songId, commentId) => async(dispatch) => {
 
     if(response.ok){
         const delete_comment = await response.json()
-        dispatch(deleteComment(delete_comment))
+        dispatch(deleteComment(commentId))
         return delete_comment
     } else {
         const data = await response.json();
@@ -184,8 +192,8 @@ export const thunkDeleteComment = (songId, commentId) => async(dispatch) => {
 }
 
 export const thunkEditComment = (songId, comment) => async (dispatch) => {
-    const response = await fetch(`api/songs/${songId}/comments/${comment.id}`, {
-        method: "PUT",
+    const response = await fetch(`/api/songs/${songId}/comments/${comment.id}`, {
+        method: "POST",
         body: JSON.stringify(comment)
     })
     if(response.ok){
@@ -200,12 +208,23 @@ export const thunkEditComment = (songId, comment) => async (dispatch) => {
     }
 }
 
-export const thunkAddLike = (songId) => async(dispatch) => {
+export const thunkAddLike = (songId, current_user) => async(dispatch) => {
     const response = await fetch(`/api/songs/${songId}/like`, {
         method: "POST",
-
     })
+
+    const song = await response.json()
+    if(song.message === "added like"){
+
+        dispatch(addLike(songId, current_user, song))
+        return 1
+    } else if (song.message === "deleted like"){
+        dispatch(deleteLike(songId, current_user))
+        return -1
+    }
+    return 0
 }
+
 
 export const thunkPostAlbumSong = (song) => async(dispatch) => {
     song = await dispatch(thunkPostSong(song));
@@ -233,6 +252,7 @@ const songReducer = (state=initialState, action) => {
             newState.songs = action.payload;
             return newState;
         case POST_SONG:
+            newState = {...state}
             newState.songs = { ...state.songs, [action.payload.id]: action.payload };
             return newState;
         case EDIT_SONG:
@@ -249,7 +269,10 @@ const songReducer = (state=initialState, action) => {
             newState.songs = { ...state.songs, [action.payload.id]: action.payload}
             return newState;
         case DELETE_COMMENT:
+            newState = { ...state }
             newState.songs = { ...state.songs }
+            console.log('Action song id: ', action.payload)
+            console.log('New state songs is: ', newState.songs)
             delete newState.songs[action.songId.commentId];
             return newState;
         case EDIT_COMMENT:
@@ -263,6 +286,10 @@ const songReducer = (state=initialState, action) => {
             newState = { ...state };
             newState.postedAlbumSongs = {};
             return newState;
+        case ADD_LIKE:
+            newState = {...state};
+            newState.songs = {...state.songs, [action.payload.id]: action.payload}
+            return newState;            
         default:
             return state;
     }

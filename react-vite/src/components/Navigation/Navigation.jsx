@@ -12,9 +12,10 @@ function Navigation() {
         <NavLink to="/feed">Feed</NavLink>
       </li>
       <li>
-        <NavLink to="/set/new">Upload</NavLink>
+        <NavLink to="/upload">Upload</NavLink>
       </li>
-
+    <ul>
+    </ul>
       <li>
         <ProfileButton />
       </li>

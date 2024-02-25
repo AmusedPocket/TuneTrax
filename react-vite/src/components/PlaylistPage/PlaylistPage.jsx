@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
-import { selectSinglePlaylist, thunkGetPlaylist } from "../../redux/playlist";
+import { selectSinglePlaylist, thunkAddLike, thunkGetPlaylist } from "../../redux/playlist";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeletePlaylistModal from "../DeletePlaylistModal";
+import { useState } from "react";
 
 function PlaylistPage() {
     const { playlistId } = useParams();
@@ -11,10 +12,30 @@ function PlaylistPage() {
     const navigate = useNavigate()
     const playlist = useSelector(selectSinglePlaylist(playlistId));
     const sessionUser = useSelector(state => state.session.user);
+    const [currentLikes, setCurrentLikes] = useState(0)
+    const [canLike, setCanLike] = useState(false)
 
+    
     useEffect(() => {
         dispatch(thunkGetPlaylist(playlistId));
     }, [dispatch, playlistId])
+
+
+    useEffect(()=> {
+        if(playlist) setCurrentLikes(playlist.likes.length)
+    }, [playlist])
+
+    const likeClick = () => {
+        // const song_likes = song.likes;
+        setCanLike(true)
+        dispatch(thunkAddLike(playlistId, sessionUser))
+            .then(result =>{ 
+                
+                setCurrentLikes(currentLikes + result)
+                setCanLike(false)
+            })
+    }
+
 
     function calcDateSince(release_date){
         const timeSince = new Date() - new Date(release_date);
@@ -27,7 +48,7 @@ function PlaylistPage() {
         if (timeSince < oneYear) return `${Math.floor(timeSince / oneMonth)} month${timeSince/oneMonth >= 2 ? "s":""} ago`;
         return `${Math.floor(timeSince / oneYear)} year${timeSince/oneYear >= 2 ? "s":""} ago`;
     }
-
+    
     function calcSongGenres(songs) {
         const set = new Set();
         const res = [];
@@ -62,6 +83,7 @@ function PlaylistPage() {
                         <div>
                             <div>play playlist</div>
                             <div>
+                          
                                 <span>{playlist.title}</span>
                                 <span>{playlist.user.username}</span>
                             </div>
@@ -91,7 +113,7 @@ function PlaylistPage() {
                 <div> {/* left side - playlist/user data */}
                     <div> {/* top */}
                         <div>
-                            <button>like</button>
+                            <button onClick={()=>likeClick()} disabled={canLike}>like</button>
                             <button>share</button>
                             {playlist.user.id == sessionUser?.id && <button onClick={() => navigate(`/playlists/${playlist.id}/edit`)}>edit</button>}
                             <button>copy link</button>
@@ -106,7 +128,7 @@ function PlaylistPage() {
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>
-                            <a>{playlist.likes?.length}</a>
+                            <a>{currentLikes}</a>
                         </div>
                     </div>
                     <div> {/* bottom */}

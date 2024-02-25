@@ -7,7 +7,36 @@ from app.forms import SongForm, CommentForm
 
 song_routes = Blueprint('songs', __name__)
 
+# Helper function for posting a song with a validated songForm 
+def post_song(songForm):
+    song = songForm.data["song_file"]
 
+    song.filename = s3.get_unique_filename(song.filename)
+    upload_song = s3.upload_file_to_s3(song)
+    
+    upload_pic = {"url": "No Image"}
+
+    song_pic = songForm.data['song_pic']
+    if song_pic:
+        song_pic.filename = s3.get_unique_filename(song_pic.filename)
+        upload_pic = s3.upload_file_to_s3(song_pic)   
+    
+    user = User.query.get(current_user.id)
+    new_song = Song(
+        user = user,
+        title = songForm.data["title"],
+        body = songForm.data["body"],
+        genre = songForm.data["genre"],
+        visibility = songForm.data["visibility"],
+        plays = 0,
+        user_id = current_user.id,
+        song_link = upload_song['url'],
+        song_pic = upload_pic['url']
+    )
+
+    db.session.add(new_song)
+    db.session.commit()
+    return new_song
 
 #Get all song routes
 @song_routes.route('/')
@@ -28,45 +57,11 @@ def single_song(id):
 #Upload a song
 @song_routes.route('/', methods=["POST"])
 @login_required
-def post_song():
-
-    if "song" not in request.files:
-        return {"errors": "song required"}, 400
-
-    song = request.files['song']
-    
-    if not s3.song_file(song.filename):
-        return {"errors": "file type not supported"}, 400
-
-    song.filename = s3.get_unique_filename(song.filename)
-    upload_song = s3.upload_file_to_s3(song)
-    
+def post_song_route():
     form = SongForm()
     form['csrf_token'].data = request.cookies['csrf_token']    
-    
-    upload_pic = {"url": "No Image"}
-
-    if "song_pic" in request.files:
-        song_pic = request.files['song_pic']
-        song_pic.filename = s3.get_unique_filename(song_pic.filename)
-        upload_pic = s3.upload_file_to_s3(song_pic)    
-    
     if form.validate_on_submit():
-        user = User.query.get(current_user.id)
-        new_song = Song(
-            user = user,
-            title = form.data["title"],
-            body = form.data["body"],
-            genre = form.data["genre"],
-            visibility = form.data["visibility"],
-            plays = 0,
-            user_id = current_user.id,
-            song_link = upload_song['url'],
-            song_pic = upload_pic['url']
-        )
-
-        db.session.add(new_song)
-        db.session.commit()
+        new_song = post_song(form)
         return new_song.song_dict()
     
     return {"errors": form.errors}, 401
@@ -163,7 +158,7 @@ def delete_song_comment(_id, c_id):
     return {"message": "Deleted successful"}
 
 # Edit a comment
-@song_routes.route('/<int:_id>/comments/<int:c_id>', methods=["PUT"])
+@song_routes.route('/<int:_id>/comments/<int:c_id>', methods=["POST"])
 @login_required
 def edit_song_comment(_id, c_id):
     """
@@ -172,9 +167,9 @@ def edit_song_comment(_id, c_id):
 
     comment = Comment.query.get(c_id)
     form = CommentForm()
-    if comment.user_id == current_user.id:
+    
+    if form.validate_on_submit() and comment.user_id == current_user.id:
         comment.comment = form.data['comment']
-        comment.song_time = form.data['song_time']
         comment.updated_at = datetime.utcnow()
         db.session.add(comment)
         db.session.commit()
@@ -184,28 +179,21 @@ def edit_song_comment(_id, c_id):
 
 
 # Add a Like
-@song_routes.route('/<int:id>/like', methods=['POST'])
+@song_routes.route('/<int:id>/like', methods=['POST', 'DELETE'])
 @login_required
 def add_like(id):
     """
     Add a like to the song by appending the user to the likes.
     """
+    found = False
     song = Song.query.get(id)
-    song.likes.append(current_user)
+    for user in song.likes:
+        if user.id == current_user.id:
+            song.likes.remove(user)
+            found = True
+            break
+    if not found:
+        song.likes.append(current_user)
     db.session.add(song)
     db.session.commit()
-    return song.song_dict()
-
-
-# Delete a Like
-@song_routes.route('/<int:id>/like', methods=['DELETE'])
-@login_required
-def delete_like(id):
-    """
-    Delete a like by removing the user from the likes
-    """
-    song = Song.query.get(id)
-    song.likes.remove(current_user)
-    db.session.add(song)
-    db.session.commit()
-    return {"message": "Removed the Like"}
+    return {"message": "deleted like" if found else "added like"}, 202 if found else 200
