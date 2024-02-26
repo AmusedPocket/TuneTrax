@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CreateSong from "../Songs/CreateSong";
 import CreateSet from "../CreateSet";
-
+import "./Upload.css"
 
 const Upload = () => {
     const [songFiles, setSongFiles] = useState()
@@ -20,21 +20,23 @@ const Upload = () => {
 
     return (
         <>
-            {!songFiles &&
-                <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={onSongChange}
-                    multiple
-                />}
-            {songFiles && songFiles?.length === 1 &&
-                <>
-                    <CreateSong songFile={songFiles[0]} />
-                </>}
-            {songFiles && songFiles?.length > 1 &&
-                <>
-                    <CreateSet songFiles={songFiles} />
-                </>}
+            <div className="upload-form_container">
+                {!songFiles &&
+                    <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={onSongChange}
+                        multiple
+                    />}
+                {songFiles && songFiles?.length === 1 &&
+                    <>
+                        <CreateSong songFile={songFiles[0]} />
+                    </>}
+                {songFiles && songFiles?.length > 1 &&
+                    <>
+                        <CreateSet songFiles={songFiles} />
+                    </>}
+            </div>
         </>
     )
 }

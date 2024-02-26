@@ -1,0 +1,18 @@
+.upload-form_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 40px;
+    margin: 20px auto;
+    height: fit-content;
+    width: 600px;
+
+    background-color: #EFDC2B;
+    border-radius: 40px;
+    box-shadow: 0 0 15px -5px #000433;
+}
+
+.upload-form_container p {
+    color: #EF3E2B;
+}
