@@ -6,6 +6,7 @@ a, ul, span, button {
 body {
     margin: 0;
     padding: 0;
+    padding-bottom: 60px;
     background-color: #FFFFAB;
 }
 

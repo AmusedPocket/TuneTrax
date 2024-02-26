@@ -1,4 +1,4 @@
-import AudioPlayer from "react-h5-audio-player";
+import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import { createRef, useState } from "react";
 import { useSongContext } from "../../../context/SongPlayerContext";
 import "./SongPlayer.css"
@@ -44,11 +44,17 @@ const SongPlayer = () => {
         // autoPlay
         ref={player}
         volume={0.1}
-        showSkipControls={true}
-        showJumpControls={false}
-        layout="stacked-reverse"
+        showSkipControls
+        showJumpControls
+        customProgressBarSection={
+          [
+            RHAP_UI.CURRENT_TIME,
+            <div key={"STOP YELLING AT ME"}>|</div>,
+            RHAP_UI.DURATION
+          ]
+        }
         onListen={(e) => setSongTime(e.target.currentTime)}
-        listenInterval={50}
+        listenInterval={1}
         src={songs.length ? songs[0].songLink : ""}
         onClickNext={skipToNextSong}
         onClickPrevious={skipToPreviousSong}
