@@ -20,5 +20,24 @@
 
 #modal-content {
   position: absolute;
-  background-color:white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  background-color:#EF912B;
+  border-radius: 50px;
+  box-shadow: 0 0 20px #000433;
+}
+#modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#modal-content form label {
+  display: flex;
+  justify-content: space-between;
+}
+#modal-content form textarea {
+  resize: none;
 }

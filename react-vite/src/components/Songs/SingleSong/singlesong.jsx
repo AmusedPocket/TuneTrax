@@ -38,7 +38,8 @@ const SingleSong = ({song}) => {
             {/* <p>{song.plays}</p> */}
             <p><button onClick={()=>likeClick()} disabled={canLike}><i className="fa-solid fa-heart">{currentLikes}</i></button></p>
             <Link to={`/songs/${song.id}`}>
-                <img className="album" src={picture}/>
+                {picture != "No Image" ? <img className="album" src={picture}/> :
+                                         <div className="album default-pic"/>}
             </Link>
         
         </div>

@@ -2,6 +2,7 @@
     
     background-image: linear-gradient(135deg, #EFDC2B 0%, #EF912B 45%, #000433 100%);
     display: flex;
+    gap:10px;
     padding: 5px;
 }
 
@@ -17,4 +18,9 @@
 
 .single-album-song-picture {
     width: 100px;
+}
+
+.album-pic {
+    width: 200px;
+    height: 200px;
 }

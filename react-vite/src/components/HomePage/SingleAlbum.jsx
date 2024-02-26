@@ -13,7 +13,8 @@ function SingleAlbum({ album }) {
     return (
         <div className="single-album-container">
             <Link to={`/albums/${album.id}`}>
-                {album.album_pic && <img src={album.album_pic} alt={`${album.title} album picture`} className="single-album-album"/>}
+                {album.album_pic ? <img src={album.album_pic} alt={`${album.title} album picture`} className="single-album-album"/> : 
+                                   <div className="default-pic album-pic"/>}
             </Link>
             <div>
                 {firstFiveSongs(album.songs).map(song => (

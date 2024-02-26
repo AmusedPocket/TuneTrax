@@ -28,6 +28,19 @@ function LoginFormModal() {
     }
   };
 
+  const defaultLogin = async (e) => {
+    e.preventDefault();
+
+    await dispatch(
+      thunkLogin({
+        email: "demo@aa.io",
+        password: "password"
+      })
+    );
+
+    closeModal();
+  }
+
   return (
     <>
       <h1>Log In</h1>
