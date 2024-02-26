@@ -137,7 +137,7 @@ function AlbumPage() {
                                 <NavLink><i className="fa-solid fa-people-group"></i>{album.user.follows}</NavLink>
                                 <NavLink><i className="fa-solid fa-record-vinyl"></i>{album.user.songs?.length}</NavLink>
                             </div>
-                            <button><i className="fa-solid fa-user-plus"></i> Follow</button>
+                            <button onClick={()=>window.alert("Feature coming soon")}><i className="fa-solid fa-user-plus"></i> Follow</button>
                         </div>
                         <div className="album-body_left-bottom_album-details"> {/* right side */}
                             <span className="album-body_left-bottom_album-details_body">{album.body}</span>

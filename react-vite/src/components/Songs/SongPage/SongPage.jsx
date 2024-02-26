@@ -235,7 +235,7 @@ const SongPage = () => {
                             </div>
                         </form>) : <p>{comment.comment} </p>}
                                 {(comment.user.id === user.id) &&
-                                    <button onClick={()=>editComment(comment)}>Manage Comment</button>
+                                    <button onClick={() => window.alert('Feature coming soon')}>Manage Comment</button>
                                 }
 
                                 {(comment.user.id === user.id) && <OpenModalButton
@@ -244,7 +244,7 @@ const SongPage = () => {
                                     <div style={{backgroundColor: "#FFFFAB", padding:"30px"}}>
                                         <h2>Confirm Delete</h2>
 
-                                        <button onClick={() => yesButtonClick(comment.id)} style={{color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)", borderRadius: "5px", padding: "1px 15px", margin: "10px", backgroundColor: "#EF3E2B"}}>
+                                        <button onClick={() => window.alert('Feature coming soon')} style={{color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)", borderRadius: "5px", padding: "1px 15px", margin: "10px", backgroundColor: "#EF3E2B"}}>
                                             Yes
                                         </button>
 

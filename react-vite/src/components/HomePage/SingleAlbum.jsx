@@ -16,7 +16,7 @@ function SingleAlbum({ album }) {
                 {album.album_pic ? <img src={album.album_pic} alt={`${album.title} album picture`} className="single-album-album"/> : 
                                    <div className="default-pic album-pic"/>}
             </Link>
-            <div>
+            <div >
                 {firstFiveSongs(album.songs).map(song => (
                     <div key={song.id} className="single-album-image-text">
                         <Link to={`/songs/${song.id}`}>
