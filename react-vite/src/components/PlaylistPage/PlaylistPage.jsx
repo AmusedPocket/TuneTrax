@@ -6,6 +6,7 @@ import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeletePlaylistModal from "../DeletePlaylistModal";
 import { useState } from "react";
 import "./PlaylistPage.css"
+import { useSongContext } from "../../context/SongPlayerContext";
 
 function PlaylistPage() {
     const { playlistId } = useParams();
@@ -13,6 +14,7 @@ function PlaylistPage() {
     const navigate = useNavigate()
     const playlist = useSelector(selectSinglePlaylist(playlistId));
     const sessionUser = useSelector(state => state.session.user);
+    const {songs, setSongs} = useSongContext();
     const [currentLikes, setCurrentLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)
 
@@ -70,6 +72,19 @@ function PlaylistPage() {
         return res;
     }
 
+    function playSongs() {
+        if (playlist) {
+            const songArr = [];
+            for (let song of playlist.songs) songArr.push(song);
+            setSongs([...songArr, ...songs])
+            const element = document.querySelector("audio")
+            if (element) {
+                element.currentTime = 0
+                element.play()
+            }
+        }
+    }
+
     if (!playlist) return(
         <>
             <h1>This playlist doesn&apos;t exist...</h1>
@@ -82,7 +97,7 @@ function PlaylistPage() {
                 <div className="playlist-header_data"> {/* Left side */}
                     <div className="playlist-header_data-top"> {/* top */}
                         <div id="playlist-header_data-top-left">
-                            <div className="play-button"><i className="fa-solid fa-play"></i></div>
+                            <div className="play-button" onClick={playSongs}><i className="fa-solid fa-play"></i></div>
                             <div>
                           
                                 <h3>{playlist.title}</h3>
@@ -114,9 +129,9 @@ function PlaylistPage() {
                     <div className="playlist-body_left-top"> {/* top */}
                         <div>
                             <button onClick={()=>likeClick()} disabled={canLike}>Like</button>
-                            <button>Share</button>
+                            <button onClick={() => alert("Coming soon!")}>Share</button>
                             {playlist.user.id == sessionUser?.id && <button onClick={() => navigate(`/playlists/${playlist.id}/edit`)}>Edit</button>}
-                            <button>Copy Link</button>
+                            <button onClick={() => alert("Coming soon!")}>Copy Link</button>
                             {playlist.user.id == sessionUser?.id && 
                                 <button>
                                     <OpenModalMenuItem
@@ -145,7 +160,7 @@ function PlaylistPage() {
                         <div className="playlist-body_left-bottom_playlist-details"> {/* right side */}
                             <span className="playlist-body_left-bottom_playlist-details_body">{playlist.body}</span>
                             {playlist.songs.map((song, index) => (
-                                <NavLink className="playlist-body_left-bottom_song-details" key={song.id}>
+                                <NavLink to={`/songs/${song.id}`} className="playlist-body_left-bottom_song-details" key={song.id}>
                                     <img src={song.song_pic} alt={`${song.title} song image`}/>
                                     <span>{index + 1}</span>
                                     <span>{song.username} - {song.title}</span>
@@ -163,10 +178,12 @@ function PlaylistPage() {
                         </div>
                         {playlist.user.albums?.map(album => (
                             <div className="album-body_right_container_set" key={album.id}>
-                                <img src={album.album_pic} alt={`${album.title} album image`}/>
+                                <NavLink to={`/albums/${album.id}`}>
+                                    <img src={album.album_pic} alt={`${album.title} album image`}/>
+                                </NavLink>
                                 <div>
                                     <NavLink>{playlist.user.username}</NavLink>
-                                    <NavLink>{album.title}</NavLink>
+                                    <NavLink to={`/albums/${album.id}`}>{album.title}</NavLink>
                                     <span>Album &bull; {new Date(album.release_date).getFullYear()}</span>
                                 </div>
                             </div>
@@ -179,10 +196,12 @@ function PlaylistPage() {
                         </div>
                         {playlist.user.playlists.map(new_playlist => new_playlist.id != playlist.id ? (
                             <div className="playlist-body_right_container_set" key={playlist.id}>
-                                <img src={new_playlist.playlist_pic} alt={`${new_playlist.title} playlist image`}/>
+                                <NavLink to={`/playlists/${new_playlist.id}`}>
+                                    <img src={new_playlist.playlist_pic} alt={`${new_playlist.title} playlist image`}/>
+                                </NavLink>
                                 <div>
-                                    <span>{playlist.user?.username}</span>
-                                    <span>{new_playlist.title}</span>
+                                    <NavLink>{playlist.user?.username}</NavLink>
+                                    <NavLink to={`/playlists/${new_playlist.id}`}>{new_playlist.title}</NavLink>
                                     <span>Playlist &bull; {new Date(new_playlist.created_at).getFullYear()}</span>
                                 </div>
                             </div>

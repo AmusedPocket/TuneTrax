@@ -234,11 +234,11 @@ const SongPage = () => {
                                 <button onSubmit={submitEdit} type="submit" style={{color: "#000433", border: "1.5px solid rgba(0, 4, 51, .3)", borderRadius: "5px", padding: "1px 5px", margin: "10px"}}>Submit Edit</button>
                             </div>
                         </form>) : <p>{comment.comment} </p>}
-                                {(comment.user.id === user.id) &&
+                                {user && (comment.user.id === user.id) &&
                                     <button onClick={() => window.alert('Feature coming soon')}>Manage Comment</button>
                                 }
 
-                                {(comment.user.id === user.id) && <OpenModalButton
+                                {user && (comment.user.id === user.id) && <OpenModalButton
                                     buttonText="Delete Comment"
                                     modalComponent={
                                     <div style={{backgroundColor: "#FFFFAB", padding:"30px"}}>

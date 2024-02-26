@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import CreateSong from "../Songs/CreateSong";
 import CreateSet from "../CreateSet";
 import "./Upload.css"
 
 const Upload = () => {
     const [songFiles, setSongFiles] = useState()
+    const navigate = useNavigate();
+    const user = useSelector(state => state.session.user)
 
     function onSongChange(e) {
         console.log("e target files", e.target.files)
@@ -26,6 +30,7 @@ const Upload = () => {
                         type="file"
                         accept="audio/*"
                         onChange={onSongChange}
+                        disabled={user === null}
                         multiple
                     />}
                 {songFiles && songFiles?.length === 1 &&

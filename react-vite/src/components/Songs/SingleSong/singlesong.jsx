@@ -8,7 +8,7 @@ import './singlesong.css'
 
 const SingleSong = ({song}) => {
     const dispatch = useDispatch()
-    const picture = song.song_pic ? song.song_pic: (song.albums ? song.albums[0].album_pic : "No Image") 
+    const picture = song.song_pic ? song.song_pic: (song.albums ? song.albums[0]?.album_pic : "No Image") 
     const currentUser = useSelector((state)=>state.session.user)
     const [currentLikes, setCurrentLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)

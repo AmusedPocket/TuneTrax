@@ -17,6 +17,10 @@ const SongPlayer = () => {
     tempSongs.shift();
     setSongs(tempSongs);
     if (!tempSongs.length) player.current.audio.current.audio = null;
+    
+    if (player) {
+      player.current.audio.current.currentTime = 0;
+    }
 
     console.log("skip\nsongs:", tempSongs, "\nprev songs:", newSongs)
   }
@@ -35,6 +39,10 @@ const SongPlayer = () => {
     const tempSongs = [...prevSongs];
     tempSongs.shift();
     setPrevSongs(tempSongs);
+
+    if (player) {
+      player.current.audio.current.currentTime = 0;
+    }
     console.log("prev\nsongs:", newSongs, "\nprev songs:", tempSongs)
   }
 

@@ -9,7 +9,7 @@ import "./CreateSet.css"
 function CreateSet({ editedSet, songFiles }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState([]);
     const [validation, setValidation] = useState({});
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
@@ -30,7 +30,7 @@ function CreateSet({ editedSet, songFiles }) {
         e.preventDefault();
         setErrors([])
 
-        if (songFiles.length != songIds.length) {
+        if (!editedSet && songFiles.length != songIds.length) {
             setValidation({tracks: "All tracks must be successfuly submitted."})
             return;
         }
@@ -103,7 +103,8 @@ function CreateSet({ editedSet, songFiles }) {
                 <h3 className={"basic info" != currentPage && "selected"} onClick={() => setCurrentPage("tracks")}>Tracks</h3>
             </div>
             {"tracks" == currentPage && (<>
-                    {songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} addFunc={addToSongList} dontNavigate={true} />)}
+                    {!editedSet && songFiles.map(songFile => <CreateSong key={songFile.tempId} songFile={songFile} addFunc={addToSongList} dontNavigate={true} />)}
+                    {editedSet && <h1>Tracks cannot be edited en masse. Edit each track individually.</h1>}
                 </>)}
             {"basic info" == currentPage && (<>
             <form onSubmit={onSubmit} className="upload-form_set_form">
