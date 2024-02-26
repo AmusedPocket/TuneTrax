@@ -29,13 +29,13 @@ function HomePage() {
 
         // Albums
         for (let album of Object.values(albums)) {
-            currLocation = (currLocation + 2) % (res.length - 1);
+            currLocation = (currLocation + 2) % (res?.length - 1);
             res.splice(currLocation, 0, ["album", album])
         }
 
         // Playlists
         for (let playlist of Object.values(playlists)) {
-            currLocation = (currLocation + 3) % (res.length - 1);
+            currLocation = (currLocation + 3) % (res?.length - 1);
             res.splice(currLocation, 0, ["playlist", playlist])
         }
 

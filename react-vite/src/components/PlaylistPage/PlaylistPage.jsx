@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeletePlaylistModal from "../DeletePlaylistModal";
 import { useState } from "react";
+import "./PlaylistPage.css"
+import { useSongContext } from "../../context/SongPlayerContext";
 
 function PlaylistPage() {
     const { playlistId } = useParams();
@@ -12,6 +14,7 @@ function PlaylistPage() {
     const navigate = useNavigate()
     const playlist = useSelector(selectSinglePlaylist(playlistId));
     const sessionUser = useSelector(state => state.session.user);
+    const {songs, setSongs} = useSongContext();
     const [currentLikes, setCurrentLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)
 
@@ -69,6 +72,25 @@ function PlaylistPage() {
         return res;
     }
 
+    function playSongs() {
+        if (playlist) {
+            const songArr = [];
+            for (let song of playlist.songs) songArr.push({
+                songLink: song.song_link,
+                songPic: song.song_pic,
+                songName: song.title,
+                userId: song.user_id,
+                songId: song.id
+            });
+            setSongs([...songArr, ...songs])
+            const element = document.querySelector("audio")
+            if (element) {
+                element.currentTime = 0
+                element.play()
+            }
+        }
+    }
+
     if (!playlist) return(
         <>
             <h1>This playlist doesn&apos;t exist...</h1>
@@ -77,20 +99,19 @@ function PlaylistPage() {
     );
     return (
         <>
-            <div>{/* head container */}
-                <div> {/* Left side */}
-                    <div> {/* top */}
-                        <div>
-                            <div>play playlist</div>
+            <div className="playlist-header">{/* head container */}
+                <div className="playlist-header_data"> {/* Left side */}
+                    <div className="playlist-header_data-top"> {/* top */}
+                        <div id="playlist-header_data-top-left">
+                            <div className="play-button" onClick={playSongs}><i className="fa-solid fa-play"></i></div>
                             <div>
                           
-                                <span>{playlist.title}</span>
-                                <span>{playlist.user.username}</span>
+                                <h3>{playlist.title}</h3>
+                                <h5>{playlist.user.username}</h5>
                             </div>
                         </div>
-                        <div>
-                            <span>released:</span>
-                            <span>{calcDateSince(playlist.release_date)}</span>
+                        <div id="playlist-header_data-top-right">
+                            <span>released: {calcDateSince(playlist.release_date)}</span>
                             <div>
                                 {calcSongGenres(playlist.songs).map(genre => <span key={genre}>#{genre}</span>)}
                             </div>
@@ -98,9 +119,9 @@ function PlaylistPage() {
                     </div>
                     <div> {/* bottom */}
                         {/* if not played */}
-                        <div>
-                            <span>{playlist.songs?.length}</span>
-                            <span>TRACKS</span>
+                        <div id="playlist-header_data-track-count">
+                            <h2>{playlist.songs?.length}</h2>
+                            <h5>TRACKS</h5>
                             {/* TODO song length */}
                         </div>
                         {/* if played */}
@@ -109,18 +130,18 @@ function PlaylistPage() {
                 </div>
                 <img src={playlist.playlist_pic} alt={`${playlist.title} cover image`}/>
             </div>
-            <div> {/* body container */}
-                <div> {/* left side - playlist/user data */}
-                    <div> {/* top */}
+            <div className="playlist-body"> {/* body container */}
+                <div className="playlist-body_left"> {/* left side - playlist/user data */}
+                    <div className="playlist-body_left-top"> {/* top */}
                         <div>
-                            <button onClick={()=>likeClick()} disabled={canLike}>like</button>
-                            <button>share</button>
-                            {playlist.user.id == sessionUser?.id && <button onClick={() => navigate(`/playlists/${playlist.id}/edit`)}>edit</button>}
-                            <button>copy link</button>
+                            <button onClick={()=>likeClick()} disabled={canLike}>Like</button>
+                            <button onClick={() => alert("Coming soon!")}>Share</button>
+                            {playlist.user.id == sessionUser?.id && <button onClick={() => navigate(`/playlists/${playlist.id}/edit`)}>Edit</button>}
+                            <button onClick={() => alert("Coming soon!")}>Copy Link</button>
                             {playlist.user.id == sessionUser?.id && 
                                 <button>
                                     <OpenModalMenuItem
-                                        itemText="delete"
+                                        itemText="Delete"
                                         modalComponent={<DeletePlaylistModal playlistId={playlistId} navigate={navigate} />}
                                     />
                                 </button>
@@ -128,77 +149,83 @@ function PlaylistPage() {
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
                         <div>
-                            <a>{currentLikes}</a>
+                            <i className="fa-solid fa-heart"></i> <a>{currentLikes}</a>
                         </div>
                     </div>
-                    <div> {/* bottom */}
-                        <div> {/* left side - user stuff */}
-                            {playlist.user.profile_pic && <img src={playlist.user.profile_pic} alt={`${playlist.user?.username} profile image`}/>}
-                            {!playlist.user.profile_pic && <div> default colored profile picture </div>}
+                    <div className="playlist-body_left-bottom"> {/* bottom */}
+                        <div className="playlist-body_left-bottom_profile"> {/* left side - user stuff */}
+                            {playlist.user.profile_pic && <img className="profile-pic" src={playlist.user.profile_pic} alt={`${playlist.user?.username} profile image`}/>}
+                            {!playlist.user.profile_pic && <div className="profile-pic default-pic" />}
                             {/* TODO: route to user page */} <NavLink>{playlist.user?.username}</NavLink>
                             <div>
-                                <NavLink>{playlist.user.follows}</NavLink>
-                                <NavLink>{playlist.user.songs?.length}</NavLink>
+                                <NavLink><i className="fa-solid fa-people-group"></i>{playlist.user.follows}</NavLink>
+                                <NavLink><i className="fa-solid fa-record-vinyl"></i>{playlist.user.songs?.length}</NavLink>
                             </div>
-                            <button>Follow</button>
+                            <button onClick={()=>window.alert("Feature coming soon")}><i className="fa-solid fa-user-plus"></i> Follow</button>
                         </div>
-                        <div> {/* right side */}
-                            <span>{playlist.body}</span>
+                        <div className="playlist-body_left-bottom_playlist-details"> {/* right side */}
+                            <span className="playlist-body_left-bottom_playlist-details_body">{playlist.body}</span>
                             {playlist.songs.map((song, index) => (
-                                <NavLink key={song.id}>
+                                <NavLink to={`/songs/${song.id}`} className="playlist-body_left-bottom_song-details" key={song.id}>
                                     <img src={song.song_pic} alt={`${song.title} song image`}/>
                                     <span>{index + 1}</span>
                                     <span>{song.username} - {song.title}</span>
-                                    <span>{song.likes}</span>
+                                    <span><i className="fa-solid fa-heart"></i> {song.likes}</span>
                                 </NavLink>
                             ))}
                         </div>
                     </div>
                 </div>
-                <div> {/* right side - user playlists, user playlists, likes, reposts */}
-                    <div>
-                        <div>
+                <div className="playlist-body_right"> {/* right side - user albums, user playlists, likes, reposts */}
+                    <div className="playlist-body_right_container">
+                        <div className="playlist-body_right_container_header">
                             <span>Playlists from this user</span>
                             {/* TODO: route to user page/playlists */}<NavLink>View All</NavLink>
                         </div>
-                        {playlist.user.playlists.map(new_playlist => new_playlist.id != playlist.id ? (
-                            <div key={new_playlist.id}>
-                                <img src={new_playlist.playlist_pic} alt={`${new_playlist.title} playlist image`}/>
+                        {playlist.user.albums?.map(album => (
+                            <div className="album-body_right_container_set" key={album.id}>
+                                <NavLink to={`/albums/${album.id}`}>
+                                    <img src={album.album_pic} alt={`${album.title} album image`}/>
+                                </NavLink>
                                 <div>
-                                    <span>{playlist.user?.username}</span>
-                                    <span>{new_playlist.title}</span>
-                                    <span>Playlist &bull; {new Date(new_playlist.release_date).getFullYear()}</span>
-                                </div>
-                            </div>
-                        ) : (null))}
-                    </div>
-                    <div>
-                        <div>
-                            <span>Playlists from this user</span>
-                            {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
-                        </div>
-                        {playlist.user.playlists.map(playlist => (
-                            <div key={playlist.id}>
-                                <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
-                                <div>
-                                    <span>{playlist.user?.username}</span>
-                                    <span>{playlist.title}</span>
-                                    <span>Playlist &bull; {new Date(playlist.created_at).getFullYear()}</span>
+                                    <NavLink>{playlist.user.username}</NavLink>
+                                    <NavLink to={`/albums/${album.id}`}>{album.title}</NavLink>
+                                    <span>Album &bull; {new Date(album.release_date).getFullYear()}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div>
-                        <div>
+                    <div className="playlist-body_right_container">
+                        <div className="playlist-body_right_container_header">
+                            <span>Playlists from this user</span>
+                            {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
+                        </div>
+                        {playlist.user.playlists.map(new_playlist => new_playlist.id != playlist.id ? (
+                            <div className="playlist-body_right_container_set" key={playlist.id}>
+                                <NavLink to={`/playlists/${new_playlist.id}`}>
+                                    <img src={new_playlist.playlist_pic} alt={`${new_playlist.title} playlist image`}/>
+                                </NavLink>
+                                <div>
+                                    <NavLink>{playlist.user?.username}</NavLink>
+                                    <NavLink to={`/playlists/${new_playlist.id}`}>{new_playlist.title}</NavLink>
+                                    <span>Playlist &bull; {new Date(new_playlist.created_at).getFullYear()}</span>
+                                </div>
+                            </div>
+                        ) : (null))}
+                    </div>
+                    <div className="playlist-body_right_container">
+                        <div className="playlist-body_right_container_header">
                             <span>{playlist.likes?.length} likes</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
-                        {firstEightLikedPFP(playlist.likes).map(like_user => (
-                            <div key={like_user.id}>
-                                {like_user.profile_pic && <img src={like_user.profile_pic} alt={`${like_user?.username} profile image`}/>}
-                                {!like_user.profile_pic && <div> default colored profile picture </div>}
-                            </div>)
-                        )}
+                        <div className="playlist-body_right_container_likes">
+                            {firstEightLikedPFP(playlist.likes).map(like_user => (
+                                <div key={like_user.id}>
+                                    {like_user.profile_pic && <img className="profile-pic_likes" src={like_user.profile_pic} alt={`${like_user?.username} profile image`}/>}
+                                    {!like_user.profile_pic && <div className="profile-pic_likes default-pic"/>}
+                                </div>)
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

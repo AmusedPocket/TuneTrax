@@ -3,10 +3,22 @@ a, ul, span, button {
     all: unset;
 }
 
+* {
+    word-wrap: break-word;
+}
+
 body {
-    margin: auto;
-    width:1200px;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 60px;
     background-color: #FFFFAB;
+    font-family: "Questrial", sans-serif;
+}
+
+.page-container {
+    margin: 0 auto;
+    padding: 0;
+    width:1200px;
 }
 
 .play-button {
@@ -34,5 +46,11 @@ body {
 .profile-pic {
     width: 120px;
     height: 120px;
+    border-radius: 50%;
+}
+.profile-pic_likes {
+    width: 40px;
+    height: 40px;
+    margin-left: -10px;
     border-radius: 50%;
 }

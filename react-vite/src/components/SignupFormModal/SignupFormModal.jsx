@@ -24,7 +24,7 @@ function SignupFormModal() {
     const tempErrors = {};
     if (password !== confirmPassword) 
       tempErrors.confirmPassword = "Confirm Password field must be the same as the Password field";
-    if (Object.values(tempErrors).length)
+    if (Object.values(tempErrors)?.length)
       return setErrors(tempErrors);
 
     const serverResponse = await dispatch(
@@ -98,6 +98,7 @@ function SignupFormModal() {
             onChange={(e) => setProfilePic(e.target.value)}
           />
         </label>
+        {errors.profile_pic && <p>{errors.profile_pic}</p>}
         <label>
           Header Pic
           <input
@@ -106,6 +107,7 @@ function SignupFormModal() {
             onChange={(e) => setHeaderPic(e.target.value)}
           />
         </label>
+        {errors.header_pic && <p>{errors.header_pic}</p>}
         <label>
           Description
           <textarea
@@ -134,6 +136,7 @@ function SignupFormModal() {
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
         <button type="submit">Sign Up</button>
+        <p>* Indicates a required response.</p>
       </form>
     </>
   );

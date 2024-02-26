@@ -6,6 +6,7 @@ import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteAlbumModal from "../DeleteAlbumModal";
 import "./AlbumPage.css"
 import { useState } from "react";
+import { useSongContext } from "../../context/SongPlayerContext";
 
 function AlbumPage() {
     const { albumId } = useParams();
@@ -13,11 +14,12 @@ function AlbumPage() {
     const navigate = useNavigate()
     const album = useSelector(selectSingleAlbum(albumId));
     const sessionUser = useSelector(state => state.session.user);
+    const {songs, setSongs} = useSongContext();
     const [albumLikes, setAlbumLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)
 
     useEffect(()=>{
-        if(album) setAlbumLikes(album.likes.length)
+        if(album?.likes) setAlbumLikes(album.likes?.length)
     }, [album])
     
 
@@ -67,6 +69,25 @@ function AlbumPage() {
         return res;
     }
 
+    function playSongs() {
+        if (album) {
+            const songArr = [];
+            for (let song of album.songs) songArr.push({
+                songLink: song.song_link,
+                songPic: song.song_pic,
+                songName: song.title,
+                userId: song.user_id,
+                songId: song.id
+            });
+            setSongs([...songArr, ...songs])
+            const element = document.querySelector("audio")
+            if (element) {
+                element.currentTime = 0
+                element.play()
+            }
+        }
+    }
+
     if (!album) return(
         <>
             <h1>This album doesn&apos;t exist...</h1>
@@ -79,7 +100,7 @@ function AlbumPage() {
                 <div className="album-header_data"> {/* Left side */}
                     <div className="album-header_data-top"> {/* top */}
                         <div id="album-header_data-top-left">
-                            <div className="play-button"><i className="fa-solid fa-play"></i></div>
+                            <div className="play-button" onClick={playSongs}><i className="fa-solid fa-play"></i></div>
                             <div>
                                 <h3>{album.title}</h3>
                                 <h5>{album.user.username}</h5>
@@ -110,9 +131,9 @@ function AlbumPage() {
                     <div className="album-body_left-top"> {/* top */}
                         <div>
                             <button onClick={()=>likeClick()} disabled={canLike}>Like</button>
-                            <button>Share</button>
+                            <button onClick={() => alert("Coming soon!")}>Share</button>
                             {album.user.id == sessionUser?.id && <button onClick={() => navigate(`/albums/${album.id}/edit`)}>Edit</button>}
-                            <button>Copy Link</button>
+                            <button onClick={() => alert("Coming soon!")}>Copy Link</button>
                             {album.user.id == sessionUser?.id && 
                                 <button>
                                     <OpenModalMenuItem
@@ -123,7 +144,7 @@ function AlbumPage() {
                             }
                             {/* TODO: add queue <button>add to next up</button> */}
                         </div>
-                        <div>
+                        <div onClick={()=>likeClick()} disabled={canLike}>
                             <i className="fa-solid fa-heart"></i> {albumLikes}
                         </div>
                     </div>
@@ -136,12 +157,12 @@ function AlbumPage() {
                                 <NavLink><i className="fa-solid fa-people-group"></i>{album.user.follows}</NavLink>
                                 <NavLink><i className="fa-solid fa-record-vinyl"></i>{album.user.songs?.length}</NavLink>
                             </div>
-                            <button><i className="fa-solid fa-user-plus"></i> Follow</button>
+                            <button onClick={()=>window.alert("Feature coming soon")}><i className="fa-solid fa-user-plus"></i> Follow</button>
                         </div>
                         <div className="album-body_left-bottom_album-details"> {/* right side */}
                             <span className="album-body_left-bottom_album-details_body">{album.body}</span>
                             {album.songs.map((song, index) => (
-                                <NavLink className="album-body_left-bottom_song-details" key={song.id}>
+                                <NavLink to={`/songs/${song.id}`} className="album-body_left-bottom_song-details" key={song.id}>
                                     <img src={song.song_pic} alt={`${song.title} song image`}/>
                                     <span>{index + 1}</span>
                                     <span>{song.username} - {song.title}</span>
@@ -159,10 +180,12 @@ function AlbumPage() {
                         </div>
                         {album.user.albums?.map(new_album => new_album.id != album.id ? (
                             <div className="album-body_right_container_set" key={new_album.id}>
-                                <img src={new_album.album_pic} alt={`${new_album.title} album image`}/>
+                                <NavLink to={`/albums/${new_album.id}`}>
+                                    <img src={new_album.album_pic} alt={`${new_album.title} album image`}/>
+                                </NavLink>
                                 <div>
                                     <NavLink>{album.user.username}</NavLink>
-                                    <NavLink>{new_album.title}</NavLink>
+                                    <NavLink to={`/albums/${new_album.id}`}>{new_album.title}</NavLink>
                                     <span>Album &bull; {new Date(new_album.release_date).getFullYear()}</span>
                                 </div>
                             </div>
@@ -175,10 +198,12 @@ function AlbumPage() {
                         </div>
                         {album.user.playlists?.map(playlist => (
                             <div className="album-body_right_container_set" key={playlist.id}>
-                                <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
+                                <NavLink to={`/playlists/${playlist.id}`}>
+                                    <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
+                                </NavLink>
                                 <div>
                                     <NavLink>{album.user.username}</NavLink>
-                                    <NavLink>{playlist.title}</NavLink>
+                                    <NavLink to={`/playlists/${playlist.id}`}>{playlist.title}</NavLink>
                                     <span>Playlist &bull; {new Date(playlist.created_at).getFullYear()}</span>
                                 </div>
                             </div>
@@ -189,11 +214,11 @@ function AlbumPage() {
                             <span><i className="fa-solid fa-heart"></i> {album.likes?.length} likes</span>
                             {/* TODO: route to user page/plsylists */}<NavLink>View All</NavLink>
                         </div>
-                        <div>
+                        <div className="album-body_right_container_likes">
                             {firstEightLikedPFP(album.likes).map(like_user => (
                                 <div key={like_user.id}>
-                                    {like_user.profile_pic && <img className="profile-pic" src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
-                                    {!like_user.profile_pic && <div className="profile-pic default-pic"></div>}
+                                    {like_user.profile_pic && <img className="profile-pic_likes" src={like_user.profile_pic} alt={`${like_user.username} profile image`}/>}
+                                    {!like_user.profile_pic && <div className="profile-pic_likes default-pic"/>}
                                 </div>)
                             )}
                         </div>

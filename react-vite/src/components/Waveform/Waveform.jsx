@@ -9,7 +9,6 @@ const Waveform = ({ audio }) => {
     const [audioContainer, sestAudioContainer] = useState();
 
     useEffect(() => {
-        console.log(audioContainer)
         if (audioContainer && songs[0]?.songId === audio.id) {
             audioContainer.currentTime = songTime;
         }

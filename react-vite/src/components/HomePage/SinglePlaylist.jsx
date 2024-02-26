@@ -4,7 +4,7 @@ function SinglePlaylist({ playlist }) {
     
     function firstFiveSongs(songs) {
         const res = [];
-        for (let i = 0; i < Math.min(songs.length, 5); i++)
+        for (let i = 0; i < Math.min(songs?.length, 5); i++)
             res.push(songs[i]);
         return res;
     }

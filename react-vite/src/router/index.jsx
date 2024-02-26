@@ -10,6 +10,7 @@ import PlaylistPage from '../components/PlaylistPage';
 import UpdatePlaylist from '../components/UpdatePlaylist';
 import HomePage from '../components/HomePage/HomePage';
 import Upload from '../components/Upload';
+import UpdateSong from '../components/UpdateSong';
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
       {
         path: "songs/:songId",
         element: <SongPage />
+      },
+      {
+        path: "songs/:songId/edit",
+        element: <UpdateSong />
       },
       {
         path: "upload",

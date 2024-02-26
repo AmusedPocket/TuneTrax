@@ -17,8 +17,51 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
 }
+#modal-content * {
+  color: #EF3E2B;
+}
 
 #modal-content {
   position: absolute;
-  background-color:white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  background-color:#EFDC2B;
+  border-radius: 50px;
+  box-shadow: 0 0 20px #000433;
+}
+#modal-content form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+#modal-content form label {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  justify-content: space-between;
+}
+#modal-content form input {
+  background-color: #FFFFAB;
+}
+#modal-content form textarea {
+  background-color: #FFFFAB;
+  resize: none;
+}
+#modal-content button {
+  padding: 4px 8px;
+  color: #EF3E2B;
+  width: fit-content;
+  border: 2px solid #EF3E2B;
+  border-radius: 5px;
+}
+#modal-content span {
+  font-size: large;
+}
+#modal-content span:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }

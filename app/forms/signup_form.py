@@ -18,14 +18,27 @@ def username_exists(form, field):
     if user:
         raise ValidationError('Username is already in use.')
 
+def email_validations(_form, field):
+    email = field.data
+    if "@" not in email or "." not in email:
+        raise ValidationError('Email must be a valid email.')
+    
+def image_validations(_form, field):
+    image = field.data
+    if image == "":
+        return 
+    for ending in [".jpg", ".png", ".jpeg"]:
+        if image.endswith(ending):
+            return
+    raise ValidationError("Image link must end in '.jpg', '.png', or '.jpeg'.")
 
 class SignUpForm(FlaskForm):
     first_name = StringField('first_name', validators=[DataRequired()])
     last_name = StringField('last_name', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired(), user_exists])
+    email = StringField('email', validators=[DataRequired(), user_exists, email_validations])
     username = StringField('username', validators=[DataRequired(), username_exists])
     password = StringField('password', validators=[DataRequired()])
-    profile_pic = StringField('profile_pic')
-    header_pic = StringField('header_pic')
+    profile_pic = StringField('profile_pic', validators=[image_validations])
+    header_pic = StringField('header_pic', validators=[image_validations])
     description = StringField('description')
     

@@ -84,7 +84,8 @@ class Song(db.Model):
     # One to Many
     comments = db.relationship(
         "Comment",
-        back_populates="song"
+        back_populates="song",
+        cascade="all, delete"
     )
     user = db.relationship(
         "User",

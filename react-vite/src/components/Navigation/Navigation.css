@@ -14,11 +14,13 @@
 nav {
   position: sticky;
   top:0;
-  display: flex;
-  justify-content: space-between;
+  z-index: 100;
 
-  margin: auto;
-  width: 1200px;
+  display: flex;
+  justify-content: center;
+  gap: 800px;
+
+  padding: fill;
   height: 50px;
   background-color: #000433;
 }
@@ -28,12 +30,29 @@ nav > ul {
 }
 nav > ul > li {
   display: flex;
+  transition: background-color .2s;
+  background-color: #000433;
   justify-content: center;
   color: white;
   align-items: center;
   width: 100px;
 }
 nav > ul > li:hover {
-  transition: backgroud-color .1s;
-  background-color: #323248;
+  transition: background-color .2s;
+  background-color:  rgba(37,37,77,1);
+}
+nav > ul > li > button {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.nav-link-title {
+  color: #Ef3E2B;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large;
+  height: 100%;
 }

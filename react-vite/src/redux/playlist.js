@@ -53,7 +53,7 @@ export const deleteLike = (playlistId, current_user) => ({
 // Thunks
 export const thunkGetPlaylist = (playlistId) => async (dispatch)=> {
      if (!playlistId) return; 
-     const res = await fetch(`/api/playlists/${playlistId}/`);
+     const res = await fetch(`/api/playlists/${playlistId}`);
 
      if (res.ok) {
           const { playlist } = await res.json();
