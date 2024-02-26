@@ -53,14 +53,13 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
 
         if (editedSong) payload.id = editedSong.id;
         else payload.song = songFile;
-
         let response;
         if (!dontNavigate) response = await dispatch(editedSong ? thunkEditSong(payload) : thunkPostSong(payload));
         else response = await dispatch(thunkPostAlbumSong(payload))
             
         // Unsuccessful Submission
         if (response.errors) { 
-            setErrors({errors: [response.errors]});
+            setErrors({errors: Object.values(response.errors)});
             setDisabled(false);
             return;
         }

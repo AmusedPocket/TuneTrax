@@ -24,7 +24,7 @@ function DeletePlaylistModal({ playlistId, navigate }) {
             <form className="DeleteForm">
                 <h1>Confirm Delete</h1>
                 <h3>Are you sure you want to delete this event?</h3>
-                <button onClick={deletePlaylist}>Yes (Delete Playlist)</button>
+                <button onClick={() => alert("Feature coming soon!")}>Yes (Delete Playlist)</button>
                 <button onClick={keepPlaylist}>No (Keep Playlist)</button>
             </form>
         </>

@@ -68,7 +68,7 @@ def post_song_route():
 
 #Edit a song by song id
 #Need AWS framework implemented
-@song_routes.route('/<int:id>', methods=["POST"])
+@song_routes.route('/<int:id>/', methods=["POST"])
 @login_required
 def update_song(id):
     song = Song.query.get(id)
@@ -82,32 +82,21 @@ def update_song(id):
     
     if updated_song.validate_on_submit():
         song.title = updated_song.title.data
-        song.song_link = updated_song.song_link.data
-        if request.files['song']:
-            new_song = request.files['song']
-            new_song.filename = s3.get_unique_filename(new_song.filename)
-            upload_song = s3.upload_file_to_s3(new_song)
-            song.song_link = upload_song['url'],
         song.body = updated_song.body.data
         song.genre = updated_song.genre.data
+        
+        if updated_song.visibility:
+            song.visibility = updated_song.visibility.data
 
-    song_data = request.form.to_dict()
-    song.title = song_data["title"]
-    song.song_link = song_data["song_link"]
-    
-    song.song_pic = song_data["song_pic"]
-    song.body = song_data["body"]
-    song.genre = song_data["genre"]
-    # song.visibility = song_data["visibility"]
+        db.session.add(song)
+        db.session.commit()
 
-    db.session.add(song)
-    db.session.commit()
-
-    return song.song_dict()
+        return song.song_dict()
+    return {"errors":updated_song.errors}, 403
 
 #Delete a song by id
 #Need to remove file from aws s3
-@song_routes.route('/<int:id>', methods=["DELETE"])
+@song_routes.route('/<int:id>/', methods=["DELETE"])
 @login_required
 def delete_song(id):
     song = Song.query.get(id)

@@ -121,10 +121,15 @@ export const thunkPostSong = (song) => async (dispatch) => {
     }
 }
 
-export const thunkEditSong = (song, songId) => async (dispatch) => {
+export const thunkEditSong = (song) => async (dispatch) => {
+    const songId = song.id;
+    const formData = new FormData();
+    for (let key of Object.keys(song)) 
+        formData.append(key, song[key]);
+
     const response = await fetch(`/api/songs/${songId}/`, {
-        method: 'PUT',
-        body: JSON.stringify(song)
+        method: 'POST',
+        body: formData
     })
     if (response.ok){
         const edit_song = await response.json()
@@ -261,6 +266,7 @@ const songReducer = (state=initialState, action) => {
                 song: action.payload
             };
         case DELETE_SONG:
+            newState = {...state}
             newState.songs = { ...state.songs };
             delete newState.songs[action.songId];
             return newState;

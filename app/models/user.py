@@ -97,19 +97,23 @@ class User(db.Model, UserMixin):
     # One to Many
     comments = db.relationship(
         "Comment",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
     songs = db.relationship(
         "Song",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
     playlists = db.relationship(
         "Playlist",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
     albums = db.relationship(
         "Album",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
 
     # GETTERS/SETTERS

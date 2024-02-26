@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { thunkGetSong, thunkEditComment, thunkAddLike } from "../../../redux/song";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -12,12 +12,15 @@ import OpenModalButton from "../../OpenModalButton/OpenModalButton";
 import { useModal } from "../../../context/Modal";
 import { thunkDeleteComment } from "../../../redux/song";
 import "./SongPage.css"
+import DeleteSongModal from "../../DeleteSongModal";
+import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 
 
 
 const SongPage = () => {
     const { songId } = useParams()
     const dispatch = useDispatch()
+    const navigate = useNavigate();
     const { songs, setSongs } = useSongContext()
     const [comment, setComment] = useState('')
     const [errors, setErrors] = useState([])
@@ -56,7 +59,12 @@ const SongPage = () => {
             })
     }
 
-    if (!song) return;
+    if (!song) return(
+        <>
+            <h1>This song doesn&apos;t exist...</h1>
+            <h5>sad noot noot</h5>
+        </>
+    );
 
     // console.log("user id is", userId)
     const songComments = song.comments
@@ -67,7 +75,7 @@ const SongPage = () => {
             setSongs([{
                 songLink: song.song_link,
                 songPic: song.song_pic,
-                songName: song.song_name,
+                songName: song.title,
                 userId: song.user_id,
                 songId: song.id
             }, ...songs])
@@ -161,7 +169,6 @@ const SongPage = () => {
         }
     }
 
-
     return (
 
         <>
@@ -191,6 +198,15 @@ const SongPage = () => {
                             <div>
                                 <i className="fa-solid fa-heart">{currentLikes}</i>
                             </div></button></p>
+                        {song.user.id == user?.id && <button onClick={() => navigate(`/songs/${song.id}/edit`)}>Edit</button>}
+                        {song.user.id == user?.id && 
+                            <button>
+                                <OpenModalMenuItem
+                                    itemText="Delete"
+                                    modalComponent={<DeleteSongModal songId={songId} navigate={navigate} />}
+                                />
+                            </button>
+                        }
                     </div>
             </div>
 

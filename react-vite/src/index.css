@@ -3,6 +3,10 @@ a, ul, span, button {
     all: unset;
 }
 
+* {
+    word-wrap: break-word;
+}
+
 body {
     margin: 0;
     padding: 0;

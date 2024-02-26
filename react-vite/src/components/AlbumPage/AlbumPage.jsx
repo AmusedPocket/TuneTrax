@@ -17,7 +17,6 @@ function AlbumPage() {
     const {songs, setSongs} = useSongContext();
     const [albumLikes, setAlbumLikes] = useState(0)
     const [canLike, setCanLike] = useState(false)
-    console.log("album is ", album)
 
     useEffect(()=>{
         if(album?.likes) setAlbumLikes(album.likes?.length)
@@ -73,7 +72,13 @@ function AlbumPage() {
     function playSongs() {
         if (album) {
             const songArr = [];
-            for (let song of album.songs) songArr.push(song);
+            for (let song of album.songs) songArr.push({
+                songLink: song.song_link,
+                songPic: song.song_pic,
+                songName: song.title,
+                userId: song.user_id,
+                songId: song.id
+            });
             setSongs([...songArr, ...songs])
             const element = document.querySelector("audio")
             if (element) {

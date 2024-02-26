@@ -17,10 +17,6 @@ const SongPlayer = () => {
     tempSongs.shift();
     setSongs(tempSongs);
     if (!tempSongs.length) player.current.audio.current.audio = null;
-    
-    if (player) {
-      player.current.audio.current.currentTime = 0;
-    }
 
     console.log("skip\nsongs:", tempSongs, "\nprev songs:", newSongs)
   }
@@ -40,9 +36,6 @@ const SongPlayer = () => {
     tempSongs.shift();
     setPrevSongs(tempSongs);
 
-    if (player) {
-      player.current.audio.current.currentTime = 0;
-    }
     console.log("prev\nsongs:", newSongs, "\nprev songs:", tempSongs)
   }
 
@@ -56,6 +49,7 @@ const SongPlayer = () => {
         showJumpControls
         customProgressBarSection={
           [
+            <span key={"WHY DONT YOU STOP YELLING"}>{songs.length ? songs[0].songName : "-"}</span>,
             RHAP_UI.CURRENT_TIME,
             <div key={"STOP YELLING AT ME"}>|</div>,
             RHAP_UI.DURATION

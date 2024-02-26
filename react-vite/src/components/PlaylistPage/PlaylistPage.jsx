@@ -75,7 +75,13 @@ function PlaylistPage() {
     function playSongs() {
         if (playlist) {
             const songArr = [];
-            for (let song of playlist.songs) songArr.push(song);
+            for (let song of playlist.songs) songArr.push({
+                songLink: song.song_link,
+                songPic: song.song_pic,
+                songName: song.title,
+                userId: song.user_id,
+                songId: song.id
+            });
             setSongs([...songArr, ...songs])
             const element = document.querySelector("audio")
             if (element) {
@@ -155,7 +161,7 @@ function PlaylistPage() {
                                 <NavLink><i className="fa-solid fa-people-group"></i>{playlist.user.follows}</NavLink>
                                 <NavLink><i className="fa-solid fa-record-vinyl"></i>{playlist.user.songs?.length}</NavLink>
                             </div>
-                            <button><i className="fa-solid fa-user-plus"></i> Follow</button>
+                            <button onClick={()=>window.alert("Feature coming soon")}><i className="fa-solid fa-user-plus"></i> Follow</button>
                         </div>
                         <div className="playlist-body_left-bottom_playlist-details"> {/* right side */}
                             <span className="playlist-body_left-bottom_playlist-details_body">{playlist.body}</span>

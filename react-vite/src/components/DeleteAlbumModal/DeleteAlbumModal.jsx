@@ -23,7 +23,7 @@ function DeleteAlbumModal({ albumId, navigate }) {
         <>
             <form className="DeleteForm">
                 <h1>Confirm Delete</h1>
-                <h3>Are you sure you want to delete this event?</h3>
+                <h3>Are you sure you want to delete this Album?</h3>
                 <button onClick={deleteAlbum}>Yes (Delete Album)</button>
                 <button onClick={keepAlbum}>No (Keep Album)</button>
             </form>
