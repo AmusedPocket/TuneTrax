@@ -4,9 +4,15 @@ a, ul, span, button {
 }
 
 body {
-    margin: auto;
-    width:1200px;
+    margin: 0;
+    padding: 0;
     background-color: #FFFFAB;
+}
+
+.page-container {
+    margin: 0 auto;
+    padding: 0;
+    width:1200px;
 }
 
 .play-button {

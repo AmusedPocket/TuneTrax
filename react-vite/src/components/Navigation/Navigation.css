@@ -14,11 +14,12 @@
 nav {
   position: sticky;
   top:0;
-  display: flex;
-  justify-content: space-between;
 
-  margin: auto;
-  width: 1200px;
+  display: flex;
+  justify-content: center;
+  gap: 800px;
+
+  padding: fill;
   height: 50px;
   background-color: #000433;
 }
@@ -28,12 +29,14 @@ nav > ul {
 }
 nav > ul > li {
   display: flex;
+  transition: background-color .2s;
+  background-color: #000433;
   justify-content: center;
   color: white;
   align-items: center;
   width: 100px;
 }
 nav > ul > li:hover {
-  transition: backgroud-color .1s;
-  background-color: #323248;
+  transition: background-color .2s;
+  background-color:  rgba(37,37,77,1);
 }

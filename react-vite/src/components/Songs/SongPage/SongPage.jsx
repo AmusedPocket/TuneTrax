@@ -109,8 +109,6 @@ const SongPage = () => {
         songComments.push(updatingComments)
     }
 
-    console.log("comments are: ", songComments)
-
     // Edit Comment functionality
     const submitEdit = async (e) => {
         e.preventDefault();
@@ -139,13 +137,8 @@ const SongPage = () => {
     }
 
     const postedAtDate = (created_at) => {
-       
         const date = new Date(created_at + " UTC")
-        
         const now = new Date()
-
-        console.log("now time zone offset: ", now.toUTCString())
-        console.log("date time zone offset :", date.toUTCString())
 
         const timeDiff = now - date -  date.getTimezoneOffset() * 60000
         const secondsDiff = Math.floor(timeDiff / 1000)
@@ -205,11 +198,11 @@ const SongPage = () => {
                         onChange={(e) => setCommentText(e.target.value)} />
                     <button onSubmit={submitEdit} type="submit">Submit Edit</button>
                 </form>) : <p>{comment.comment} </p>}
-                        {(comment.user.id === user.id) &&
+                        {user && (comment.user.id === user.id) &&
                             <button onClick={()=>editComment(comment)}>Manage Comment</button>
                         }
 
-                        {(comment.user.id === user.id) && <OpenModalButton
+                        {user && (comment.user.id === user.id) && <OpenModalButton
                             buttonText="Delete Comment"
                             modalComponent={<>
                                 <h2>Confirm Delete</h2>
