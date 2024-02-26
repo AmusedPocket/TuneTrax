@@ -1,0 +1,70 @@
+.upload-form_song {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 100%;
+    width:100%;
+}
+.upload-form_song * {
+    color: #000433;
+}
+.upload-form_song h1 {
+    margin: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #000433;
+    width: 100%;
+}
+.upload-form_song > div{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: fit-content;
+}
+
+.upload-form_song_pic {
+    width: 200px;
+    padding: 10px;
+}
+.upload-form_song_pic img  {
+    width: 200px;
+    height: 200px;
+}
+
+.upload-form_song_data {
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    gap: 10px;
+    align-items: end;
+    width: 50%;
+}
+.upload-form_song_data > label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.upload-form_song_data button {
+    padding: 4px 8px;
+    color: #000433;
+    width: fit-content;
+    border: 2px solid #000433;
+    border-radius: 5px;
+}
+.upload-form_song_button-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.submitted-song {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid #000433;
+    padding: 10px 0;
+}
+.submitted-song img{
+    width: 100px;
+    height: 100px;
+}

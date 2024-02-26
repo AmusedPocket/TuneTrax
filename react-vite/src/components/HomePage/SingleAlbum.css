@@ -1,0 +1,37 @@
+.single-album-container {
+    
+    background-image: linear-gradient(135deg, #EFDC2B 0%, #EF912B 45%, #000433 100%);
+    display: flex;
+    gap:10px;
+    padding: 5px;
+}
+
+.first-five-album-song-text{
+    display: inline-flex;
+    padding: 5px;
+    width: fit-content;
+}
+
+.single-album-album{
+    border: 1.5px solid rgba(0, 4, 51, .25);
+    width: 200px;
+    height: 200px;
+
+}
+
+.single-album-song-picture {
+    width: 30px;
+    width: 30px;
+    margin: 0px 5px;
+}
+
+.single-album-image-text{
+    border: 2px solid black;
+    display: flex;
+    width: fit-content;
+}
+
+.album-pic{
+    width: 200px;
+    height: 200px;
+}

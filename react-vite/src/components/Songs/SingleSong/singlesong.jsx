@@ -4,6 +4,7 @@ import { useState } from "react";
 import { thunkAddLike } from "../../../redux/song";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import './singlesong.css'
 
 const SingleSong = ({song}) => {
     const dispatch = useDispatch()
@@ -30,14 +31,15 @@ const SingleSong = ({song}) => {
 
     return(
         <div className="single-song-container">
-            <p>{song.username}</p>
+            <p >{song.username}</p>
             {song.albums && <p>{song.albums[0]?.title}</p>}
-            <p>{song.title}</p>
+            <p className="artist">{song.title}</p>
             <p>#{song.genre}</p>
-            <p>{song.plays}</p>
+            {/* <p>{song.plays}</p> */}
             <p><button onClick={()=>likeClick()} disabled={canLike}><i className="fa-solid fa-heart">{currentLikes}</i></button></p>
             <Link to={`/songs/${song.id}`}>
-                <img src={picture}/>
+                {picture != "No Image" ? <img className="album" src={picture}/> :
+                                         <div className="album default-pic"/>}
             </Link>
         
         </div>

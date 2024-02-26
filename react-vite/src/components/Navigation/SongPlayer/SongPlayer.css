@@ -1,10 +1,46 @@
 .react-h5-audio-player {
+     position: fixed;
+     bottom:0;
      width: 100%;
-     max-width: 400px;
-     /* background-color: black; */
+
+     background-color: #000433;
+     border-top: 2px solid #EF912B;
+     padding: 10px 0 10px 0;
 }
 
+.rhap_main {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     gap: 5px;
+     align-items: center;
+     width: 1200px;
+     margin: auto;
+}
 
-.react-h5-audio-player--volume-filled {
-     background-color: #4caf50;
-   }
+.rhap_progress-section {
+     display: flex;
+     align-items: center;
+     color: white;
+}
+.rhap_progress-section * {
+     display: flex;
+     justify-content: center;
+     width: 50px;
+}
+
+.rhap_controls-section {
+     display: flex;
+     gap: 40px;
+}
+.rhap_main-controls {
+     display: flex;
+     gap: 10px;
+}
+.rhap_controls-section button {
+     color: white;
+     text-align: center;
+     width: 30px;
+     height: 30px;
+     font-size: x-large;
+}
