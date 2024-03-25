@@ -43,8 +43,14 @@ def post_song(songForm):
 def songs():
     songs = Song.query.all()
     print("in songs route")
-    return {song.id:song.song_dict() for song in songs}
+    return {song.id:song.toDictHomePage() for song in songs}
 
+#Get single song and play it
+@song_routes.route('/<int:id>/play')
+def single_song_play(id):
+    song = Song.query.get(id)
+
+    return song.toDictLimited()
 
 #Get a single song
 @song_routes.route('/<int:id>')

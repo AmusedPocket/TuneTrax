@@ -207,7 +207,7 @@
     gap: 10px;
     height: 80px;
 }
-.album-body_right_container_set img {
+.album-body_right_container_set img, .album-body_right_container_set-default {
     cursor: pointer;
     height: 50px;
     width: 50px;

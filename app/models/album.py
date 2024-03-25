@@ -37,7 +37,7 @@ class Album(db.Model):
             "album_pic":self.album_pic,
             "release_date":self.release_date.strftime("%Y-%m-%d"),
             "user":self.user.toDictAlbum(),
-            "songs":[song.toDictLimited() for song in self.songs],
+            "songs":[song.toDictHomePage() for song in self.songs],
         }
 
     # RELATIONSHIPS: 

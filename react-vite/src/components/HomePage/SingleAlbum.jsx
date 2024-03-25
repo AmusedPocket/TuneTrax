@@ -9,7 +9,10 @@ function SingleAlbum({ album }) {
             res.push(songs[i]);
         return res;
     }
-    console.log(album)
+    if(!album && !album?.id){
+        return;
+    }
+    
     return (
         <div className="single-album-container">
             <Link to={`/albums/${album.id}`}>

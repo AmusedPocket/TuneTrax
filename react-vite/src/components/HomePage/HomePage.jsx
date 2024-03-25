@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { thunkGetSongPlay, thunkGetSongs } from "../../redux/song";
-import { thunkGetAlbums } from "../../redux/album";
+import { selectAlbums, thunkGetAlbums } from "../../redux/album";
 import { thunkGetPlaylist } from "../../redux/playlist";
 import SingleSong from "../Songs/SingleSong";
 import SingleAlbum from "./SingleAlbum";
@@ -9,14 +9,15 @@ import SinglePlaylist from "./SinglePlaylist";
 import { selectSongArray } from "../../redux/song";
 import './HomePage.css'
 import { useSongContext } from "../../context/SongPlayerContext";
+import { NavLink } from "react-router-dom";
 
 function HomePage() {
     const dispatch = useDispatch();
     const songs = useSelector(state => state.songs.songs)
-    const albums = useSelector(state => state.albums);
+    const albums = useSelector(selectAlbums())
     const playlists = useSelector(state => state.playlists);
     const [songContainer, setSongContainer] = useState({})
-    const [albumContainer, setAlbumContainer] = useState({})
+    
     const { songs: playingSongs, setSongs } = useSongContext()
 
     useEffect(() => {
@@ -24,6 +25,8 @@ function HomePage() {
         dispatch(thunkGetAlbums())
         dispatch(thunkGetPlaylist())
     }, [])
+
+    
 
 
     useEffect(() => {
@@ -91,7 +94,7 @@ function HomePage() {
                         return <SinglePlaylist key={i} playlist={el[1]}/>;
                 }
             })} */}
-            {Object.keys(songContainer).map((genre) => {
+            {Object.keys(songContainer).map((genre, index) => {
                 return (<div key={genre}>
                     <h3>{genre}</h3>
                     <div className="home_page-song-container">
@@ -109,10 +112,11 @@ function HomePage() {
                                         <div className="play-button fa-solid fa-play" />
                                     </div>
                                 </div>
-                                <h5>{song.title}</h5>
+                                <h5><NavLink to={`/songs/${song.id}`}>{song.title}</NavLink></h5>
                             </div>
                         )}
                     </div>
+                    <div><SingleAlbum album={albums[index]}/></div>
                 </div>)
             })}
         </>

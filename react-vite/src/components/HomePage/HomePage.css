@@ -24,6 +24,7 @@
     height: 60px;
     top: 14px;
     left: 38px;
+    pointer-events: none;
 }
 
 .home_page-song-image:hover + .home_page-song-container-play {

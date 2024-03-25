@@ -15,6 +15,11 @@ export const selectSingleAlbum = (id) => createSelector(
     albums => albums[id]
 )
 
+export const selectAlbums = () => createSelector(
+    state => state.albums,
+    albums => Object.values(albums)
+)
+
 // Action Creators
 export const getAlbum = (album) => ({
     type: GET_ALBUM,
