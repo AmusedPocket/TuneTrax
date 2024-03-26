@@ -81,8 +81,8 @@ def album_seed_data(all_songs, all_users):
     for album in all_albums:
         album.user = all_users[album.user_id]
         album.likes = sample(all_users, randint(0, len(all_users)))
-        album.genre = album.songs[0].genre
-        
+        album.genre = album.songs[0].genre.name
+
     db.session.add_all(all_albums)
     db.session.commit()
 
