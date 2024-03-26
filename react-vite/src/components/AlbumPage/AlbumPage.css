@@ -116,6 +116,10 @@
     padding: 0 0 5px 0;
     margin: 0 0 15px 0;
 }
+
+.album-body_left-top > div > button {
+    cursor: pointer;
+}
 .album-body_left-top > div {
     color: #000433;
     display: flex;
@@ -225,4 +229,19 @@
 .album-body_right_container_likes {
     display: flex;
     padding: 5px 15px;
+}
+
+.upcoming{
+    list-style-type: none;
+    cursor: pointer;
+}
+
+.follow-button {
+    cursor: pointer;
+    display: inline-flex;
+    border: 0.5px solid rgb(128, 128, 128);
+}
+
+.follow-button-text{
+    margin-left: 5px;
 }
