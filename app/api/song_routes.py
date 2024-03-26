@@ -168,15 +168,18 @@ def edit_song_comment(_id, c_id):
 
     comment = Comment.query.get(c_id)
     form = CommentForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
     
     if form.validate_on_submit() and comment.user_id == current_user.id:
+        print("form data is: ", form.data)
         comment.comment = form.data['comment']
         comment.updated_at = datetime.utcnow()
         db.session.add(comment)
         db.session.commit()
         return comment.comment_dict()
     else:
-        return {"Error": "Could not edit comment"}
+        return {"Error": form.errors}
 
 
 # Add a Like

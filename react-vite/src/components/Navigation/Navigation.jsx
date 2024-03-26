@@ -2,6 +2,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import "./Navigation.css";
+import FeatureComingSoonModal from "../FeatureComingSoonModal/FeatureComingSoonModal";
+import OpenModalMenuItem from "./OpenModalMenuItem";
+
 
 function Navigation() {
   return (
@@ -11,7 +14,11 @@ function Navigation() {
           <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <div onClick={()=>window.alert("Feature coming soon")}>Feed</div>
+        <button className="upcoming"> <OpenModalMenuItem
+                                itemText="Feed"
+                                modalComponent={<FeatureComingSoonModal />}
+
+                            /></button>
         </li>
         <li>
           <NavLink to="/upload">Upload</NavLink>
@@ -19,7 +26,7 @@ function Navigation() {
         
       </ul>
       
-      <div className="nav-link-title">Tune Trax<img className="nav-link-logo" src="./public/favicon.webp"/></div>
+      <div className="nav-link-title">Tune Trax<img className="nav-link-logo" src="../public/favicon.webp"/></div>
       <ul>
         <li>
           <ProfileButton />
