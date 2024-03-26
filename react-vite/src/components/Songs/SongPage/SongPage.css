@@ -4,11 +4,17 @@
      background: linear-gradient(135deg, #EFDC2B 0%, #EF912B 45%, #EF3E2B 100%);
 }
 
-.song-header > img, .song-header-default-pic {
+.song-header > img  {
      width: 360px;
      height: 360px;
      padding: 20px;
  }
+ .song-header-default-pic {
+     width: 360px;
+     height: 360px;
+     margin: 20px;
+ }
+
 
 .song-header span {
      color: white;

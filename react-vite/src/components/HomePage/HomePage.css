@@ -1,3 +1,9 @@
+.home_page-genre-container{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 .home_page-song-image {
     width: 100px;
     height: 100px;
@@ -61,3 +67,23 @@
     background-color: #000433;
     border-radius: 5px;
 }
+
+.home_page-album-container {
+    display: flex;
+    gap: 5px;
+    justify-content: start;
+    overflow-x: scroll;
+    cursor: pointer;
+}
+
+.home_page-album-container::-webkit-scrollbar{
+    background-color: #EF912B;
+    border-radius: 5px;
+}
+
+.home_page-album-container::-webkit-scrollbar-thumb{
+    background-color: #000433;
+    border-radius: 5px;
+}
+
+

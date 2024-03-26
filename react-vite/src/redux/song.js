@@ -107,8 +107,8 @@ export const thunkGetSongPlay = (songId) => async (dispatch) => {
 
 }
 
-export const thunkGetSongs = () => async (dispatch) => {
-    const response = await fetch('/api/songs/')
+export const thunkGetSongs = (genres) => async (dispatch) => {
+    const response = await fetch(`/api/songs/?genres=${genres.join("-")}`)
     if (response.ok){
         const songs = await response.json();
         dispatch(getSongs(songs))

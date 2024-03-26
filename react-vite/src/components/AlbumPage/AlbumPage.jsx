@@ -124,7 +124,7 @@ function AlbumPage() {
                         {/* TODO show waveform */}
                     </div>
                 </div>
-                <img src={album.album_pic} alt={`${album.title} cover image`}/>
+                {album.album_pic !== "No Image" ? <img src={album.album_pic} alt={`${album.title} cover image`} /> : <div className="album-header-default-pic default-pic" />}
             </div>
             <div className="album-body"> {/* body container */}
                 <div className="album-body_left"> {/* left side - album/user data */}
