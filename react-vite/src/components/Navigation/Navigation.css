@@ -14,7 +14,7 @@
 nav {
   position: sticky;
   top:0;
-  z-index: 100;
+  z-index: 10;
 
   display: flex;
   justify-content: center;
@@ -36,6 +36,7 @@ nav > ul > li {
   color: white;
   align-items: center;
   width: 100px;
+  cursor: pointer;
 }
 nav > ul > li:hover {
   transition: background-color .2s;
@@ -55,4 +56,11 @@ nav > ul > li > button {
   align-items: center;
   font-size: xx-large;
   height: 100%;
+}
+
+.nav-link-logo {
+  display: flex;
+  width: 40px;
+  padding-left: 10px;
+
 }

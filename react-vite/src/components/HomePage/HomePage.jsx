@@ -11,6 +11,7 @@ import './HomePage.css'
 import { useSongContext } from "../../context/SongPlayerContext";
 import { NavLink } from "react-router-dom";
 import InfiniteScroll from 'react-infinite-scroller';
+import { thunkClearSongStore } from "../../redux/song";
 
 function HomePage() {
     const dispatch = useDispatch();
@@ -22,14 +23,12 @@ function HomePage() {
     const [albumContainer, setAlbumContainer] = useState({})
     const { songs: playingSongs, setSongs } = useSongContext()
     const [hasMore, setHasMore] = useState(true)
+    let hasSearched = false
     
-
-    // useEffect(() => {
-    //     dispatch(thunkGetSongs())
-    //     dispatch(thunkGetAlbums())
-    //     dispatch(thunkGetPlaylist())
-
-    // }, [])
+    useEffect(()=>{
+        dispatch(thunkClearSongStore())
+    }, [])
+    
 
 
     useEffect(() => {
@@ -37,7 +36,9 @@ function HomePage() {
         const tempContainer = {...albumContainer}
         for (let album of Object.values(albums)) {
             if (tempContainer[album.genre]) {
-                tempContainer[album.genre].push(album)
+                if(!tempContainer[album.genre].find(newAlbum => newAlbum.id === album.id)){
+                    tempContainer[album.genre].push(album)
+                }
             } else {
                 tempContainer[album.genre] = [album]
             }
@@ -53,7 +54,9 @@ function HomePage() {
 
         for (let song of Object.values(songs)) {
             if (tempContainer[song.genre]) {
-                tempContainer[song.genre].push(song);
+                if(!tempContainer[song.genre].find(newSong => newSong.id === song.id)){
+                    tempContainer[song.genre].push(song);
+                }
             } else {
                 tempContainer[song.genre] = [song]
             }
@@ -62,28 +65,6 @@ function HomePage() {
         setSongContainer(tempContainer)
     }, [setSongContainer, songs])
 
-    function mixFeed() {
-        const res = [];
-        let currLocation = 0;
-
-        // Songs
-        for (let song of Object.values(songs))
-            res.push(["song", song]);
-
-        // Albums
-        for (let album of Object.values(albums)) {
-            currLocation = (currLocation + 2) % (res?.length - 1);
-            res.splice(currLocation, 0, ["album", album])
-        }
-
-        // Playlists
-        for (let playlist of Object.values(playlists)) {
-            currLocation = (currLocation + 3) % (res?.length - 1);
-            res.splice(currLocation, 0, ["playlist", playlist])
-        }
-
-        return res;
-    }
 
     const playSong = async (songId) => {
         const songData = await dispatch(thunkGetSongPlay(songId))
@@ -101,9 +82,21 @@ function HomePage() {
     // if (!songs || !Object.keys(albumContainer).length || !albums || !playlists) return "Loading..."
 
     const loadFunc = async (pageNum) => {
+        setHasMore(false);
+        
+        pageNum -= 1
+        
+        const arr = ["Electronic", "Rock", "Pop", "Alternative", "Hauntology", "Classical", "Indie", "Rap", "Country", "Metal"]
         
         
-        const arr = ["Electronic", "Rock", "Pop", "Alternative", "Hauntology", "Classical", "Indie", "Rap", "Country", "Metal"];
+        
+        if(hasSearched){
+            
+            return;
+        } else {
+            hasSearched = true
+        }
+        
         if(pageNum >= arr.length){
             setHasMore(false);
             
@@ -111,7 +104,9 @@ function HomePage() {
         }
         await dispatch(thunkGetSongs([arr[pageNum]]))
         await dispatch(thunkGetAlbums([arr[pageNum]]))
-        
+        console.log("pageNum is: ", pageNum)
+        console.log("has searched is: ", hasSearched)
+        setHasMore(true);
     }
 
     return (
@@ -121,7 +116,7 @@ function HomePage() {
                 loadMore={loadFunc}
                 hasMore={hasMore}
                 initialLoad={true}
-                threshold={50}
+                threshold={100}
                 loader={<div className="loader" key={0}>Loading ...</div>}
             >
                 {Object.keys(songContainer).map((genre, index) => {

@@ -160,7 +160,11 @@
 .song-comment {
      display: flex;
      flex-direction: column;
-     margin: 30px;
+     
+}
+
+.song-comment h2{
+    margin-top: .3em;
 }
 
 .song-body_left-bottom_profile {
@@ -211,23 +215,86 @@
  .song-comment-input {
      padding-top: 40px;
 }
-
-
-.song-comment-eachone{
-     padding: 15px 0px;
-     gap: 20px;
-     border-bottom: 2px solid rgba(0, 4, 51, .5);
+.song-comment-input form{
+    display: flex;
+    padding: 2px;
+    border: 1.5px solid rgba(0, 4, 51, .3);
+    background-color: white;
+    border-radius: calc(infinity*1px);
+    
 }
 
+.song-comment-input textarea{
+    flex-grow: 1;
+    resize: none;
+    border-radius: calc(infinity * 1px);
+    padding: 7px 10px;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
 
-.song-comment-eachone > button {
+.song-comment-input textarea:focus{
+    border: none;
+    outline: none;
+}
+
+.song-comment-input input:disabled{
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+.song-comment-input input{
+    margin-left: 2px;
+    cursor: pointer;
+    border: 1.5px solid rgba(0, 4, 51);
+    gap:0px;
+    border-radius: calc(infinity * 1px);
+    background-color:#EF3E2B;
+    font-size: medium;
+    color: white;
+}
+
+.song-comment-eachone{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5px;
+    border-radius: 15px;
+     margin: 15px 0px;
+     /* gap: 20px; */
+     border-bottom: 2px solid rgba(0, 4, 51, .5);
+     width: 100%;
+     background-color: #EFDC2B;
+}
+
+.song-comment-eachone p{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin: 5px;
+}
+
+.song-comment-eachone h2{
+    margin: 0;
+}
+
+.song-comment-eachone  button {
      color: #000433;
      border: 1.5px solid rgba(0, 4, 51, .3);
      border-radius: 5px;
      padding: 1px 5px;
      margin-left: 10px;
 }
+.song-page-manage-delete-buttons{
+    display: flex;
+    justify-content: end;
+    margin-right: 10px;
+}
 
+.song-page-manage-delete-buttons button{
+    background-color: #EF912B;
+    cursor: pointer;
+    color: white;
+}
  .song-body_right {
      display: flex;
      flex-direction: column;
