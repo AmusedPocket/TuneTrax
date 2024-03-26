@@ -14,7 +14,7 @@ function CreateSet({ editedSet, songFiles }) {
     const [currentPage, setCurrentPage] = useState("basic info");
     const [disabled, setDisabled] = useState(false);
 
-    const [albumImg, setAlbumImg] = useState(editedSet ? editedSet.image : "No Image");
+    const [albumImg, setAlbumImg] = useState(editedSet ? editedSet.image : {URL: "No Image"});
     const [title, setTitle] = useState(editedSet ? editedSet.title : "");
     const [type, setType] = useState(editedSet ? editedSet.type : "Album");
     const [releaseDate, setReleaseDate] = useState(editedSet ? editedSet.release_date : "");
@@ -23,7 +23,10 @@ function CreateSet({ editedSet, songFiles }) {
 
     function onImageChange(e) {
         if (e.target.files && e.target.files[0]);
-            setAlbumImg(URL.createObjectURL(e.target.files[0]));
+            setAlbumImg({
+                URL: URL.createObjectURL(e.target.files[0]),
+                file: e.target.files[0]
+            });
     }
     
     async function onSubmit(e) {
@@ -57,7 +60,7 @@ function CreateSet({ editedSet, songFiles }) {
 
         const payload = {
             title,
-            album_pic: albumImg,
+            album_pic: albumImg.file,
             body: description,
             release_date: releaseDate,
             songs: songIds.join(",")
@@ -83,7 +86,7 @@ function CreateSet({ editedSet, songFiles }) {
     
     function clearForm (e) {
         e.preventDefault();
-        setAlbumImg("No Image");
+        setAlbumImg({URL: "No Image"});
         setTitle("");
         setType("Album");
         setReleaseDate("");
@@ -109,8 +112,8 @@ function CreateSet({ editedSet, songFiles }) {
             {"basic info" == currentPage && (<>
             <form onSubmit={onSubmit} className="upload-form_set_form">
                 <div className="upload-form_set_image">
-                    <img src={albumImg}/>
-                    {albumImg == "No Image" &&
+                    <img src={albumImg.URL}/>
+                    {albumImg.URL == "No Image" &&
                     <input 
                         type="file"
                         accept="image/*"

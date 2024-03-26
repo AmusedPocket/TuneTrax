@@ -1,6 +1,13 @@
 import { normalizeObj } from "./helpers";
 import {createSelector} from "reselect"
 
+export const selectSongArray = (()=> {
+    return createSelector(
+        state => state.songs.songs,
+        songs => Object.values(songs)
+    )
+})
+
 const GET_SONG = 'songs/GET_SONG';
 const GET_SONGS = 'songs/GET_SONGS';
 const POST_SONG = 'songs/POST_SONG';
@@ -87,8 +94,21 @@ export const thunkGetSong = (songId) => async (dispatch) => {
     if (data.errors) return data;
 }
 
-export const thunkGetSongs = () => async (dispatch) => {
-    const response = await fetch('/api/songs/')
+export const thunkGetSongPlay = (songId) => async (dispatch) => {
+    const response = await fetch(`/api/songs/${songId}/play`);
+
+    if (response.ok) {
+        const song = await response.json();
+        dispatch(getSong(song));
+        return song;
+    }
+    const data = await response.json();
+    if (data.errors) return data;
+
+}
+
+export const thunkGetSongs = (genres) => async (dispatch) => {
+    const response = await fetch(`/api/songs/?genres=${genres.join("-")}`)
     if (response.ok){
         const songs = await response.json();
         dispatch(getSongs(songs))

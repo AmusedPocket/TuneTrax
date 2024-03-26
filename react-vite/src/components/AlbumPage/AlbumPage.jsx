@@ -124,7 +124,7 @@ function AlbumPage() {
                         {/* TODO show waveform */}
                     </div>
                 </div>
-                <img src={album.album_pic} alt={`${album.title} cover image`}/>
+                {album.album_pic !== "No Image" ? <img src={album.album_pic} alt={`${album.title} cover image`} /> : <div className="album-header-default-pic default-pic" />}
             </div>
             <div className="album-body"> {/* body container */}
                 <div className="album-body_left"> {/* left side - album/user data */}
@@ -180,8 +180,8 @@ function AlbumPage() {
                         </div>
                         {album.user.albums?.map(new_album => new_album.id != album.id ? (
                             <div className="album-body_right_container_set" key={new_album.id}>
-                                <NavLink to={`/albums/${new_album.id}`}>
-                                    <img src={new_album.album_pic} alt={`${new_album.title} album image`}/>
+                                 <NavLink to={`/albums/${new_album.id}`}>
+                                    {new_album.album_pic !== "No Image" ? <img src={new_album.album_pic} alt={`${new_album.title} album image`} /> : <div className="default-pic album-body_right_container_set-default" />}
                                 </NavLink>
                                 <div>
                                     <NavLink>{album.user.username}</NavLink>
@@ -198,8 +198,9 @@ function AlbumPage() {
                         </div>
                         {album.user.playlists?.map(playlist => (
                             <div className="album-body_right_container_set" key={playlist.id}>
-                                <NavLink to={`/playlists/${playlist.id}`}>
-                                    <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`}/>
+                               <NavLink to={`/playlists/${playlist.id}`}>
+                                    {playlist.playlist_pic !== "No Image" ? <img src={playlist.playlist_pic} alt={`${playlist.title} playlist image`} /> : <div className="default-pic album-body_right_container_set-default" />}
+
                                 </NavLink>
                                 <div>
                                     <NavLink>{album.user.username}</NavLink>
