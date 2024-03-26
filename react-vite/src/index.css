@@ -54,3 +54,7 @@ body {
     margin-left: -10px;
     border-radius: 50%;
 }
+
+#root {
+    padding-bottom: 30px;
+}
