@@ -74,7 +74,7 @@ def album_seed_data(all_songs, all_users):
     album81 = Album(title="Country Greatest Hits", album_pic="No Image", body="Country Greatest Hits", user_id=9, release_date=datetime.strptime("2003-08-12", "%Y-%m-%d"), songs=[*all_songs[80:90]])
     album82 = Album(title="Death of the Chosen Few", album_pic="https://tunetrax.s3.us-east-2.amazonaws.com/death-of-chosen-few-album.jpg", user_id=10, release_date=datetime.strptime("2016-07-07", "%Y-%m-%d"), songs=[*all_songs[90:97]])
     album83 = Album(title="True Defiance", album_pic="https://tunetrax.s3.us-east-2.amazonaws.com/demon-hunter-true-defiance.jpg", user_id=10, release_date=datetime.strptime("2019-05-21", "%Y-%m-%d"), songs=[*all_songs[97:99]])
-    album84 = Album(title="N/A", album_pic="No Image", user_id=10, release_date=datetime.strptime("2013-07-11", "%Y-%m-%d"), songs=[all_songs[99]])
+    album84 = Album(title="N/A", album_pic="No Image", user_id=10, release_date=datetime.strptime("2013-07-11", "%Y-%m-%d"), songs=[all_songs[99]], genre="Metal")
     
     all_albums = [album1, album2, album3, album4, album5, album6, album7, album8, album9, album10, album11, album12, album13, album14, album15, album17, album18, album19, album20, album21, album22, album23, album24, album25, album26, album27, album28, album29, album30, album31, album32, album36, album37, album38, album39, album40, album41, album42, album43, album44, album45, album46, album47, album48, album49, album50, album51, album61, album62, album63, album64, album65, album66, album67, album68, album69, album70, album71, album72, album73, album74, album75, album76, album77, album78, album79, album80, album81, album82, album83, album84]
     
