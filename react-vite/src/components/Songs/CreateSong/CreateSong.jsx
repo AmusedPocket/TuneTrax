@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { thunkEditSong, thunkPostAlbumSong, thunkPostSong } from "../../../redux/song";
 import "./CreateSong.css"
+import Upload from "../../Upload";
 
 function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     
     const [songImg, setSongImg] = useState(editedSong ? editedSong.image : {URL: "No Image"});
-    const [title, setTitle] = useState(editedSong ? editedSong.title : "");
+    const [title, setTitle] = useState(editedSong ? editedSong.title : songFile.name.split(".")[0]);
     const [description, setDescription] = useState(editedSong ? editedSong.body : "");
     const [genre, setGenre] = useState(editedSong ? editedSong.genre : "");
     const [privacy, setPrivacy] = useState(false);
@@ -83,6 +84,7 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
         setGenre("");
         setPrivacy(false);
     }
+    
 
     return !hasSubmitted || !dontNavigate ? (
         <form onSubmit={onSubmit} className="upload-form_song">
@@ -91,14 +93,17 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
             </div>
             <div>
                 <div className="upload-form_song_pic">
-                    <img src={songImg.URL} alt="Song image."/>
-                    {songImg.URL == "No Image" &&
+                    {songImg.URL !== "No Image" && <img src={songImg.URL} alt="Song image."/>}
+                    {songImg.URL == "No Image" && <>
+                    <label for="image-upload" class="upload-song_container-upload-custom-button">Upload Song Image</label>
                     <input 
+                        id="image-upload"
                         type="file"
                         accept="image/*"
                         onChange={onImageChange}
+                        className="upload-song_container-upload-button"
                         />
-                    }
+                    </>}
                 </div>
                 <div className="upload-form_song_data">  
                     {errors.errors && errors.errors.map((error, i) => (<div key={i}>{error}</div>))}
@@ -107,6 +112,7 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
                         <input
                             type="text"
                             value={title}
+                            placeHolder={""}
                             onChange={(e) => setTitle(e.target.value)}
                             />
                         {validation.title && <p>{validation.title}</p>}
@@ -135,6 +141,7 @@ function CreateSong({ editedSong, songFile, addFunc, dontNavigate=false }) {
                     <label>
                         Description
                         <textarea
+                            className="create-song-description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             />

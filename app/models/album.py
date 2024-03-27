@@ -40,6 +40,7 @@ class Album(db.Model):
             "release_date":self.release_date.strftime("%Y-%m-%d"),
             "user":self.user.toDictAlbum(),
             "songs":[song.toDictHomePage() for song in self.songs],
+            "likes":len(self.likes),
             "genre": self.genre.name
         }
 

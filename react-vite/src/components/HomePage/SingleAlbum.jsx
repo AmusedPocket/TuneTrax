@@ -12,6 +12,8 @@ function SingleAlbum({ album }) {
     if(!album && !album?.id){
         return;
     }
+  
+    console.log("album is: ", album)
 
     return (
         <div className="single-album-container">
@@ -20,6 +22,8 @@ function SingleAlbum({ album }) {
                                    <div className="default-pic album-pic"/>}
             </Link>
             <div >
+                <h3>{album.title}</h3>
+                <div className="first-five-songs-wrapper">
                 {firstFiveSongs(album.songs).map(song => (
                     <div key={song.id} className="single-album-image-text">
                         <Link to={`/songs/${song.id}`}>
@@ -28,6 +32,8 @@ function SingleAlbum({ album }) {
                         </Link>
                     </div>
                 ))}
+                </div>
+                <h5><i className="fa-solid fa-heart"></i> {album.likes} | Trax: {(album.songs.length)} | {album.release_date} | {album.user.username} </h5>
             </div>
         </div>
     )

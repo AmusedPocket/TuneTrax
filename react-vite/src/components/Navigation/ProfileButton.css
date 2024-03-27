@@ -12,3 +12,7 @@ button {
     background-color: rgba(0, 4, 51, .25);
     
 }
+
+#profile-button-pic{
+  height: 30px;
+}
