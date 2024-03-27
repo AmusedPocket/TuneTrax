@@ -26,7 +26,7 @@ function Navigation() {
         
       </ul>
       
-      <div className="nav-link-title">Tune Trax<img className="nav-link-logo" src="../public/favicon.webp"/></div>
+      <div className="nav-link-title">Tune Trax<img className="nav-link-logo" src="https://tunetrax-pictures.s3.us-west-2.amazonaws.com/favicon.webp"/></div>
       <ul>
         <li>
           <ProfileButton />
