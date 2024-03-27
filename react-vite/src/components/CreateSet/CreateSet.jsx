@@ -16,7 +16,6 @@ function CreateSet({ editedSet, songFiles }) {
 
     const [albumImg, setAlbumImg] = useState(editedSet ? editedSet.image : {URL: "No Image"});
     const [title, setTitle] = useState(editedSet ? editedSet.title : "");
-    const [type, setType] = useState(editedSet ? editedSet.type : "Album");
     const [releaseDate, setReleaseDate] = useState(editedSet ? editedSet.release_date : "");
     const [description, setDescription] = useState(editedSet ? editedSet.body : "");
     const [songIds, setSongIds] = useState([])
@@ -55,8 +54,6 @@ function CreateSet({ editedSet, songFiles }) {
         if (Object.values(tempValidation)?.length != 0) 
             return setDisabled(false);
 
-        console.log("song", songFiles)
-        console.log("image", albumImg)
 
         const payload = {
             title,
@@ -68,10 +65,8 @@ function CreateSet({ editedSet, songFiles }) {
 
         if (editedSet) payload.id = editedSet.id;
 
-        const response = await dispatch("Album" == type ? 
-                                    (editedSet ? thunkUpdateAlbum(payload) : thunkAddAlbum(payload)) : 
-                                    (editedSet ? thunkUpdatePlaylist(payload) : thunkAddPlaylist(payload)));
-
+        const response = await dispatch(editedSet ? thunkUpdateAlbum(payload) : thunkAddAlbum(payload)) 
+                                    
         // Unsuccessful Submission
         if (response.errors) { 
             setErrors(Object.keys(response.errors).reduce((acc, errKey) => 
@@ -81,7 +76,7 @@ function CreateSet({ editedSet, songFiles }) {
         }
 
         // Successful Submission
-        navigate(`/${"Album" == type ? "albums" : "playlists"}/${response.id}`);
+        navigate(`/albums/${response.id}`);
     }
     
     function clearForm (e) {
@@ -100,7 +95,7 @@ function CreateSet({ editedSet, songFiles }) {
 
     return (
         <div className="upload-form_set">
-            <h1>Create a Set</h1>
+            <h1>Create an Album</h1>
             <div>
                 <h3 className={"tracks" != currentPage && "selected"} onClick={() => setCurrentPage("basic info")}>Basic info</h3>
                 <h3 className={"basic info" != currentPage && "selected"} onClick={() => setCurrentPage("tracks")}>Tracks</h3>
@@ -112,14 +107,17 @@ function CreateSet({ editedSet, songFiles }) {
             {"basic info" == currentPage && (<>
             <form onSubmit={onSubmit} className="upload-form_set_form">
                 <div className="upload-form_set_image">
-                    <img src={albumImg.URL}/>
-                    {albumImg.URL == "No Image" &&
+                    {albumImg.URL !== "No Image" &&<img src={albumImg.URL}/>}
+                    {albumImg.URL == "No Image" && <>
+                    <label for="image-upload" class="upload-song_container-upload-custom-button">Upload Album Image</label>
                     <input 
+                        id="image-upload"
                         type="file"
                         accept="image/*"
                         onChange={onImageChange}
+                        className="upload-song_container-upload-button"
                         />
-                    }
+                    </>}
                 </div>
                 <div className="upload-form_set_data">  
                     {errors.length != 0 && errors.map((error, i) => (<p key={i}>{error}</p>))}
@@ -134,19 +132,12 @@ function CreateSet({ editedSet, songFiles }) {
                     {validation.title && <p>{validation.title}</p>}
                     <div>
                         <label>
-                            Set type 
-                            <select
-                                type="select"
-                                value={type}
-                                onChange={(e) => setType(e.target.value)}
-                                >
-                                <option value="Album" defaultValue>Album</option>
-                                <option value="Playlist">Playlist</option>
-                            </select>
+                            
                         </label>
                         <label>
-                            Release date {"Album" == type && "*"}{/* TODO: make asterisk red */}
+                            Release date *
                             <input
+                                className="album-release-date"
                                 type="date"
                                 value={releaseDate}
                                 onChange={(e) => setReleaseDate(e.target.value)}

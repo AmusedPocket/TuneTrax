@@ -179,6 +179,7 @@
 
     padding: 5px;
     height: 50px;
+    cursor: pointer;
 }
 .album-body_left-bottom_song-details:hover {
     transition: background-color .1s;

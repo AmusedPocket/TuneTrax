@@ -4,9 +4,32 @@ import ProfileButton from "./ProfileButton";
 import "./Navigation.css";
 import FeatureComingSoonModal from "../FeatureComingSoonModal/FeatureComingSoonModal";
 import OpenModalMenuItem from "./OpenModalMenuItem";
-
+import LoginFormModal from "../LoginFormModal";
+import { useEffect, useRef, useState } from "react";
 
 function Navigation() {
+  const sessionUser = useSelector((state)=>state.session.user)
+  const [showMenu, setShowMenu] = useState(false);
+  
+  const ulRef = useRef();
+
+  
+
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const closeMenu = (e) => {
+      if (ulRef.current && !ulRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [showMenu]);
+
+  const closeMenu = () => setShowMenu(false);
   return (
     <nav>
       <ul>
@@ -20,9 +43,16 @@ function Navigation() {
 
                             /></button>
         </li>
-        <li>
+        {sessionUser && <li>
           <NavLink to="/upload">Upload</NavLink>
-        </li>
+        </li>}
+        {!sessionUser && <li>
+          <OpenModalMenuItem
+                itemText="Upload"
+                onItemClick={closeMenu}
+                modalComponent={<LoginFormModal />}
+              />
+        </li>}
         
       </ul>
       
