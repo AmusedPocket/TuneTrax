@@ -1,131 +1,66 @@
-# Flask React Project
+# TuneTrax
+[1]:https://github.com/AmusedPocket/TuneTrax/wiki/Database-Schema
+[2]:https://tunetrax.onrender.com
+[3]:https://github.com/AmusedPocket
+[4]:https://github.com/WhiffKin
+[5]:https://github.com/Christopher-Aum
+[6]:https://github.com/kaifunction
 
-This is the starter for the Flask React project.
+## Live Link
 
-## Getting started
+[TuneTrax][2]
 
-1. Clone this repository (only this branch).
+## Introduction
 
-2. Install dependencies.
+TuneTrax is a FullStack Soundcloud clone with RESTful conventions in mind. As a user for our site, you are able to: view songs and albums; play music from these pages; login as a demo user or create your own user. As a logged in user you are able to: create, update, and delete songs and albums.
 
-   ```bash
-   pipenv install -r requirements.txt
-   ```
+## Dev Links
 
-3. Create a __.env__ file based on the example with proper settings for your
-   development environment.
+[AmusedPocked][3]    - Trevor I. <br/>
+[WhiffKin][4]        - Garrett L. <br/>
+[Christopher-Aum][5] - Christopher A. <br/>
+[KaiFunction][6]     - Kai F.
 
-4. Make sure the SQLite3 database connection URL is in the __.env__ file.
+## Backend Technology
 
-5. This starter organizes all tables inside the `flask_schema` schema, defined
-   by the `SCHEMA` environment variable.  Replace the value for
-   `SCHEMA` with a unique name, **making sure you use the snake_case
-   convention.**
+Flask, SQL Alchemy, AWS S3, POSTGRESQL, and Docker were used to create the database and backend routes. 
 
-6. Get into your pipenv, migrate your database, seed your database, and run your
-   Flask app:
+Database schema [link here][1].
 
-   ```bash
-   pipenv shell
-   ```
+Routes used with Flask for:
+ * Songs
+ * Albums
+ * Playlists
+ * User
+ * Authentication
 
-   ```bash
-   flask db upgrade
-   ```
+File upload and deletion is handled by AWS S3.
 
-   ```bash
-   flask seed all
-   ```
+Hosting is managed by Render.
 
-   ```bash
-   flask run
-   ```
+## Frontend Technology
 
-7. The React frontend has no styling applied. Copy the __.css__ files from your
-   Authenticate Me project into the corresponding locations in the
-   __react-vite__ folder to give your project a unique look.
+React, Redux, React-H5-Audio-Player, React-Infinite-Scroller, Wavesurfer, and Font-Awesome were used to create the front-end functionality
 
-8. To run the React frontend in development, `cd` into the __react-vite__
-   directory and run `npm i` to install dependencies. Next, run `npm run build`
-   to create the `dist` folder. The starter has modified the `npm run build`
-   command to include the `--watch` flag. This flag will rebuild the __dist__
-   folder whenever you change your code, keeping the production version up to
-   date.
+## Navigation
 
-## Deployment through Render.com
+* Landing page
+![image](https://github.com/AmusedPocket/TuneTrax/assets/142931967/07c35d87-6ad5-4013-8891-64c255daed92)
+* Song Page
+![image](https://github.com/AmusedPocket/TuneTrax/assets/142931967/f7f469d1-ae7e-4451-b7d3-d5a196d8770d)
+* Album Page
+![image](https://github.com/AmusedPocket/TuneTrax/assets/142931967/b5f76ea9-5351-4829-85e6-b8c14c126f0f)
+* Upload Page
+![image](https://github.com/AmusedPocket/TuneTrax/assets/142931967/6f71c21b-2f9f-4da7-a059-2201fb29d2ef)
+![image](https://github.com/AmusedPocket/TuneTrax/assets/142931967/f741dd94-3c77-4d33-b185-ed285e43b996)
+![image](https://github.com/AmusedPocket/TuneTrax/assets/142931967/89f73a91-451e-4e47-afb4-7b1244ad4ded)
 
-First, recall that Vite is a development dependency, so it will not be used in
-production. This means that you must already have the __dist__ folder located in
-the root of your __react-vite__ folder when you push to GitHub. This __dist__
-folder contains your React code and all necessary dependencies minified and
-bundled into a smaller footprint, ready to be served from your Python API.
+## Future Goals
 
-Begin deployment by running `npm run build` in your __react-vite__ folder and
-pushing any changes to GitHub.
+* Follows feature
+* Feed Page - for showing folloed users content
+* Playlists
 
-Refer to your Render.com deployment articles for more detailed instructions
-about getting started with [Render.com], creating a production database, and
-deployment debugging tips.
+## Conclusion
 
-From the Render [Dashboard], click on the "New +" button in the navigation bar,
-and click on "Web Service" to create the application that will be deployed.
-
-Select that you want to "Build and deploy from a Git repository" and click
-"Next". On the next page, find the name of the application repo you want to
-deploy and click the "Connect" button to the right of the name.
-
-Now you need to fill out the form to configure your app. Most of the setup will
-be handled by the __Dockerfile__, but you do need to fill in a few fields.
-
-Start by giving your application a name.
-
-Make sure the Region is set to the location closest to you, the Branch is set to
-"main", and Runtime is set to "Docker". You can leave the Root Directory field
-blank. (By default, Render will run commands from the root directory.)
-
-Select "Free" as your Instance Type.
-
-### Add environment variables
-
-In the development environment, you have been securing your environment
-variables in a __.env__ file, which has been removed from source control (i.e.,
-the file is gitignored). In this step, you will need to input the keys and
-values for the environment variables you need for production into the Render
-GUI.
-
-Add the following keys and values in the Render GUI form:
-
-- SECRET_KEY (click "Generate" to generate a secure secret for production)
-- FLASK_ENV production
-- FLASK_APP app
-- SCHEMA (your unique schema name, in snake_case)
-
-In a new tab, navigate to your dashboard and click on your Postgres database
-instance.
-
-Add the following keys and values:
-
-- DATABASE_URL (copy value from the **External Database URL** field)
-
-**Note:** Add any other keys and values that may be present in your local
-__.env__ file. As you work to further develop your project, you may need to add
-more environment variables to your local __.env__ file. Make sure you add these
-environment variables to the Render GUI as well for the next deployment.
-
-### Deploy
-
-Now you are finally ready to deploy! Click "Create Web Service" to deploy your
-project. The deployment process will likely take about 10-15 minutes if
-everything works as expected. You can monitor the logs to see your Dockerfile
-commands being executed and any errors that occur.
-
-When deployment is complete, open your deployed site and check to see that you
-have successfully deployed your Flask application to Render! You can find the
-URL for your site just below the name of the Web Service at the top of the page.
-
-**Note:** By default, Render will set Auto-Deploy for your project to true. This
-setting will cause Render to re-deploy your application every time you push to
-main, always keeping it up to date.
-
-[Render.com]: https://render.com/
-[Dashboard]: https://dashboard.render.com/
+Our Team picked up Python in a week for this project and wrote the backend API in this new language. As our first foyer into the Flask development cycle our team worked hard to understand how it's implementation should be handled and succeeded in making this project in the short time frame available. We still currently meet frequently to ensure that the project is staying up to date and gaining new features!
